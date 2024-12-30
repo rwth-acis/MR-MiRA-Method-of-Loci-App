@@ -500,6 +500,34 @@ PrefabInstance:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2399766939491347150}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: AddFurniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125620559487, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2718388125629357672, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1037,6 +1065,10 @@ PrefabInstance:
       value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 5285301184695710490, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Adds an object to the room
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285301184695710490, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
       value: 0.8396226
       objectReference: {fileID: 0}
@@ -1372,6 +1404,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7837598653366937773, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_Name
+      value: AddFurniture
+      objectReference: {fileID: 0}
     - target: {fileID: 7837598653375310010, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Name
       value: Back Button
@@ -1535,6 +1571,10 @@ PrefabInstance:
     - target: {fileID: 7909318751582378518, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7909318752081480430, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Add Object
       objectReference: {fileID: 0}
     - target: {fileID: 7909318752081480430, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -2238,6 +2278,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d755f81678254439eff3296b16271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  furniture: {fileID: 4101571906190343619, guid: e9541b79d99cf3c46afa99ccb5c30f96, type: 3}
+  json: 
 --- !u!224 &1262246705847404927 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6067706443764739711, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}

@@ -35,4 +35,8 @@ public class User
         return -1;
     }
 
+    public int GetCurrentRoomID()
+    {
+        return _currentRoomID;
+    }
 }
