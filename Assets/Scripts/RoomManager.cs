@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using OVRSimpleJSON;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,12 +9,14 @@ using UnityEngine.SceneManagement;
 public class RoomManager : MonoBehaviour
 {
     public static RoomManager Instance { get; private set; }
-    private List<Room> _rooms = new List<Room>();
     private List<User> _users = new List<User>();
     private User _currentUser;
+    private Room _currentRoom;
+    private int _freeSceneID = 2;
 
     //for testing
     [SerializeField] public GameObject furniture;
+    [SerializeField] public GameObject furniture2;
     [SerializeField] public string json;
 
     private void Awake()
@@ -32,22 +35,52 @@ public class RoomManager : MonoBehaviour
 
     void Start()
     {
-        User lena = new User("Lena");
-        _users.Add(lena);
-        _currentUser = _users[0];
-        Room room = new Room(_rooms.Count);
-        _rooms.Add(room);
-        _currentUser.AddRoom(_rooms.Count);
-        //testing
-        _rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
-        Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoomID());
-        SaveRoom saveRoom = new SaveRoom();
-        saveRoom.roomID = _currentUser.GetCurrentRoomID();
-        saveRoom.saveObject = furniture;
-        json = JsonUtility.ToJson(saveRoom);
-        Debug.Log("Furniture saved to JSON: " + json);
+        // TODO get name as input from user
+        //LoadUser("Lena");
 
-        AddFurniture();
+        User newUser = new User("Lena");
+        _users.Add(newUser);
+        _currentUser = _users[0];
+
+        // Create a new room and add it to the list of rooms and the user
+        Room room = new Room(0);
+        _currentUser.AddRoom(room);
+        _currentRoom = _currentUser.GetFirstRoom();
+        Debug.Log("Current Room ID in RoomManager start: " + _currentRoom.ID);
+        //testing
+        // _rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
+        // Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoomID());
+        // SaveRoom saveRoom = new SaveRoom();
+        // saveRoom.roomID = _currentUser.GetCurrentRoomID();
+        // saveRoom.saveObject = furniture;
+        // json = JsonUtility.ToJson(saveRoom);
+        // Debug.Log("Furniture saved to JSON: " + json);
+
+        // AddFurniture();
+    }
+
+    public void getInputName(string name)
+    {
+        LoadUser(name);
+    }
+
+    public void LoadUser(string username)
+    {
+        string path = Path.Combine(Application.persistentDataPath, username + ".json");
+        User newUser;
+        // Check if the user's save file exists
+        if (!File.Exists(path))
+        {
+            newUser = new User(username);
+        }
+        else
+        {
+            // Read the user's save file
+            string userjson = File.ReadAllText(path);
+            newUser = new User(username, JsonUtility.FromJson<SaveData>(userjson));
+        }
+        _users.Add(newUser);
+        _currentUser = newUser;
     }
 
     /// <summary>
@@ -56,12 +89,13 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "New Room"</param>
     public void CreateRoom(bool value)
     {
-        // TODO: neue Szene hinzufügen
-        Room room = new Room(_rooms.Count);
-        _rooms.Add(room);
-        _currentUser.AddRoom(_rooms.Count);
+        Debug.Log("Creating new room for user " + _currentUser);
+        int newRoomID = _currentUser.GetFreeRoomID();
+        Room room = new Room(newRoomID);
+        _currentUser.AddRoom(room);
         // Go to the newly created room
-        NextScene(true);
+        _currentRoom = _currentUser.GetCurrentRoom();
+        LoadRoom(room);
     }
 
     /// <summary>
@@ -70,45 +104,92 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Next Room"</param>
     public void NextScene(bool value)
     {
-        int nextRoomID = _currentUser.NextRoom();
-        if (nextRoomID == -1)
+        Room nextRoom = _currentUser.NextRoom();
+        if (nextRoom == null)
         {
+            Debug.Log("There is no next room available in RoomManager");
             return; // TODO: Error Message or Grey out Button
         }
-        SceneManager.LoadScene("Room 2");
-        LoadRoom(nextRoomID);
+        // // get the scene that is currently active
+        // int currentSceneID = SceneManager.GetActiveScene().buildIndex + 1;
+        // // load the next room
+        // SceneManager.LoadScene("Room " + _freeSceneID);
+        // // set the free scene ID to the current scene ID
+        // _freeSceneID = currentSceneID;
+        // _currentRoomID = nextRoomID;
+        LoadRoom(nextRoom);
     }
 
     public void PreviousScene(bool value)
     {
-        int previousRoomID = _currentUser.PreviousRoom();
-        if (previousRoomID == -1)
+        Room previousRoom = _currentUser.PreviousRoom();
+        if (previousRoom == null)
         {
+            Debug.Log("There is no previous room available in RoomManager");
             return; // TODO: Error Message or Grey out Button
         }
-        SceneManager.LoadScene("Room 1");
-        LoadRoom(previousRoomID);
+        // int currentSceneID = SceneManager.GetActiveScene().buildIndex + 1;
+        // SceneManager.LoadScene("Room " + _freeSceneID);
+        // _freeSceneID = currentSceneID;
+        // _currentRoomID = previousRoomID;
+        LoadRoom(previousRoom);
     }
 
-    public void LoadRoom(int roomID)
+    public void LoadRoom(Room room)
     {
-        // TODO: Load Room Interiors
-        GameObject myfurniture = JsonUtility.FromJson<SaveRoom>(json).saveObject;
-        WaitForSeconds wait = new WaitForSeconds(2);
-        GameObject.Instantiate(myfurniture, new Vector3(1, 1, 0), Quaternion.identity);
-        Debug.Log("Furniture loaded from JSON: " + json);
-        //_rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
+        // Save the current room to JSON
+        _currentRoom.SaveRoom();
+
+        // First remove all furniture from the scene
+        GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Furniture");
+        foreach (GameObject obj in allObjects)
+        {
+            GameObject.Destroy(obj);
+        }
+
+        // Load the room
+        Debug.Log("We are loading room " + room.ID);
+        if (room != null && room.HasFurniture())
+        {
+            List<GameObject> myfurniture = JsonUtility.FromJson<SaveRoom>(json).furniture;
+            foreach (GameObject furniture in myfurniture)
+            {   furniture.tag = "Furniture";
+
+            }
+            WaitForSeconds wait = new WaitForSeconds(2);
+            GameObject.Instantiate(myfurniture[0], new Vector3(1, 1, 0), Quaternion.identity);
+            GameObject.Instantiate(myfurniture[1], new Vector3(2, 1, 0), Quaternion.identity);
+            Debug.Log("Furniture loaded from JSON: " + json);
+        }
     }
 
-    public void AddFurniture()
+    public void AddFurniture(bool value)
     {
-        // _rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
-        // Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoomID());
-        // SaveRoom saveRoom = new SaveRoom();
-        // saveRoom.roomID = _currentUser.GetCurrentRoomID();
-        // saveRoom.saveObject = furniture;
-        // json = JsonUtility.ToJson(saveRoom);
-        // Debug.Log("Furniture saved to JSON: " + json);
-        LoadRoom(_currentUser.GetCurrentRoomID());
+        // Add furniture to the current room's list of furniture
+        _currentRoom.AddFurniture(furniture);
+        _currentRoom.AddFurniture(furniture2);
+        Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoom().ID);
+
+        // Instantiate the furniture in the scene
+        GameObject newObject = GameObject.Instantiate(furniture, new Vector3(1, 1, 0), Quaternion.identity);
+        GameObject newObject2 = GameObject.Instantiate(furniture2, new Vector3(2, 1, 0), Quaternion.identity);
+        newObject.tag = "Furniture";
+        // Save the furniture to JSON
+        SaveRoom saveRoom = new SaveRoom();
+        saveRoom.roomID = _currentUser.CurrentRoomID;
+        saveRoom.furniture = _currentRoom.Furniture;
+        json = JsonUtility.ToJson(saveRoom); // TODO Save and load to/from User
+        Debug.Log("Furniture saved to JSON: " + json);
+    }
+
+    /// <summary>
+    /// Switch the user and save all the rooms of the current user
+    /// </summary>
+    public void SwitchUser(string username)
+    {
+        // Save the current user
+        _currentUser.SaveUser();
+        // Switch to the next user
+        _users.Add(new User(username));
     }
 }

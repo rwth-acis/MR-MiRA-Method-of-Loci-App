@@ -17,6 +17,8 @@ TagManager:
   - QDSUITextInputField
   - QDSUIAccentColor
   - QDSUISharedThemeColor
+  - Furniture
+  - Representation
   layers:
   - Default
   - TransparentFX
