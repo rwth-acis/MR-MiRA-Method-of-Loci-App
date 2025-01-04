@@ -45,15 +45,6 @@ public class RoomManager : MonoBehaviour
 
         // Create a new room and add it to the list of rooms and the user
 
-        if(_currentUser.GetFirstRoom() == null)
-        {
-            Debug.Log("First room is null");
-            Room room = new Room(0);
-            _currentUser.AddRoom(room);
-            _currentRoom = _currentUser.GetFirstRoom();
-            Debug.Log("Current Room ID in RoomManager start: " + _currentRoom.ID);
-        }
-        LoadRoom(_currentRoom);
         //testing
         // _rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
         // Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoomID());
@@ -66,12 +57,6 @@ public class RoomManager : MonoBehaviour
         // AddFurniture();
     }
 
-    // Called when enter is pressed in the input field
-    public void GetInputName(string name)
-    {
-        SwitchUser(name);
-    }
-
     public void LoadUser(string username)
     {
         string path = Path.Combine(Application.persistentDataPath, username + ".json");
@@ -81,6 +66,9 @@ public class RoomManager : MonoBehaviour
         {
             Debug.Log("File not found");
             newUser = new User(username);
+            Debug.Log("First room is null");
+            Room room = new Room(0);
+            newUser.AddRoom(room);
         }
         else
         {
@@ -91,6 +79,7 @@ public class RoomManager : MonoBehaviour
         _users.Add(newUser);
         _currentUser = newUser;
         _currentRoom = _currentUser.GetFirstRoom();
+        LoadRoom(_currentRoom);
     }
 
     /// <summary>
@@ -203,7 +192,6 @@ public class RoomManager : MonoBehaviour
         // Save the current user
         _currentUser.SaveUser();
         // Switch to the next user
-        _users.Add(new User(username));
-        // LoadUser(username);
+        LoadUser(username);
     }
 }
