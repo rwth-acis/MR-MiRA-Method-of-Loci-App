@@ -36,17 +36,24 @@ public class RoomManager : MonoBehaviour
     void Start()
     {
         // TODO get name as input from user
-        //LoadUser("Lena");
+        LoadUser("Lena");
 
-        User newUser = new User("Lena");
-        _users.Add(newUser);
-        _currentUser = _users[0];
+
+        // User newUser = new User("Lena");
+        // _users.Add(newUser);
+        // _currentUser = _users[0];
 
         // Create a new room and add it to the list of rooms and the user
-        Room room = new Room(0);
-        _currentUser.AddRoom(room);
-        _currentRoom = _currentUser.GetFirstRoom();
-        Debug.Log("Current Room ID in RoomManager start: " + _currentRoom.ID);
+
+        if(_currentUser.GetFirstRoom() == null)
+        {
+            Debug.Log("First room is null");
+            Room room = new Room(0);
+            _currentUser.AddRoom(room);
+            _currentRoom = _currentUser.GetFirstRoom();
+            Debug.Log("Current Room ID in RoomManager start: " + _currentRoom.ID);
+        }
+        LoadRoom(_currentRoom);
         //testing
         // _rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
         // Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoomID());
@@ -59,9 +66,10 @@ public class RoomManager : MonoBehaviour
         // AddFurniture();
     }
 
-    public void getInputName(string name)
+    // Called when enter is pressed in the input field
+    public void GetInputName(string name)
     {
-        LoadUser(name);
+        SwitchUser(name);
     }
 
     public void LoadUser(string username)
@@ -71,6 +79,7 @@ public class RoomManager : MonoBehaviour
         // Check if the user's save file exists
         if (!File.Exists(path))
         {
+            Debug.Log("File not found");
             newUser = new User(username);
         }
         else
@@ -81,6 +90,7 @@ public class RoomManager : MonoBehaviour
         }
         _users.Add(newUser);
         _currentUser = newUser;
+        _currentRoom = _currentUser.GetFirstRoom();
     }
 
     /// <summary>
@@ -140,6 +150,7 @@ public class RoomManager : MonoBehaviour
         // Save the current room to JSON
         _currentRoom.SaveRoom();
 
+        _currentUser.SaveUser();
         // First remove all furniture from the scene
         GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Furniture");
         foreach (GameObject obj in allObjects)
@@ -151,15 +162,17 @@ public class RoomManager : MonoBehaviour
         Debug.Log("We are loading room " + room.ID);
         if (room != null && room.HasFurniture())
         {
-            List<GameObject> myfurniture = JsonUtility.FromJson<SaveRoom>(json).furniture;
-            foreach (GameObject furniture in myfurniture)
+            List<GameObject> roomFurniture = room.Furniture;
+            foreach (GameObject furniture in roomFurniture)
             {   furniture.tag = "Furniture";
 
             }
             WaitForSeconds wait = new WaitForSeconds(2);
-            GameObject.Instantiate(myfurniture[0], new Vector3(1, 1, 0), Quaternion.identity);
-            GameObject.Instantiate(myfurniture[1], new Vector3(2, 1, 0), Quaternion.identity);
-            Debug.Log("Furniture loaded from JSON: " + json);
+
+            foreach (GameObject furniture in roomFurniture)
+            {
+                GameObject.Instantiate(furniture, new Vector3(1, 1, 0), Quaternion.identity);
+            }
         }
     }
 
@@ -191,5 +204,6 @@ public class RoomManager : MonoBehaviour
         _currentUser.SaveUser();
         // Switch to the next user
         _users.Add(new User(username));
+        // LoadUser(username);
     }
 }

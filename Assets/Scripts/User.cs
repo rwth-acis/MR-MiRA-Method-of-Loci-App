@@ -20,12 +20,14 @@ public class User
 
     public User(string name, SaveData saveData)
     {
+        Debug.Log("User constructor with savedata " + name);
         _name = name;
         _saveData = saveData;
         foreach (SaveRoom saveRoom in _saveData.SaveRooms)
         {
             _rooms.Add(new Room(saveRoom));
         }
+
     }
 
     public void AddRoom(Room room)
@@ -105,6 +107,7 @@ public class User
         // Save JSON data to file
         SaveDataJSON = JsonUtility.ToJson(_saveData);
         string path = Path.Combine(Application.persistentDataPath, _name + ".json");
+        Debug.Log("Save to:" + path);
         File.WriteAllText(path, SaveDataJSON);
     }
 }

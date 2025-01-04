@@ -22,6 +22,7 @@ public class Room
         ID = saveRoom.roomID;
         Furniture = saveRoom.furniture;
         Representations = saveRoom.representations;
+        Debug.Log("Room created from SaveRoom with ID: " + ID + " Furntiure count: " + Furniture.Count);
     }
 
     public void AddFurniture(GameObject furniture)

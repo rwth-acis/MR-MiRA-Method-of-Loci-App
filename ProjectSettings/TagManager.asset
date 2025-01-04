@@ -19,6 +19,9 @@ TagManager:
   - QDSUISharedThemeColor
   - Furniture
   - Representation
+  - QDSUIToggleCheckbox
+  - QDSUIToggleSwitch
+  - QDSUIToggleCheckboxRadio
   layers:
   - Default
   - TransparentFX
