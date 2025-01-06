@@ -821,6 +821,10 @@ PrefabInstance:
       value: RoomManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2718388125629357672, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125629357672, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}

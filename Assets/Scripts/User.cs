@@ -20,7 +20,7 @@ public class User
 
     public User(string name, SaveData saveData)
     {
-        Debug.Log("User constructor with savedata " + name);
+        Debug.Log("User constructor with savedata " + name + ". Rooms: " + saveData.SaveRooms.Count);
         _name = name;
         _saveData = saveData;
         foreach (SaveRoom saveRoom in _saveData.SaveRooms)
@@ -42,7 +42,7 @@ public class User
 
     public Room NextRoom()
     {
-        if (CurrentRoomID >= _rooms.Count)
+        if (CurrentRoomID >= _rooms.Count - 1)
         {
             Debug.Log("No more rooms available");
             return null;

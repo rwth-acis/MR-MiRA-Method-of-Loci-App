@@ -12,12 +12,10 @@ public class RoomManager : MonoBehaviour
     private List<User> _users = new List<User>();
     private User _currentUser;
     private Room _currentRoom;
-    private int _freeSceneID = 2;
 
     //for testing
     [SerializeField] public GameObject furniture;
     [SerializeField] public GameObject furniture2;
-    [SerializeField] public string json;
 
     private void Awake()
     {
@@ -37,24 +35,6 @@ public class RoomManager : MonoBehaviour
     {
         // TODO get name as input from user
         LoadUser("Lena");
-
-
-        // User newUser = new User("Lena");
-        // _users.Add(newUser);
-        // _currentUser = _users[0];
-
-        // Create a new room and add it to the list of rooms and the user
-
-        //testing
-        // _rooms[_currentUser.GetCurrentRoomID()].AddFurniture(furniture);
-        // Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoomID());
-        // SaveRoom saveRoom = new SaveRoom();
-        // saveRoom.roomID = _currentUser.GetCurrentRoomID();
-        // saveRoom.saveObject = furniture;
-        // json = JsonUtility.ToJson(saveRoom);
-        // Debug.Log("Furniture saved to JSON: " + json);
-
-        // AddFurniture();
     }
 
     public void LoadUser(string username)
@@ -95,6 +75,7 @@ public class RoomManager : MonoBehaviour
         // Go to the newly created room
         _currentRoom = _currentUser.GetCurrentRoom();
         LoadRoom(room);
+        _currentRoom.SaveRoom();
     }
 
     /// <summary>
@@ -109,14 +90,8 @@ public class RoomManager : MonoBehaviour
             Debug.Log("There is no next room available in RoomManager");
             return; // TODO: Error Message or Grey out Button
         }
-        // // get the scene that is currently active
-        // int currentSceneID = SceneManager.GetActiveScene().buildIndex + 1;
-        // // load the next room
-        // SceneManager.LoadScene("Room " + _freeSceneID);
-        // // set the free scene ID to the current scene ID
-        // _freeSceneID = currentSceneID;
-        // _currentRoomID = nextRoomID;
         LoadRoom(nextRoom);
+        _currentRoom = _currentUser.GetCurrentRoom();
     }
 
     public void PreviousScene(bool value)
@@ -127,18 +102,14 @@ public class RoomManager : MonoBehaviour
             Debug.Log("There is no previous room available in RoomManager");
             return; // TODO: Error Message or Grey out Button
         }
-        // int currentSceneID = SceneManager.GetActiveScene().buildIndex + 1;
-        // SceneManager.LoadScene("Room " + _freeSceneID);
-        // _freeSceneID = currentSceneID;
-        // _currentRoomID = previousRoomID;
         LoadRoom(previousRoom);
+        _currentRoom = _currentUser.GetCurrentRoom();
     }
 
     public void LoadRoom(Room room)
     {
         // Save the current room to JSON
         _currentRoom.SaveRoom();
-
         _currentUser.SaveUser();
         // First remove all furniture from the scene
         GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Furniture");
@@ -148,40 +119,57 @@ public class RoomManager : MonoBehaviour
         }
 
         // Load the room
-        Debug.Log("We are loading room " + room.ID);
+        Debug.Log("LENA: We are loading room " + room.ID);
         if (room != null && room.HasFurniture())
         {
+            // List of the prefabs of the furniture in the room
             List<GameObject> roomFurniture = room.Furniture;
-            foreach (GameObject furniture in roomFurniture)
-            {   furniture.tag = "Furniture";
-
+            for (int i = 0; i < roomFurniture.Count; i++)
+            {
+                //Debug.Log("LENA: Instantiating furniture on position " + room.FurnitureTransforms[i].position);
+                Debug.Log("LENA: Instantiating furniture" + i + roomFurniture[i].transform.position);
+                GameObject myObject = GameObject.Instantiate(roomFurniture[i]);
+                // myObject.transform.position = room.FurnitureTransforms[i].position;
+                // myObject.transform.rotation = room.FurnitureTransforms[i].rotation;
+                // myObject.transform.localScale = room.FurnitureTransforms[i].localScale;
+                Debug.Log("LENA:  " + room.FurnitureInstances.Count + "<=" + roomFurniture.Count);
+                if (room.FurnitureInstances.Count < roomFurniture.Count)
+                {
+                    room.AddFurnitureInstance(myObject);
+                }
             }
-            WaitForSeconds wait = new WaitForSeconds(2);
-
+            //TODO maybe load the transforms step by step
+            room.LoadTransforms();
             foreach (GameObject furniture in roomFurniture)
             {
-                GameObject.Instantiate(furniture, new Vector3(1, 1, 0), Quaternion.identity);
+                furniture.tag = "Furniture";
             }
         }
     }
 
     public void AddFurniture(bool value)
     {
-        // Add furniture to the current room's list of furniture
-        _currentRoom.AddFurniture(furniture);
-        _currentRoom.AddFurniture(furniture2);
-        Debug.Log("Furniture added to room " + _currentUser.GetCurrentRoom().ID);
+        Debug.Log("LENA: Furniture added to room " + _currentUser.GetCurrentRoom().ID);
 
         // Instantiate the furniture in the scene
-        GameObject newObject = GameObject.Instantiate(furniture, new Vector3(1, 1, 0), Quaternion.identity);
-        GameObject newObject2 = GameObject.Instantiate(furniture2, new Vector3(2, 1, 0), Quaternion.identity);
+        GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
+        GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
         newObject.tag = "Furniture";
-        // Save the furniture to JSON
-        SaveRoom saveRoom = new SaveRoom();
-        saveRoom.roomID = _currentUser.CurrentRoomID;
-        saveRoom.furniture = _currentRoom.Furniture;
-        json = JsonUtility.ToJson(saveRoom); // TODO Save and load to/from User
-        Debug.Log("Furniture saved to JSON: " + json);
+        newObject2.tag = "Furniture";
+        furniture.tag = "Furniture";
+        furniture2.tag = "Furniture";
+        // Add furniture to the current room's list of furniture
+        _currentRoom.AddFurniture(furniture, newObject);
+        _currentRoom.AddFurniture(furniture2, newObject2);
+        // _currentRoom.AddFurnitureTransform(newObject.transform);
+        // _currentRoom.AddFurnitureTransform(newObject2.transform);
+        _currentRoom.UpdateTransforms();
+        _currentRoom.SaveRoom();
+
+        //for testing //TODO remove
+        // Debug.Log("Saving User " + _currentUser._name);
+        // _currentUser.SaveUser();
+        // LoadUser("Lena");
     }
 
     /// <summary>
