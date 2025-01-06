@@ -108,6 +108,9 @@ public class RoomManager : MonoBehaviour
 
     public void LoadRoom(Room room)
     {
+        Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
+
+        room.FurnitureInstances.Clear();
         // Save the current room to JSON
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
@@ -117,33 +120,32 @@ public class RoomManager : MonoBehaviour
         {
             GameObject.Destroy(obj);
         }
-
         // Load the room
         Debug.Log("LENA: We are loading room " + room.ID);
         if (room != null && room.HasFurniture())
         {
             // List of the prefabs of the furniture in the room
             List<GameObject> roomFurniture = room.Furniture;
+            Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
             for (int i = 0; i < roomFurniture.Count; i++)
             {
+                Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
+
                 //Debug.Log("LENA: Instantiating furniture on position " + room.FurnitureTransforms[i].position);
                 Debug.Log("LENA: Instantiating furniture" + i + roomFurniture[i].transform.position);
                 GameObject myObject = GameObject.Instantiate(roomFurniture[i]);
+                myObject.tag = "Furniture";
                 // myObject.transform.position = room.FurnitureTransforms[i].position;
                 // myObject.transform.rotation = room.FurnitureTransforms[i].rotation;
                 // myObject.transform.localScale = room.FurnitureTransforms[i].localScale;
                 Debug.Log("LENA:  " + room.FurnitureInstances.Count + "<=" + roomFurniture.Count);
-                if (room.FurnitureInstances.Count < roomFurniture.Count)
-                {
-                    room.AddFurnitureInstance(myObject);
-                }
+                //if (room.FurnitureInstances.Count < roomFurniture.Count)
+                //{
+                room.AddFurnitureInstance(myObject);
+                //}
             }
             //TODO maybe load the transforms step by step
             room.LoadTransforms();
-            foreach (GameObject furniture in roomFurniture)
-            {
-                furniture.tag = "Furniture";
-            }
         }
     }
 

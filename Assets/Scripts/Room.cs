@@ -125,6 +125,7 @@ public class Room
         saveRoom.roomID = ID;
         saveRoom.furniture = Furniture;
         saveRoom.representations = Representations;
+        UpdateTransforms();
         saveRoom.furnitureTransforms = FurnitureTransforms;
         saveRoom.representationTransforms = RepresentationTransforms;
 
