@@ -4,25 +4,36 @@ using UnityEngine.SceneManagement;
 
 public class Room
 {
-    // id is local to every user
+    [Tooltip("Id of the room local to every user")]
     public int ID { get; private set; }
-    // A list of the furniture prefabs that are in the room
+    [Tooltip("A list of the furniture prefabs that are in the room")]
     public List<GameObject> Furniture { get; private set; } = new List<GameObject>();
+    [Tooltip("A list of the furniture instances that are in the room after instantiation")]
     public List<GameObject> FurnitureInstances { get; private set; } = new List<GameObject>();
+    [Tooltip("A list of the representation prefabs that are in the room")]
     public List<GameObject> Representations { get; private set; } = new List<GameObject>();
+    [Tooltip("A list of the representation instances that are in the room after instantiation")]
     public List<GameObject> RepresentationInstances { get; private set; } = new List<GameObject>();
-
-    //TODO save the transforms of the instances here
+    [Tooltip("A list of the serialized transforms of the furniture instances in the room")]
     public List<SerializedTransform> FurnitureTransforms { get; private set; } = new List<SerializedTransform>();
+    [Tooltip("A list of the serialized transforms of the representation instances in the room")]
     public List<SerializedTransform> RepresentationTransforms { get; private set; } = new List<SerializedTransform>();
-
-    // JSON representation of the room, can be collected by user to generate a save file
+    [Tooltip("JSON representation of the room, can be collected by user to generate a save file")]
     public SaveRoom SaveData { get; private set; }
+
+    /// <summary>
+    /// Create a new room with the given id
+    /// </summary>
+    /// <param name="id">ID for the new room</param>
     public Room(int id)
     {
         ID = id;
     }
 
+    /// <summary>
+    /// Create a new room from a SaveRoom object from permanent storage
+    /// </summary>
+    /// <param name="saveRoom">The SaveRoom object that has been loaded from a save file</param>
     public Room(SaveRoom saveRoom)
     {
         SaveData = saveRoom;
@@ -31,37 +42,12 @@ public class Room
         Representations = saveRoom.representations;
         FurnitureTransforms = saveRoom.furnitureTransforms;
         RepresentationTransforms = saveRoom.representationTransforms;
-        // Transform newTransform = new GameObject().transform;
-        // // get the transforms from the save room and apply them to the furniture and representations
-        // if (Furniture != null && Furniture.Count != 0 && saveRoom.furnitureTransforms != null && saveRoom.furnitureTransforms.Count != 0)
-        // {
-        //     for (int i = 0; i < Furniture.Count; i++)
-        //     {
-        //         Debug.Log("LENA: Pre-error_:" + saveRoom.furniture.Count + " =? " + saveRoom.furnitureTransforms.Count);
-        //         newTransform.transform.position = new Vector3(saveRoom.furnitureTransforms[i]._position[0], saveRoom.furnitureTransforms[i]._position[1], saveRoom.furnitureTransforms[i]._position[2]);
-        //         newTransform.transform.rotation = new Quaternion(saveRoom.furnitureTransforms[i]._rotation[1], saveRoom.furnitureTransforms[i]._rotation[2], saveRoom.furnitureTransforms[i]._rotation[3], saveRoom.furnitureTransforms[i]._rotation[0]);
-        //         newTransform.transform.localScale = new Vector3(saveRoom.furnitureTransforms[i]._scale[0], saveRoom.furnitureTransforms[i]._scale[1], saveRoom.furnitureTransforms[i]._scale[2]);
-        //         FurnitureTransforms.Add(newTransform);
-        //         Debug.Log("LENA: The Transform of the furniture in the room has been set" + FurnitureTransforms[i].position);
-        //     }
-        //     Debug.Log("LENA: The Transform of the furniture 1 are" + FurnitureTransforms[0].position);
-        //     Debug.Log("LENA: The Transform of the furniture 2 are" + FurnitureTransforms[1].position);
-        //
-        // }
-        // if (Representations != null && Representations.Count != 0 && saveRoom.representationTransforms != null && saveRoom.representationTransforms.Count != 0)
-        // {
-        //     for (int i = 0; i < Representations.Count; i++)
-        //     {
-        //         newTransform = Representations[i].transform;
-        //         newTransform.transform.position = new Vector3(saveRoom.representationTransforms[i]._position[0], saveRoom.representationTransforms[i]._position[1], saveRoom.representationTransforms[i]._position[2]);
-        //         newTransform.transform.rotation = new Quaternion(saveRoom.representationTransforms[i]._rotation[1], saveRoom.representationTransforms[i]._rotation[2], saveRoom.representationTransforms[i]._rotation[3], saveRoom.representationTransforms[i]._rotation[0]);
-        //         newTransform.transform.localScale = new Vector3(saveRoom.representationTransforms[i]._scale[0], saveRoom.representationTransforms[i]._scale[1], saveRoom.representationTransforms[i]._scale[2]);
-        //     }
-        // }
-
-        Debug.Log("Room created from SaveRoom with ID: " + ID + " Furniture count: " + Furniture.Count);
     }
 
+    /// <summary>
+    /// Loads the transforms of the furniture and representation instances in the room after those are instantiated.
+    /// This cannot be called before the instances are created as Transform is a component of GameObject.
+    /// </summary>
     public void LoadTransforms()
     {
         if (FurnitureInstances.Count != 0)
@@ -74,7 +60,6 @@ public class Room
                     FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i]._position[0], FurnitureTransforms[i]._position[1], FurnitureTransforms[i]._position[2]);
                     FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i]._rotation[1], FurnitureTransforms[i]._rotation[2], FurnitureTransforms[i]._rotation[3], FurnitureTransforms[i]._rotation[0]);
                     FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i]._scale[0], FurnitureTransforms[i]._scale[1], FurnitureTransforms[i]._scale[2]);
-                    //FurnitureTransforms.Add(newTransform);
                 }
             }
         }
@@ -91,34 +76,60 @@ public class Room
             }
         }
     }
-    public void AddFurniture(GameObject furniture, GameObject instance)
+
+    /// <summary>
+    /// Add a furniture prefab to the list of furniture in the room.
+    /// And add the instance of the furniture to the list of furniture instances.
+    /// </summary>
+    /// <param name="prefab">The prefab of the added furniture</param>
+    /// <param name="instance">The instance of the added furniture</param>
+    public void AddFurniture(GameObject prefab, GameObject instance)
     {
-        this.Furniture.Add(furniture);
+        this.Furniture.Add(prefab);
         this.FurnitureInstances.Add(instance);
-        //this.FurnitureTransforms.Add(instance.transform);
-        //GameObject.Instantiate(furniture,new Vector3(1,1,0),Quaternion.identity);
     }
 
+    /// <summary>
+    /// Add a furniture instance to the list of furniture in the room.
+    /// Only after the furniture has been instantiated.
+    /// </summary>
+    /// <param name="instance">The furniture instance</param>
     public void AddFurnitureInstance(GameObject instance)
     {
         this.FurnitureInstances.Add(instance);
     }
 
-    // public void AddFurnitureTransform(Transform transform)
-    // {
-    //     //this.FurnitureTransforms.Add(transform);
-    // }
-
+    /// <summary>
+    /// Add a representation prefab to the list of representations in the room.
+    /// </summary>
+    /// <param name="representation">The prefab to add to the representations list</param>
     public void AddRepresentation(GameObject representation)
     {
         this.Representations.Add(representation);
     }
 
+    /// <summary>
+    /// Add a representation instance to the list of representations in the room.
+    /// Only after the representation has been instantiated.
+    /// </summary>
+    /// <param name="representationInstance"></param>
+    public void AddRepresentationInstance(GameObject representationInstance)
+    {
+        this.RepresentationInstances.Add(representationInstance);
+    }
+
+    /// <summary>
+    /// Returs whether the room has furniture or not.
+    /// </summary>
+    /// <returns>True if the room has furniture. False if not.</returns>
     public bool HasFurniture()
     {
         return Furniture.Count > 0;
     }
 
+    /// <summary>
+    /// Creates a SaveRoom object from the room and stores it in the SaveData property.
+    /// </summary>
     public void SaveRoom()
     {
         SaveRoom saveRoom = new SaveRoom();
@@ -128,13 +139,12 @@ public class Room
         UpdateTransforms();
         saveRoom.furnitureTransforms = FurnitureTransforms;
         saveRoom.representationTransforms = RepresentationTransforms;
-
-        Debug.Log("Saving the Transform of the furniture in the room");
-
         SaveData = saveRoom;
     }
 
-    //TODO call when transforms change
+    /// <summary>
+    /// Updates the list of furniture and representation transforms with the current transforms of the instances.
+    /// </summary>
     public void UpdateTransforms()
     {
         if (FurnitureInstances.Count != 0)

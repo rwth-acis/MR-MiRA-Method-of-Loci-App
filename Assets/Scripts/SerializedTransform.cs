@@ -4,12 +4,18 @@ using UnityEngine;
 [Serializable]
 public class SerializedTransform
 {
+    [Tooltip("The position of the transform")]
     public float[] _position = new float[3];
+    [Tooltip("The rotation of the transform")]
     public float[] _rotation = new float[4];
+    [Tooltip("The scale of the transform")]
     public float[] _scale = new float[3];
 
-
-    public SerializedTransform(Transform transform, bool worldSpace = false)
+    /// <summary>
+    /// Create a new serialized transform from a transform
+    /// </summary>
+    /// <param name="transform">The transform to be serialised</param>
+    public SerializedTransform(Transform transform)
     {
         _position[0] = transform.position.x;
         _position[1] = transform.position.y;
