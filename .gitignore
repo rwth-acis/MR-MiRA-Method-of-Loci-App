@@ -185,4 +185,10 @@ google-services.json
 # Android Profiling
 *.hprof
 
+# Additional folders and files (no template)
 .utmp/
+Assets/TextMesh Pro/
+Assets/TextMesh Pro.meta
+Assets/UI Samples/
+Assets/UI Samples.meta
+Assets/Samples/
