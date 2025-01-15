@@ -6,6 +6,8 @@ public class RoomManager : MonoBehaviour
 {
     [Tooltip("The instance of the RoomManager")]
     public static RoomManager Instance { get; private set; }
+    [Tooltip("The agent controller")]
+    public AgentController agentController;
     private List<User> _users = new List<User>();
     private User _currentUser;
     private Room _currentRoom;
@@ -31,6 +33,8 @@ public class RoomManager : MonoBehaviour
     void Start()
     {
         // TODO get name as input from user
+        // Find the agentcontroller in the scene
+        agentController = FindObjectOfType<AgentController>();
         LoadUser("Lena");
     }
 
@@ -135,11 +139,8 @@ public class RoomManager : MonoBehaviour
             Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
             for (int i = 0; i < roomFurniture.Count; i++)
             {
-                Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
-                Debug.Log("LENA: Instantiating furniture" + i + roomFurniture[i].transform.position);
                 GameObject myObject = GameObject.Instantiate(roomFurniture[i]);
                 myObject.tag = "Furniture";
-                Debug.Log("LENA:  " + room.FurnitureInstances.Count + "<=" + roomFurniture.Count);
                 room.AddFurnitureInstance(myObject);
             }
             room.LoadTransforms();

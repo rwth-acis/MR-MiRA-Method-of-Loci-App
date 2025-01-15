@@ -5,18 +5,29 @@ using i5.VirtualAgents.ScheduleBasedExecution;
 
 public class AgentController : MonoBehaviour
 {
-    // The agent which is controlled by this controller, set in the inspector
+    [Tooltip("The agent which is controlled by this controller")]
     public Agent agent;
-    // The taskSystem of the agent
+    [Tooltip("The task system of the agent")]
     protected ScheduleBasedTaskSystem taskSystem;
+    // The "center" eye anchor of the user
+    [Tooltip("The center eye anchor of the user")]
+    [SerializeField] public GameObject user;
+    [Tooltip("The audio clip for the introduction")]
     [SerializeField] public AudioClip introductionAudio;
+    [Tooltip("The audio clip for the MoL Explanation")]
     [SerializeField] public AudioClip MoLAudio;
+
+    [Tooltip("To check if the agent is following the user")]
+    private bool _isFollowingUser = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // Get the task system of the agent
         taskSystem = (ScheduleBasedTaskSystem)agent.TaskSystem;
-        // Play the introduction audio
+        // Turn to the user
+        FaceUser();
+        // TODO Play the introduction audio on the head layer
         AgentAudioTask audioTask = new AgentAudioTask(introductionAudio);
         taskSystem.ScheduleTask(audioTask);
         AgentAudioTask audioTask2 = new AgentAudioTask(MoLAudio);
@@ -26,6 +37,81 @@ public class AgentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Turn to the user
+        // If the user is too far away, and there is no walking task already, follow the user
+        if (Vector3.Distance(transform.position, user.transform.position) > 2 && !_isFollowingUser)
+        {
+            FollowUser();
+        }
+    }
+
+    /// <summary>
+    /// Turns the agent to face the user
+    /// </summary>
+    public void FaceUser()
+    {
+        float angle = Vector3.SignedAngle(agent.transform.forward, user.transform.position - agent.transform.position, Vector3.up);
+        AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
+        taskSystem.ScheduleTask(rotationTask);
+        _isFollowingUser = true;
+        rotationTask.OnTaskFinished += OnTaskFinished;
+    }
+
+    /// <summary>
+    /// Makes the agent point at a specific object
+    /// </summary>
+    /// <param name="gameObject">The object to point at</param>
+    public void PointAtObject(GameObject gameObject)
+    {
+        FaceUser();
+        taskSystem.Tasks.PointAt(gameObject, true);
+    }
+
+    /// <summary>
+    /// Makes the agent follow the user if the user is too far away and turn to face the user if the user is close
+    /// </summary>
+    public void FollowUser()
+    {
+        // Rotate if close enough to the user
+        if (Vector3.Distance(transform.position, user.transform.position) < 1)
+        {
+            FaceUser();
+        }
+        else
+        {
+            //AgentMovementTask task = (AgentMovementTask)taskSystem.Tasks.GoTo(user, default, default, true);
+            AgentMovementTask task = new AgentMovementTask(user, default, true);
+            task.MinDistance = 1;
+            taskSystem.ScheduleTask(task);
+            _isFollowingUser = true;
+            float angle = Vector3.SignedAngle(agent.transform.forward, user.transform.position - agent.transform.position, Vector3.up);
+            AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
+            taskSystem.ScheduleTask(rotationTask);
+            rotationTask.OnTaskFinished -= OnTaskFinished;
+            rotationTask.OnTaskFinished += OnTaskFinished;
+        }
+    }
+
+    /// <summary>
+    /// To control that the agent only has one follow task at a time
+    /// </summary>
+    private void OnTaskFinished()
+    {
+        _isFollowingUser = false;
+    }
+
+
+    public void GuideUserFurnishing()
+    {
+        //TODO
+    }
+
+    public void GuideUserEncodingInformation()
+    {
+        //TODO
+    }
+
+    public void GuideUserEmptyPalace()
+    {
+        //TODO
     }
 }
