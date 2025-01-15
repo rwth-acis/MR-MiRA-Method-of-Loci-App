@@ -2,6 +2,7 @@
   "dependencies": {
     "com.i5.virtualagents": "1.3.0",
     "com.meta.xr.sdk.all": "71.0.0",
+    "com.readyplayerme.core": "https://github.com/readyplayerme/rpm-unity-sdk-core.git",
     "com.unity.ai.navigation": "2.0.5",
     "com.unity.collab-proxy": "2.6.0",
     "com.unity.ide.rider": "3.0.34",
