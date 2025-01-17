@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class RoomManager : MonoBehaviour
 {
@@ -8,9 +9,15 @@ public class RoomManager : MonoBehaviour
     public static RoomManager Instance { get; private set; }
     [Tooltip("The agent controller")]
     public AgentController agentController;
+    public Material wallColour;
+    public List<GameObject> furniturePrefabs = new List<GameObject>();
+
     private List<User> _users = new List<User>();
+    private List<Color> _wallColours = new List<Color>();
+    private int _colourPointer;
     private User _currentUser;
     private Room _currentRoom;
+    private int _furniturePointer = 0;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -35,8 +42,11 @@ public class RoomManager : MonoBehaviour
         // TODO get name as input from user
         // Find the agentcontroller in the scene
         agentController = FindObjectOfType<AgentController>();
+        //Set up the colour list
+        colourListSetup();
         LoadUser("Lena");
     }
+
 
     /// <summary>
     /// Loads a user from a save file or creates a new user if the save file does not exist.
@@ -145,6 +155,12 @@ public class RoomManager : MonoBehaviour
             }
             room.LoadTransforms();
         }
+
+        if (room != null && room.WallColour != null)
+        {
+            wallColour.color = room.WallColour;
+            Debug.Log("Wall colour: " + room.WallColour);
+        }
     }
 
     /// <summary>
@@ -174,5 +190,126 @@ public class RoomManager : MonoBehaviour
     {
         _currentUser.SaveUser();
         LoadUser(username);
+    }
+
+    public void NextWallColour(bool value)
+    {
+        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
+        if (_colourPointer == _wallColours.Count - 1)
+        {
+            _colourPointer = 0;
+        }
+        else
+        {
+            _colourPointer++;
+        }
+        wallColour.color = _currentRoom.WallColour;
+        _currentRoom.SaveRoom();
+        Debug.Log("Wall colour: " + _currentRoom.WallColour);
+    }
+
+    public void PreviousWallColour(bool value)
+    {
+        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
+        if (_colourPointer == 0)
+        {
+            _colourPointer = _wallColours.Count - 1;
+        }
+        else
+        {
+            _colourPointer--;
+        }
+        wallColour.color = _currentRoom.WallColour;
+        _currentRoom.SaveRoom();
+        Debug.Log("Wall colour: " + _currentRoom.WallColour);
+    }
+
+    private void colourListSetup()
+    {
+        _wallColours.Add(Color.white);
+        _wallColours.Add(Color.yellow);
+        _wallColours.Add(new Color(1f,0.5f,0));
+        _wallColours.Add(Color.magenta);
+        _wallColours.Add(Color.red);
+        _wallColours.Add(Color.green);
+        _wallColours.Add(Color.cyan);
+        _wallColours.Add(Color.blue);
+        _wallColours.Add(new Color(0.6f,0.3f,1f));
+        _wallColours.Add(Color.grey);
+        _wallColours.Add(Color.black);
+        _colourPointer = 0;
+    }
+
+    /// <summary>
+    /// Shows the next furniture prefab in the list
+    /// </summary>
+    /// <param name="value"></param>
+    public void NextFurniture(bool value)
+    {
+        // Remove the last preview object
+        GameObject[] previewObjects = GameObject.FindGameObjectsWithTag("Preview");
+        foreach (GameObject obj in previewObjects)
+        {
+            GameObject.Destroy(obj);
+        }
+        if (_furniturePointer >= furniturePrefabs.Count - 1)
+        {
+            _furniturePointer = 0;
+        }
+        else
+        {
+            _furniturePointer ++;
+        }
+        // Instantiate the new preview object
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], Vector3.zero, Quaternion.identity);
+        newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        newObject.tag = "Preview";
+    }
+
+    /// <summary>
+    /// Show the previous furniture prefab in the list
+    /// </summary>
+    /// <param name="value"></param>
+    public void PreviousFurniture(bool value)
+    {
+        // Remove the last preview object
+        GameObject[] previewObjects = GameObject.FindGameObjectsWithTag("Preview");
+        foreach (GameObject obj in previewObjects)
+        {
+            GameObject.Destroy(obj);
+        }
+        if(_furniturePointer == 0)
+        {
+            _furniturePointer = furniturePrefabs.Count - 1;
+        }
+        else
+        {
+            _furniturePointer--;
+        }
+        // Instantiate the new preview object
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], Vector3.zero, Quaternion.identity);
+        newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        newObject.tag = "Preview";
+    }
+
+    /// <summary>
+    /// Lets the user place the selected furniture in the room
+    /// </summary>
+    /// <param name="value"></param>
+    public void SelectFurniture(bool value)
+    {
+        // Remove the last preview object
+        GameObject[] previewObjects = GameObject.FindGameObjectsWithTag("Preview");
+        foreach (GameObject obj in previewObjects)
+        {
+            GameObject.Destroy(obj);
+        }
+        // TODO find free floor space to place object
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], Vector3.zero, Quaternion.identity);
+        newObject.tag = "Furniture";
+        // Add furniture to the current room's list of furniture
+        _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
+        _currentRoom.UpdateTransforms();
+        _currentRoom.SaveRoom();
     }
 }

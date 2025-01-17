@@ -16,5 +16,7 @@ public class SaveRoom
     public List<SerializedTransform> furnitureTransforms = new List<SerializedTransform>();
     [Tooltip("A list of the serialized transforms to instantiate the representation instances")]
     public List<SerializedTransform> representationTransforms = new List<SerializedTransform>();
+    [Tooltip("The colour of the walls in the room")]
+    public Color wallColour;
 
 }
