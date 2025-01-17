@@ -10,7 +10,7 @@ public class MenuSpawner : MonoBehaviour
     void Start()
     {
         // Spawn the menu prefab
-        Instantiate(menuPrefab, user.transform.position + user.transform.forward + Vector3.up, user.transform.rotation);
+        GameObject menu = Instantiate(menuPrefab, user.transform.position + user.transform.forward + Vector3.up, user.transform.rotation);
     }
 
     // Update is called once per frame

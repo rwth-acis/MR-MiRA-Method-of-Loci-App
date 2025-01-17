@@ -23,6 +23,7 @@ TagManager:
   - QDSUIToggleSwitch
   - QDSUIToggleCheckboxRadio
   - Preview
+  - Menu
   layers:
   - Default
   - TransparentFX

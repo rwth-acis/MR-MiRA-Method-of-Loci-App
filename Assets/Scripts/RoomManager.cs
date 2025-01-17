@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -11,13 +12,17 @@ public class RoomManager : MonoBehaviour
     public AgentController agentController;
     public Material wallColour;
     public List<GameObject> furniturePrefabs = new List<GameObject>();
+    [Tooltip("The center eye anchor of the user")]
+    [SerializeField] public GameObject user;
 
     private List<User> _users = new List<User>();
+    private Camera _cam;
     private List<Color> _wallColours = new List<Color>();
     private int _colourPointer;
     private User _currentUser;
     private Room _currentRoom;
     private int _furniturePointer = 0;
+    private GameObject _menu;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -42,11 +47,32 @@ public class RoomManager : MonoBehaviour
         // TODO get name as input from user
         // Find the agentcontroller in the scene
         agentController = FindObjectOfType<AgentController>();
+        user = GameObject.Find("CenterEyeAnchor");
+        _menu = GameObject.FindGameObjectWithTag("Menu");
+        _cam = user.GetComponent(typeof(Camera)) as Camera;
         //Set up the colour list
         colourListSetup();
         LoadUser("Lena");
     }
 
+    private void Update()
+    {
+        // Check if the menu is within the user's field of view
+        Vector3 viewPos = _cam.WorldToViewportPoint(_menu.transform.position);
+        bool isVisible = viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0;
+
+        // If the menu is not visible, reposition it in front of the user
+        if (!isVisible)
+        {
+            Vector3 velocity = Vector3.zero;
+            Vector3 targetPosition = user.transform.TransformPoint(new Vector3(0, 0, 0.7f));
+            targetPosition.y = _menu.transform.position.y;
+            _menu.transform.position = Vector3.SmoothDamp(_menu.transform.position, targetPosition, ref velocity, 0.3f);
+            var lookAtPos = new Vector3(user.transform.position.x, _menu.transform.position.y, user.transform.position.z);
+            _menu.transform.LookAt(lookAtPos);
+            _menu.transform.Rotate(0, 180, 0);
+        }
+    }
 
     /// <summary>
     /// Loads a user from a save file or creates a new user if the save file does not exist.
