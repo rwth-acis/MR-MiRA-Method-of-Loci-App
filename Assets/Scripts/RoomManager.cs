@@ -287,7 +287,8 @@ public class RoomManager : MonoBehaviour
             _furniturePointer ++;
         }
         // Instantiate the new preview object
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], Vector3.zero, Quaternion.identity);
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
+        newObject.transform.parent = _menu.transform;
         newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         newObject.tag = "Preview";
     }
@@ -313,7 +314,8 @@ public class RoomManager : MonoBehaviour
             _furniturePointer--;
         }
         // Instantiate the new preview object
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], Vector3.zero, Quaternion.identity);
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
+        newObject.transform.parent = _menu.transform;
         newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         newObject.tag = "Preview";
     }
@@ -337,5 +339,44 @@ public class RoomManager : MonoBehaviour
         _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
         _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
+    }
+
+    private Vector3 findFreeFloorSpace()
+    {
+        return Vector3.zero;
+    }
+
+    private Vector3 findFreeFloatingSpace()
+    {
+        // Vector3 freeSpace = new Vector3(0, 0, 0);
+        // Vector3 viewPos = _cam.WorldToViewportPoint(freeSpace);
+        // bool isVisible = viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0;
+        // while (!isVisible)
+        // {
+        //     isVisible = viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0;
+        //     freeSpace += user.transform.right * 0.5f; // Adjust the offset as needed
+        //     if (!Physics.Raycast(user.transform.position, freeSpace - user.transform.position, out hit, 2f))
+        //     {
+        //         return freeSpace;
+        //     }
+        // }
+
+        Vector3 basePosition = user.transform.position + user.transform.forward * 1;
+        basePosition.y = user.transform.position.y;
+
+        float offset = 0.2f; // Distance to move left or right
+        int maxAttempts = 20; // Maximum number of attempts to find a free space
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            Vector3 freeSpace = basePosition + user.transform.right * (i % 2 == 0 ? offset * (i / 2) : -offset * (i / 2));
+
+            if (!Physics.Raycast(user.transform.position, freeSpace - user.transform.position, out RaycastHit hit, 2f))
+            {
+                return freeSpace;
+            }
+        }
+        Debug.Log("No free space found");
+        return basePosition;
     }
 }
