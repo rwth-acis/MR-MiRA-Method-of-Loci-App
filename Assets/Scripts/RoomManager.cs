@@ -332,8 +332,7 @@ public class RoomManager : MonoBehaviour
         {
             GameObject.Destroy(obj);
         }
-        // TODO find free floor space to place object
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], Vector3.zero, Quaternion.identity);
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
         newObject.tag = "Furniture";
         // Add furniture to the current room's list of furniture
         _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
@@ -341,26 +340,34 @@ public class RoomManager : MonoBehaviour
         _currentRoom.SaveRoom();
     }
 
-    private Vector3 findFreeFloorSpace()
+    private Vector3 findFreeFloorSpace(GameObject newObject)
     {
-        return Vector3.zero;
+        Vector3 basePosition = user.transform.position + user.transform.forward * 2;
+        basePosition.y = newObject.transform.position.y; // use the y position of the object to be placed
+
+        float offset = 0.2f; // Distance to move left or right
+        int maxAttempts = 20; // Maximum number of attempts to find a free space
+
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            Vector3 freeSpace = basePosition + user.transform.right * (i % 2 == 0 ? offset * (i / 2) : -offset * (i / 2));
+
+            if (!Physics.Raycast(user.transform.position, freeSpace - user.transform.position, out RaycastHit hit, 2f))
+            {
+                // Check if the space is on the ground
+                if (Physics.Raycast(freeSpace, Vector3.down, out RaycastHit groundHit, Mathf.Infinity))
+                {
+                    freeSpace.y = basePosition.y + groundHit.point.y;
+                    return freeSpace;
+                }
+            }
+        }
+        Debug.Log("No free space found");
+        return basePosition;
     }
 
     private Vector3 findFreeFloatingSpace()
     {
-        // Vector3 freeSpace = new Vector3(0, 0, 0);
-        // Vector3 viewPos = _cam.WorldToViewportPoint(freeSpace);
-        // bool isVisible = viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0;
-        // while (!isVisible)
-        // {
-        //     isVisible = viewPos.x >= 0 && viewPos.x <= 1 && viewPos.y >= 0 && viewPos.y <= 1 && viewPos.z > 0;
-        //     freeSpace += user.transform.right * 0.5f; // Adjust the offset as needed
-        //     if (!Physics.Raycast(user.transform.position, freeSpace - user.transform.position, out hit, 2f))
-        //     {
-        //         return freeSpace;
-        //     }
-        // }
-
         Vector3 basePosition = user.transform.position + user.transform.forward * 1;
         basePosition.y = user.transform.position.y;
 
