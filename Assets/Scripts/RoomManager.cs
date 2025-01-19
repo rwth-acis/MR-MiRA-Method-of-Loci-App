@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Oculus.Interaction;
+using Oculus.Interaction.HandGrab;
 
 public class RoomManager : MonoBehaviour
 {
@@ -50,6 +51,7 @@ public class RoomManager : MonoBehaviour
         user = GameObject.Find("CenterEyeAnchor");
         _menu = GameObject.FindGameObjectWithTag("Menu");
         _cam = user.GetComponent(typeof(Camera)) as Camera;
+
         //Set up the colour list
         colourListSetup();
         LoadUser("Lena");
@@ -72,6 +74,7 @@ public class RoomManager : MonoBehaviour
             _menu.transform.LookAt(lookAtPos);
             _menu.transform.Rotate(0, 180, 0);
         }
+
     }
 
     /// <summary>
@@ -334,6 +337,7 @@ public class RoomManager : MonoBehaviour
         }
         GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
         newObject.tag = "Furniture";
+
         // Add furniture to the current room's list of furniture
         _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
         _currentRoom.UpdateTransforms();

@@ -20,7 +20,7 @@ public class Room
     public List<SerializedTransform> RepresentationTransforms { get; private set; } = new List<SerializedTransform>();
     [Tooltip("JSON representation of the room, can be collected by user to generate a save file")]
 
-    public Color WallColour { get; private set; }
+    public Color WallColour { get; private set; } = Color.white;
     public SaveRoom SaveData { get; private set; }
 
     /// <summary>
