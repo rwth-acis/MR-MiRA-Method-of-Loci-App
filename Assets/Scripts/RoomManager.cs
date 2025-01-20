@@ -244,9 +244,14 @@ public class RoomManager : MonoBehaviour
                 room.LoadTransforms();
             }
         }
-        else
+        else if (layoutMode)
         {
             // TODO mark the loci on the transform positions of the representations
+            // Make sure the furniture is not grabbable in the layout mode
+            foreach (var furniture in room.FurnitureInstances)
+            {
+                furniture.GetComponentInChildren<Grabbable>().enabled = false;
+            }
         }
     }
 

@@ -4530,6 +4530,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UI: {fileID: 851712208}
   User: {fileID: 855758748}
+  layoutMode: 0
 --- !u!4 &558134626
 Transform:
   m_ObjectHideFlags: 0
