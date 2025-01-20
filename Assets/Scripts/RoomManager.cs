@@ -19,6 +19,7 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
+    public bool layoutMode { get; set; }
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -55,11 +56,16 @@ public class RoomManager : MonoBehaviour
         user = GameObject.Find("CenterEyeAnchor");
         _menu = GameObject.FindGameObjectWithTag("Menu");
         _cam = user.GetComponent(typeof(Camera)) as Camera;
-
+        ModeSelector mode = FindObjectOfType<ModeSelector>();
+        layoutMode = mode.layoutMode;
+        GameObject.Destroy(mode);
+        Debug.Log("Layout mode: " + layoutMode);
         //Set up the colour list
         colourListSetup();
         LoadUser("Lena");
     }
+
+
 
     private void Update()
     {
@@ -183,7 +189,6 @@ public class RoomManager : MonoBehaviour
     /// <param name="room">The room to be loaded</param>
     public void LoadRoom(Room room)
     {
-        Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
         room.FurnitureInstances.Clear();
         // Save the current room to JSON
         _currentRoom.SaveRoom();
@@ -194,6 +199,16 @@ public class RoomManager : MonoBehaviour
         {
             GameObject.Destroy(obj);
         }
+        if (!layoutMode)
+        {
+            room.RepresentationInstances.Clear();
+            GameObject[] allRepresentations = GameObject.FindGameObjectsWithTag("Information");
+            foreach (GameObject obj in allRepresentations)
+            {
+                GameObject.Destroy(obj);
+            }
+        }
+
         // Load the room
         Debug.Log("LENA: We are loading room " + room.ID);
         if (room != null && room.HasFurniture())
@@ -215,6 +230,24 @@ public class RoomManager : MonoBehaviour
             wallColour.color = room.WallColour;
             Debug.Log("Wall colour: " + room.WallColour);
         }
+        if(!layoutMode)
+        {
+            if (room != null && room.HasRepresentations())
+            {
+                List<GameObject> roomRepresentations = room.Representations;
+                for (int i = 0; i < roomRepresentations.Count; i++)
+                {
+                    GameObject myRepresentation = GameObject.Instantiate(roomRepresentations[i]);
+                    myRepresentation.tag = "Information";
+                    room.AddFurnitureInstance(myRepresentation);
+                }
+                room.LoadTransforms();
+            }
+        }
+        else
+        {
+            // TODO mark the loci on the transform positions of the representations
+        }
     }
 
     /// <summary>
@@ -223,15 +256,26 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Add Furniture"</param>
     public void AddFurniture(bool value)
     {
-        Debug.Log("LENA: Furniture added to room " + _currentUser.GetCurrentRoom().ID);
-        // Instantiate the furniture in the scene
+        // TODO this method is for testing
+        // Debug.Log("LENA: Furniture added to room " + _currentUser.GetCurrentRoom().ID);
+        // // Instantiate the furniture in the scene
+        // GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
+        // GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
+        // newObject.tag = "Furniture";
+        // newObject2.tag = "Furniture";
+        // // Add furniture to the current room's list of furniture
+        // _currentRoom.AddFurniture(furniture, newObject);
+        // _currentRoom.AddFurniture(furniture2, newObject2);
+        // _currentRoom.UpdateTransforms();
+        // _currentRoom.SaveRoom();
+
         GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
         GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
-        newObject.tag = "Furniture";
-        newObject2.tag = "Furniture";
+        newObject.tag = "Information";
+        newObject2.tag = "Information";
         // Add furniture to the current room's list of furniture
-        _currentRoom.AddFurniture(furniture, newObject);
-        _currentRoom.AddFurniture(furniture2, newObject2);
+        _currentRoom.AddRepresentation(furniture, newObject);
+        _currentRoom.AddRepresentation(furniture2, newObject2);
         _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
     }
