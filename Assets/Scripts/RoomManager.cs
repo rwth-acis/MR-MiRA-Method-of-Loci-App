@@ -11,8 +11,11 @@ public class RoomManager : MonoBehaviour
     public static RoomManager Instance { get; private set; }
     [Tooltip("The agent controller")]
     public AgentController agentController;
+    [Tooltip("The material for the walls")]
     public Material wallColour;
+    [Tooltip("The list of all furniture prefabs")]
     public List<GameObject> furniturePrefabs = new List<GameObject>();
+    [Tooltip("The list of all door prefabs")]
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
@@ -243,6 +246,10 @@ public class RoomManager : MonoBehaviour
         LoadUser(username);
     }
 
+    /// <summary>
+    ///  Change to the next wall colour in the list
+    /// </summary>
+    /// <param name="value">The value of the button "Next Wallcolour"</param>
     public void NextWallColour(bool value)
     {
         _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
@@ -259,6 +266,10 @@ public class RoomManager : MonoBehaviour
         Debug.Log("Wall colour: " + _currentRoom.WallColour);
     }
 
+    /// <summary>
+    /// Changes to the previous wall colour in the list
+    /// </summary>
+    /// <param name="value">The value of the button "Previous Wallcolour"</param>
     public void PreviousWallColour(bool value)
     {
         _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
@@ -275,6 +286,9 @@ public class RoomManager : MonoBehaviour
         Debug.Log("Wall colour: " + _currentRoom.WallColour);
     }
 
+    /// <summary>
+    /// To set up the list of colours for the walls
+    /// </summary>
     private void colourListSetup()
     {
         _wallColours.Add(Color.white);
@@ -294,7 +308,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Shows the next furniture prefab in the list
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the button "Next Furniture"</param>
     public void NextFurniture(bool value)
     {
         // Remove the last preview object
@@ -321,7 +335,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Show the previous furniture prefab in the list
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the button "Previous Furniture"</param>
     public void PreviousFurniture(bool value)
     {
         // Remove the last preview object
@@ -348,7 +362,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Lets the user place the selected furniture in the room
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the button "Select Furniture"</param>
     public void SelectFurniture(bool value)
     {
         // Remove the last preview object
@@ -366,6 +380,11 @@ public class RoomManager : MonoBehaviour
         _currentRoom.SaveRoom();
     }
 
+    /// <summary>
+    /// Finds a free space on the floor to place the object
+    /// </summary>
+    /// <param name="newObject">The object to be placed</param>
+    /// <returns>A free position on the ground</returns>
     private Vector3 findFreeFloorSpace(GameObject newObject)
     {
         Vector3 basePosition = user.transform.position + user.transform.forward;
@@ -392,6 +411,10 @@ public class RoomManager : MonoBehaviour
         return basePosition;
     }
 
+    /// <summary>
+    /// Finds a free space to place an object in the air
+    /// </summary>
+    /// <returns>A free position to float in front of the user</returns>
     private Vector3 findFreeFloatingSpace()
     {
         Vector3 basePosition = user.transform.position + user.transform.forward * 1;

@@ -4,10 +4,10 @@ using UnityEngine.Serialization;
 
 public class ObjectSnapper : MonoBehaviour
 {
-    [SerializeField]
-    public Grabbable grabbable;
-    [SerializeField]
-    public bool isDoor = false;
+    [Tooltip("The grabbable object to check for grabbing")]
+    [SerializeField] public Grabbable grabbable;
+    [Tooltip("Is the object a door")]
+    [SerializeField] public bool isDoor = false;
     private bool grabbed = false;
     private Renderer _renderer;
 
@@ -41,6 +41,9 @@ public class ObjectSnapper : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Snaps the object to the wall behind it
+    /// </summary>
     public void snapToWall()
     {
         if (_renderer == null)
@@ -57,6 +60,9 @@ public class ObjectSnapper : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(hit.normal);
     }
 
+    /// <summary>
+    /// Snaps the object to the floor and makes it upright
+    /// </summary>
     public void snapToFloor()
     {
         if (_renderer == null)
