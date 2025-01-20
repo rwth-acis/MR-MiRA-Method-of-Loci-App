@@ -6,6 +6,8 @@ public class ObjectSnapper : MonoBehaviour
 {
     [SerializeField]
     public Grabbable grabbable;
+    [SerializeField]
+    public bool isDoor = false;
     private bool grabbed = false;
     private Renderer _renderer;
 
@@ -28,6 +30,10 @@ public class ObjectSnapper : MonoBehaviour
         {
             if (grabbed)
             {
+                if (isDoor)
+                {
+                    snapToWall();
+                }
                 Debug.Log("I have been released!");
                 snapToFloor();
                 grabbed = false;
@@ -35,8 +41,28 @@ public class ObjectSnapper : MonoBehaviour
         }
     }
 
-    private void snapToFloor()
+    public void snapToWall()
     {
+        if (_renderer == null)
+        {
+            _renderer = GetComponent<Renderer>();
+        }
+        // find the wall behind the object
+        if( Physics.Raycast(transform.position, -transform.forward, out RaycastHit hit, Mathf.Infinity))
+        {
+            // set the position to be on the wall
+            transform.position = hit.point;
+        }
+        // find the right rotation to be parallel to the wall
+        transform.rotation = Quaternion.LookRotation(hit.normal);
+    }
+
+    public void snapToFloor()
+    {
+        if (_renderer == null)
+        {
+            _renderer = GetComponent<Renderer>();
+        }
         // set the rotation to be always upright
         transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 

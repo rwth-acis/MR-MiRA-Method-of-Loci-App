@@ -13,6 +13,7 @@ public class RoomManager : MonoBehaviour
     public AgentController agentController;
     public Material wallColour;
     public List<GameObject> furniturePrefabs = new List<GameObject>();
+    public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
 
@@ -112,11 +113,32 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "New Room"</param>
     public void CreateRoom(bool value)
     {
+        // add door to the current room
+        // TODO make sure that the rooms are actually connected
+        Quaternion rotation = Quaternion.LookRotation(- user.transform.forward);
+        GameObject door = GameObject.Instantiate(doorPrefabs[0], user.transform.position + user.transform.forward * 0.5f, rotation);
+        ObjectSnapper objectsnapper = door.GetComponent<ObjectSnapper>();
+        objectsnapper.snapToFloor();
+        objectsnapper.snapToWall();
+        _currentRoom.AddFurniture(doorPrefabs[0], door);
+        _currentRoom.UpdateTransforms();
+
+        // Create a new room
         int newRoomID = _currentUser.GetFreeRoomID();
         Room room = new Room(newRoomID);
         _currentUser.AddRoom(room);
         _currentRoom = _currentUser.GetCurrentRoom();
         LoadRoom(room);
+
+        // Add a door to the new room
+        door = GameObject.Instantiate(doorPrefabs[1], user.transform.position - user.transform.forward * 0.5f, user.transform.rotation);
+        objectsnapper = door.GetComponent<ObjectSnapper>();
+        objectsnapper.snapToFloor();
+        objectsnapper.snapToWall();
+        room.AddFurniture(doorPrefabs[1], door);
+        room.UpdateTransforms();
+
+        //LoadRoom(room);
         _currentRoom.SaveRoom();
     }
 
@@ -346,7 +368,7 @@ public class RoomManager : MonoBehaviour
 
     private Vector3 findFreeFloorSpace(GameObject newObject)
     {
-        Vector3 basePosition = user.transform.position + user.transform.forward * 2;
+        Vector3 basePosition = user.transform.position + user.transform.forward;
         basePosition.y = newObject.transform.position.y; // use the y position of the object to be placed
 
         float offset = 0.2f; // Distance to move left or right
