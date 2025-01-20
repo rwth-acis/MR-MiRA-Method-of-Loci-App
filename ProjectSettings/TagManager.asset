@@ -22,6 +22,9 @@ TagManager:
   - QDSUIToggleCheckbox
   - QDSUIToggleSwitch
   - QDSUIToggleCheckboxRadio
+  - Preview
+  - Menu
+  - Door
   layers:
   - Default
   - TransparentFX

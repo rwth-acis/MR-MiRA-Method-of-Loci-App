@@ -19,6 +19,8 @@ public class Room
     [Tooltip("A list of the serialized transforms of the representation instances in the room")]
     public List<SerializedTransform> RepresentationTransforms { get; private set; } = new List<SerializedTransform>();
     [Tooltip("JSON representation of the room, can be collected by user to generate a save file")]
+
+    public Color WallColour { get; private set; } = Color.white;
     public SaveRoom SaveData { get; private set; }
 
     /// <summary>
@@ -42,6 +44,7 @@ public class Room
         Representations = saveRoom.representations;
         FurnitureTransforms = saveRoom.furnitureTransforms;
         RepresentationTransforms = saveRoom.representationTransforms;
+        WallColour = saveRoom.wallColour;
     }
 
     /// <summary>
@@ -139,6 +142,7 @@ public class Room
         UpdateTransforms();
         saveRoom.furnitureTransforms = FurnitureTransforms;
         saveRoom.representationTransforms = RepresentationTransforms;
+        saveRoom.wallColour = WallColour;
         SaveData = saveRoom;
     }
 
@@ -156,6 +160,11 @@ public class Room
                 FurnitureTransforms.Add(newTransform);
             }
         }
+    }
+
+    public void ChangeWallColour(Color newColour)
+    {
+        WallColour = newColour;
     }
 }
 

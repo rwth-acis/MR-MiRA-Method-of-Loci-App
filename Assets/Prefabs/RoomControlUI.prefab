@@ -700,6 +700,34 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.29411766
       objectReference: {fileID: 0}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2399766939491347150}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PreviousWallColour
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388123542707080, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 2718388124227879421, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -765,6 +793,118 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2718388124268664710, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2399766939491347150}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextWallColour
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124436751316, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2399766939491347150}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextFurniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388124899946029, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2399766939491347150}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PreviousFurniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125113028231, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2399766939491347150}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectFurniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: RoomManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2718388125336960722, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
@@ -1237,6 +1377,10 @@ PrefabInstance:
       value: Label
       objectReference: {fileID: 0}
     - target: {fileID: 5285301184007029576, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: The next available furniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285301184007029576, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
       value: 0.8396226
       objectReference: {fileID: 0}
@@ -1261,6 +1405,10 @@ PrefabInstance:
       value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 5285301184196600802, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Going back to the last furniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285301184196600802, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
       value: 0.8396226
       objectReference: {fileID: 0}
@@ -1283,6 +1431,10 @@ PrefabInstance:
     - target: {fileID: 5285301184196600802, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285301184442438583, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Select the current funiture
       objectReference: {fileID: 0}
     - target: {fileID: 5285301184442438583, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -1363,6 +1515,10 @@ PrefabInstance:
     - target: {fileID: 5285301184695710490, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285301184760559341, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Changes to the last colour
       objectReference: {fileID: 0}
     - target: {fileID: 5285301184760559341, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -1451,6 +1607,10 @@ PrefabInstance:
     - target: {fileID: 5285301185510734563, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285301185678184113, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Changes the colour of the walls
       objectReference: {fileID: 0}
     - target: {fileID: 5285301185678184113, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -1624,6 +1784,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoomControlUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6067706442897525986, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_TagString
+      value: Menu
+      objectReference: {fileID: 0}
     - target: {fileID: 6067706442897525993, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1676,6 +1840,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7837598652746553599, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_Name
+      value: Next Furniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837598652800727125, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_Name
+      value: Previous Furniture
+      objectReference: {fileID: 0}
     - target: {fileID: 7837598653366937773, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Name
       value: AddFurniture
@@ -1684,6 +1856,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Back Button
       objectReference: {fileID: 0}
+    - target: {fileID: 7837598653653813248, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_Name
+      value: Select Furniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837598654107200858, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_Name
+      value: Previous Colour
+      objectReference: {fileID: 0}
+    - target: {fileID: 7837598654305506566, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_Name
+      value: Next Colour
+      objectReference: {fileID: 0}
     - target: {fileID: 7837598654740848980, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Name
       value: New Room Button
@@ -1691,6 +1875,10 @@ PrefabInstance:
     - target: {fileID: 7837598654767216431, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Name
       value: Forward Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 7909318750669672217, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Previous wall colour
       objectReference: {fileID: 0}
     - target: {fileID: 7909318750669672217, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -1715,6 +1903,10 @@ PrefabInstance:
     - target: {fileID: 7909318750669672217, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7909318750901811013, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Next Wall Colour
       objectReference: {fileID: 0}
     - target: {fileID: 7909318750901811013, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -1797,6 +1989,10 @@ PrefabInstance:
       value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 7909318751494535868, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Next Furniture
+      objectReference: {fileID: 0}
+    - target: {fileID: 7909318751494535868, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
       value: 0.96862745
       objectReference: {fileID: 0}
@@ -1819,6 +2015,10 @@ PrefabInstance:
     - target: {fileID: 7909318751494535868, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7909318751582378518, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Previous Furniture
       objectReference: {fileID: 0}
     - target: {fileID: 7909318751582378518, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -1899,6 +2099,10 @@ PrefabInstance:
     - target: {fileID: 7909318752089459449, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
+      objectReference: {fileID: 0}
+    - target: {fileID: 7909318752334686787, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_text
+      value: Select
       objectReference: {fileID: 0}
     - target: {fileID: 7909318752334686787, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_fontColor.b
@@ -2558,9 +2762,62 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d755f81678254439eff3296b16271e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agentController: {fileID: 0}
+  wallColour: {fileID: 2100000, guid: c1a9c65277d99cb4facd96535833d81a, type: 2}
+  furniturePrefabs:
+  - {fileID: 6684038756483129766, guid: 313766ad4577d074fac7838a43cb97e1, type: 3}
+  - {fileID: 3371889403479897360, guid: 63e87fd1bd3964644b53926f76ca26f7, type: 3}
+  - {fileID: 9060652066865877222, guid: e11d779f72c7b1d42ba9a8dc87d74ce8, type: 3}
+  - {fileID: 3223786888655241156, guid: 1bf7102c09703904e9431ab47f2743cd, type: 3}
+  - {fileID: 2242454540745681049, guid: 6aa15dc08eedc7e4e9a6d23eb831fb44, type: 3}
+  - {fileID: 9129287809186868970, guid: dd5d182d102fd5949b068e4fca216adf, type: 3}
+  - {fileID: 4903304975547840519, guid: ef86513f85a552c47aef1a377662d974, type: 3}
+  - {fileID: 3209446312675315739, guid: 516ca6f2d4ed84d45b1e2ec73ac585e9, type: 3}
+  - {fileID: 8043695712785971815, guid: 20bc502146d4cb1489f5e4f1a7d8b482, type: 3}
+  - {fileID: 2700445886263001910, guid: 40c4d97286151ce46a00f0bafc2d6c8f, type: 3}
+  - {fileID: 896236789921288260, guid: 73f1b719bd469f04aa2de7d8045b7f62, type: 3}
+  - {fileID: 9038504539748147171, guid: feef0316e508d284596feefaa73c5083, type: 3}
+  - {fileID: 1319848277915030399, guid: f9466d7086750b84c8340ccea16acfe9, type: 3}
+  - {fileID: 1643826376707978088, guid: 60f46b44efd78a34a9ff92b724ac412f, type: 3}
+  - {fileID: 8736676959807833442, guid: 4bba10785eb282f4c9c1afead8aa6859, type: 3}
+  - {fileID: 2606658692345023806, guid: 9fbbd9ce2b700344ab614733d4b9596a, type: 3}
+  - {fileID: 5960216419319758523, guid: c76eb3bd80794274eb027c6dcdaa79b0, type: 3}
+  - {fileID: 5342824736495175209, guid: c1a1e64bf3b2e7740b4d9895f9b9a767, type: 3}
+  - {fileID: 1856554923228117040, guid: ddf677e799ba38c4da7bb405a46fa8eb, type: 3}
+  - {fileID: 2205206193057132246, guid: 0fd9a8cad49906e4a82026c0ea76aabc, type: 3}
+  - {fileID: 4692057398140151779, guid: fd9071e43eeee1a4bbf078e6f0ec8f55, type: 3}
+  - {fileID: 841550293813249450, guid: ea1c6c505c8d6144ab1402d477f80254, type: 3}
+  - {fileID: 1983775766072712426, guid: 70da61713a3e9b046858efba21bdd284, type: 3}
+  - {fileID: 2053063158078073470, guid: 8bdb74054ff7a8a48bf463a35b00c8ac, type: 3}
+  - {fileID: 1972914432997548284, guid: a05e12a79149b6e4e9b4eae4b3a3e740, type: 3}
+  - {fileID: 177326017865874122, guid: cb950ad8710a35a4c8bfea09c7cd6a65, type: 3}
+  - {fileID: 579972277243233558, guid: c8b629a45316c8e4ab10de833c25bd6b, type: 3}
+  - {fileID: 6542704357614880943, guid: 39168dbec3672d641be85c74d88086eb, type: 3}
+  - {fileID: 5739362253645334182, guid: 9dabb4cdaba45634d916f03eefb07103, type: 3}
+  - {fileID: 6181368014548379174, guid: 7bbe3d1dd97744c42bbe520a1fb3ac33, type: 3}
+  - {fileID: 6131709956336915367, guid: 67b99ac42b06d06428ee4547b87794f8, type: 3}
+  - {fileID: 5048157033745156193, guid: 60bc01d319ead6b4db70ad71f9e15721, type: 3}
+  - {fileID: 6353005051026390307, guid: 08ec8a137b0f4a64cb5ee55ea4879dd1, type: 3}
+  - {fileID: 8745498839590357126, guid: 848fa6bad0c4b814b8d6002cf3384a80, type: 3}
+  - {fileID: 1724139097691146967, guid: 120b686cb88dcfc42b1c510567c3b20c, type: 3}
+  - {fileID: 8312433162926975474, guid: f4a860e570456634ebe3f9710ff9a91e, type: 3}
+  - {fileID: 8487394948254251890, guid: 5735d7dacd490964599798587ec90531, type: 3}
+  - {fileID: 7400064419051201561, guid: b6ea9d6db0fec654d9c1964cbefab85c, type: 3}
+  - {fileID: 9067349347614129221, guid: 993c131b38f0e25428d59a50d4fcb72e, type: 3}
+  - {fileID: 5624931994790575382, guid: a7eb39dca7cafa34bbf3b9836b3e5891, type: 3}
+  - {fileID: 4660741602098330451, guid: 67e16cb461428f540809d21ff02e15d3, type: 3}
+  - {fileID: 6440434382334916255, guid: 61630183fdc7d7540b2589abacb8f11f, type: 3}
+  - {fileID: 2818752148726330190, guid: 1a102286b4b473842abedad01797c4b0, type: 3}
+  - {fileID: 5472854390928152214, guid: a68cefb7a46576646b8f64cafce3d48e, type: 3}
+  - {fileID: 8045354405652630556, guid: 412c7dcc232f0504891df9f880d8df53, type: 3}
+  - {fileID: 3064114817254561904, guid: 97f7094f9f960ca4dab9c1c92473eb93, type: 3}
+  - {fileID: 1601310253868775884, guid: ce2c28f5bc134b24bbd51e5dd4e45169, type: 3}
+  doorPrefabs:
+  - {fileID: 3225825741913464838, guid: d4b129be19f96fb4f810b5fd537c885d, type: 3}
+  - {fileID: 2780178273917619693, guid: 46cd76a4427e5cc40903eee4d6f65c08, type: 3}
+  user: {fileID: 0}
   furniture: {fileID: 4101571906190343619, guid: e9541b79d99cf3c46afa99ccb5c30f96, type: 3}
   furniture2: {fileID: 6282513184797030826, guid: db9d3fa4633dd104b8b29ddcba1ba680, type: 3}
-  json: 
 --- !u!224 &1262246705847404927 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6067706443764739711, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
