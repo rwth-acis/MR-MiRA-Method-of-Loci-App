@@ -59,6 +59,10 @@ public class RoomManager : MonoBehaviour
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
         GameObject.Destroy(mode);
+        if (layoutMode)
+        {
+            agentController.DeactivateAgent();
+        }
         Debug.Log("Layout mode: " + layoutMode);
         //Set up the colour list
         colourListSetup();
