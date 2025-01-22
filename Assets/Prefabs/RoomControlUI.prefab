@@ -2816,6 +2816,7 @@ MonoBehaviour:
   - {fileID: 3225825741913464838, guid: d4b129be19f96fb4f810b5fd537c885d, type: 3}
   - {fileID: 2780178273917619693, guid: 46cd76a4427e5cc40903eee4d6f65c08, type: 3}
   user: {fileID: 0}
+  locusHalo: {fileID: 4524853151991134021, guid: 91144a21c08577b4a9a43c2249bfaf55, type: 3}
   furniture: {fileID: 4101571906190343619, guid: e9541b79d99cf3c46afa99ccb5c30f96, type: 3}
   furniture2: {fileID: 6282513184797030826, guid: db9d3fa4633dd104b8b29ddcba1ba680, type: 3}
 --- !u!224 &1262246705847404927 stripped

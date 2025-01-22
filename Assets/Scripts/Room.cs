@@ -18,7 +18,8 @@ public class Room
     public List<SerializedTransform> FurnitureTransforms { get; private set; } = new List<SerializedTransform>();
     [Tooltip("A list of the serialized transforms of the representation instances in the room")]
     public List<SerializedTransform> RepresentationTransforms { get; private set; } = new List<SerializedTransform>();
-    [Tooltip("JSON representation of the room, can be collected by user to generate a save file")]
+    [Tooltip("A list of the loci in the room, represented by halo objects")]
+    public List<GameObject> Loci { get; private set; } = new List<GameObject>();
 
     public Color WallColour { get; private set; } = Color.white;
     public SaveRoom SaveData { get; private set; }
@@ -81,6 +82,26 @@ public class Room
     }
 
     /// <summary>
+    /// Loads the transforms of the loci after images to mark them are instantiated.
+    /// This cannot be called before the instances are created as Transform is a component of GameObject.
+    /// </summary>
+    public void LoadTransformsLoci()
+    {
+        if (Loci.Count != 0)
+        {
+            if (Representations != null && Representations.Count != 0 && RepresentationTransforms != null && RepresentationTransforms.Count != 0)
+            {
+                for (int i = 0; i < Loci.Count; i++)
+                {
+                    Loci[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
+                    Loci[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
+                    Loci[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Add a furniture prefab to the list of furniture in the room.
     /// And add the instance of the furniture to the list of furniture instances.
     /// </summary>
@@ -100,6 +121,15 @@ public class Room
     public void AddFurnitureInstance(GameObject instance)
     {
         this.FurnitureInstances.Add(instance);
+    }
+
+    /// <summary>
+    /// Add a locus halo instance to the list of Loci
+    /// </summary>
+    /// <param name="locus"></param>
+    public void AddLocusInstance(GameObject locus)
+    {
+        this.Loci.Add(locus);
     }
 
     /// <summary>
@@ -171,7 +201,7 @@ public class Room
             for (int i = 0; i < RepresentationInstances.Count; i++)
             {
                 SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
-                FurnitureTransforms.Add(newRepTransform);
+                RepresentationTransforms.Add(newRepTransform);
             }
         }
     }

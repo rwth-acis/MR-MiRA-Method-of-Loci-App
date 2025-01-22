@@ -19,6 +19,8 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
+    [Tooltip("The locus halo")]
+    [SerializeField] public GameObject locusHalo;
     [Tooltip("Whether the layout mode is active")]
     public bool layoutMode { get; set; }
 
@@ -194,7 +196,12 @@ public class RoomManager : MonoBehaviour
     /// <param name="room">The room to be loaded</param>
     public void LoadRoom(Room room)
     {
+        //_currentRoom.UpdateTransforms();
+        // We clear the instances of the *new* room, to forgo issues with old instances having no transforms, etc...
         room.FurnitureInstances.Clear();
+        room.RepresentationInstances.Clear();
+        room.Loci.Clear();
+
         // Save the current room to JSON
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
@@ -207,6 +214,7 @@ public class RoomManager : MonoBehaviour
         if (!layoutMode)
         {
             room.RepresentationInstances.Clear();
+            room.Loci.Clear();
             GameObject[] allRepresentations = GameObject.FindGameObjectsWithTag("Information");
             foreach (GameObject obj in allRepresentations)
             {
@@ -244,14 +252,26 @@ public class RoomManager : MonoBehaviour
                 {
                     GameObject myRepresentation = GameObject.Instantiate(roomRepresentations[i]);
                     myRepresentation.tag = "Information";
-                    room.AddFurnitureInstance(myRepresentation);
+                    room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
             }
         }
         else if (layoutMode)
         {
-            // TODO mark the loci on the transform positions of the representations
+            // mark the loci on the transform positions of the representations
+            foreach (var loci in room.Representations)
+            {
+                GameObject myLocus = GameObject.Instantiate(locusHalo, loci.transform.position, Quaternion.identity);
+                myLocus.tag = "Information";
+                room.AddLocusInstance(myLocus);
+            }
+            room.LoadTransformsLoci();
+            foreach (var loci in room.Loci)
+            {
+                ObjectSnapper objectsnapper = loci.GetComponent<ObjectSnapper>();
+                objectsnapper.snapToFloor();
+            }
             // Make sure the furniture is not grabbable in the layout mode
             foreach (var furniture in room.FurnitureInstances)
             {
