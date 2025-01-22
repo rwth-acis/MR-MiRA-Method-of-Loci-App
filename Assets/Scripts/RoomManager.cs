@@ -19,6 +19,7 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
+    [Tooltip("Whether the layout mode is active")]
     public bool layoutMode { get; set; }
 
     private List<User> _users = new List<User>();
