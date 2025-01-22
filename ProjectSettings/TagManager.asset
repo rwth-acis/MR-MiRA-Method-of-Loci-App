@@ -25,6 +25,12 @@ TagManager:
   - Preview
   - Menu
   - Door
+  - Locomotion
+  - PassThrough
+  - PassThroughButton
+  - LocoButton
+  - LocoText
+  - Information
   layers:
   - Default
   - TransparentFX

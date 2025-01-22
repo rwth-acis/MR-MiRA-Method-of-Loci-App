@@ -106,9 +106,10 @@ public class Room
     /// Add a representation prefab to the list of representations in the room.
     /// </summary>
     /// <param name="representation">The prefab to add to the representations list</param>
-    public void AddRepresentation(GameObject representation)
+    public void AddRepresentation(GameObject representation, GameObject instance)
     {
         this.Representations.Add(representation);
+        this.RepresentationInstances.Add(instance);
     }
 
     /// <summary>
@@ -128,6 +129,10 @@ public class Room
     public bool HasFurniture()
     {
         return Furniture.Count > 0;
+    }
+    public bool HasRepresentations()
+    {
+        return Representations.Count > 0;
     }
 
     /// <summary>
@@ -160,11 +165,21 @@ public class Room
                 FurnitureTransforms.Add(newTransform);
             }
         }
+        if (RepresentationInstances.Count != 0)
+        {
+            RepresentationTransforms.Clear();
+            for (int i = 0; i < RepresentationInstances.Count; i++)
+            {
+                SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
+                FurnitureTransforms.Add(newRepTransform);
+            }
+        }
     }
 
     public void ChangeWallColour(Color newColour)
     {
         WallColour = newColour;
     }
+
 }
 

@@ -23,6 +23,7 @@ public class AgentController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        ActivateAgent();
         // Get the task system of the agent
         taskSystem = (ScheduleBasedTaskSystem)agent.TaskSystem;
         // Turn to the user
@@ -113,5 +114,15 @@ public class AgentController : MonoBehaviour
     public void GuideUserEmptyPalace()
     {
         //TODO
+    }
+
+    public void DeactivateAgent()
+    {
+        agent.gameObject.SetActive(false);
+    }
+
+    public void ActivateAgent()
+    {
+        agent.gameObject.SetActive(true);
     }
 }
