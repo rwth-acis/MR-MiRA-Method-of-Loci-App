@@ -19,7 +19,11 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
+    [Tooltip("The locus halo")]
+    [SerializeField] public GameObject locusHalo;
+    [Tooltip("Whether the layout mode is active")]
     public bool layoutMode { get; set; }
+    public bool reusePalace { get; set; }
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -58,8 +62,9 @@ public class RoomManager : MonoBehaviour
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
+        reusePalace = mode.reuseMode;
         GameObject.Destroy(mode);
-        if (layoutMode)
+        if (layoutMode && !reusePalace)
         {
             agentController.DeactivateAgent();
         }
@@ -193,7 +198,12 @@ public class RoomManager : MonoBehaviour
     /// <param name="room">The room to be loaded</param>
     public void LoadRoom(Room room)
     {
+        //_currentRoom.UpdateTransforms();
+        // We clear the instances of the *new* room, to forgo issues with old instances having no transforms, etc...
         room.FurnitureInstances.Clear();
+        room.RepresentationInstances.Clear();
+        room.Loci.Clear();
+
         // Save the current room to JSON
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
@@ -203,14 +213,13 @@ public class RoomManager : MonoBehaviour
         {
             GameObject.Destroy(obj);
         }
-        if (!layoutMode)
+        room.RepresentationInstances.Clear();
+        room.Loci.Clear();
+        // Deletes either the representations or the loci halo objects
+        GameObject[] allRepresentations = GameObject.FindGameObjectsWithTag("Information");
+        foreach (GameObject obj in allRepresentations)
         {
-            room.RepresentationInstances.Clear();
-            GameObject[] allRepresentations = GameObject.FindGameObjectsWithTag("Information");
-            foreach (GameObject obj in allRepresentations)
-            {
-                GameObject.Destroy(obj);
-            }
+            GameObject.Destroy(obj);
         }
 
         // Load the room
@@ -243,20 +252,49 @@ public class RoomManager : MonoBehaviour
                 {
                     GameObject myRepresentation = GameObject.Instantiate(roomRepresentations[i]);
                     myRepresentation.tag = "Information";
-                    room.AddFurnitureInstance(myRepresentation);
+                    room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
             }
         }
         else if (layoutMode)
         {
-            // TODO mark the loci on the transform positions of the representations
+            // mark the loci on the transform positions of the representations
+            foreach (var loci in room.Representations)
+            {
+                GameObject myLocus = GameObject.Instantiate(locusHalo, loci.transform.position, Quaternion.identity);
+                myLocus.tag = "Information";
+                room.AddLocusInstance(myLocus);
+            }
+            room.LoadTransformsLoci();
+            foreach (var loci in room.Loci)
+            {
+                ObjectSnapper objectsnapper = loci.GetComponent<ObjectSnapper>();
+                objectsnapper.snapToFloor();
+            }
             // Make sure the furniture is not grabbable in the layout mode
             foreach (var furniture in room.FurnitureInstances)
             {
                 furniture.GetComponentInChildren<Grabbable>().enabled = false;
             }
         }
+
+        if (reusePalace)
+        {
+            // Show all the representations that have been replaced already
+            if (room != null && room.HasRepresentations())
+            {
+                List<GameObject> roomRepresentations = room.Representations;
+                for (int i = 0; i < room.ReplacingLocusIndex; i++)
+                {
+                    GameObject myRepresentation = GameObject.Instantiate(roomRepresentations[i]);
+                    myRepresentation.tag = "Information";
+                    room.AddRepresentationInstance(myRepresentation);
+                }
+                room.LoadTransforms();
+            }
+        }
+
     }
 
     /// <summary>
@@ -277,14 +315,19 @@ public class RoomManager : MonoBehaviour
         // _currentRoom.AddFurniture(furniture2, newObject2);
         // _currentRoom.UpdateTransforms();
         // _currentRoom.SaveRoom();
-
-        GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
-        GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
-        newObject.tag = "Information";
-        newObject2.tag = "Information";
-        // Add furniture to the current room's list of furniture
-        _currentRoom.AddRepresentation(furniture, newObject);
-        _currentRoom.AddRepresentation(furniture2, newObject2);
+        if (reusePalace)
+        {
+            // Replacing the old representation with a new one
+            GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
+            newObject2.tag = "Information";
+            _currentRoom.ReplaceRepresentation(0, furniture2, newObject2);
+        }
+        else
+        {
+            GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
+            newObject.tag = "Information";
+            _currentRoom.AddRepresentation(furniture, newObject);
+        }
         _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
     }

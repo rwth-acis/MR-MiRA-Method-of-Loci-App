@@ -18,6 +18,10 @@ public class ObjectSnapper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(grabbable == null)
+        {
+            return;
+        }
         if (grabbable.SelectingPointsCount > 0)
         {
             if(!grabbed)

@@ -116,11 +116,17 @@ public class AgentController : MonoBehaviour
         //TODO
     }
 
+    /// <summary>
+    /// Deactivate the agent
+    /// </summary>
     public void DeactivateAgent()
     {
         agent.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Activate the agent
+    /// </summary>
     public void ActivateAgent()
     {
         agent.gameObject.SetActive(true);
