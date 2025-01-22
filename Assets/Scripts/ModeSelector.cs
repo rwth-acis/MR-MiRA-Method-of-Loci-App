@@ -10,6 +10,7 @@ public class ModeSelector : MonoBehaviour
     [SerializeField] public GameObject User;
     [Tooltip("Whether the layout mode is selected")]
     public bool layoutMode;
+    public bool reuseMode = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -36,6 +37,17 @@ public class ModeSelector : MonoBehaviour
     {
         SceneManager.LoadScene("Room 1");
         layoutMode = true;
+    }
+
+    /// <summary>
+    /// Loads the palace with no information objects and the user can choose new ones
+    /// </summary>
+    /// <param name="value">Teh value of the corresponding button</param>
+    public void ReusePalace(bool value)
+    {
+        SceneManager.LoadScene("Room 1");
+        layoutMode = true;
+        reuseMode = true;
     }
 
 }

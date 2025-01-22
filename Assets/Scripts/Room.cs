@@ -24,6 +24,9 @@ public class Room
     public Color WallColour { get; private set; } = Color.white;
     public SaveRoom SaveData { get; private set; }
 
+    [Tooltip("The index of the locus to be replaced next")]
+    public int ReplacingLocusIndex { get; private set; } = 0;
+
     /// <summary>
     /// Create a new room with the given id
     /// </summary>
@@ -186,22 +189,29 @@ public class Room
     /// </summary>
     public void UpdateTransforms()
     {
-        if (FurnitureInstances.Count != 0)
+        if(Loci.Count != 0 && RepresentationInstances.Count != 0)
         {
-            FurnitureTransforms.Clear();
-            for (int i = 0; i < FurnitureInstances.Count; i++)
-            {
-                SerializedTransform newTransform = new SerializedTransform(FurnitureInstances[i].transform);
-                FurnitureTransforms.Add(newTransform);
-            }
+            // Do not change the transforms when reusing the room
         }
-        if (RepresentationInstances.Count != 0)
+        else
         {
-            RepresentationTransforms.Clear();
-            for (int i = 0; i < RepresentationInstances.Count; i++)
+            if (FurnitureInstances.Count != 0)
             {
-                SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
-                RepresentationTransforms.Add(newRepTransform);
+                FurnitureTransforms.Clear();
+                for (int i = 0; i < FurnitureInstances.Count; i++)
+                {
+                    SerializedTransform newTransform = new SerializedTransform(FurnitureInstances[i].transform);
+                    FurnitureTransforms.Add(newTransform);
+                }
+            }
+            if (RepresentationInstances.Count != 0)
+            {
+                RepresentationTransforms.Clear();
+                for (int i = 0; i < RepresentationInstances.Count; i++)
+                {
+                    SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
+                    RepresentationTransforms.Add(newRepTransform);
+                }
             }
         }
     }
@@ -209,6 +219,13 @@ public class Room
     public void ChangeWallColour(Color newColour)
     {
         WallColour = newColour;
+    }
+
+    public void ReplaceRepresentation(int index, GameObject newRepresentation, GameObject newRepresentationInstance)
+    {
+        Representations[index] = newRepresentation;
+        RepresentationInstances.Add(newRepresentationInstance);
+        ReplacingLocusIndex = index + 1;
     }
 
 }
