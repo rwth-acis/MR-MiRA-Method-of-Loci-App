@@ -16,6 +16,5 @@ public class MenuSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // TODO: Follow User
     }
 }

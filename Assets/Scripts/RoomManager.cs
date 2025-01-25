@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Oculus.Interaction;
-using Oculus.Interaction.HandGrab;
 
 public class RoomManager : MonoBehaviour
 {
@@ -510,6 +509,10 @@ public class RoomManager : MonoBehaviour
         return basePosition;
     }
 
+    /// <summary>
+    /// Adds a GameObject to the current room, its transform will be saved as a loci
+    /// </summary>
+    /// <param name="loci">The GameObject to place</param>
     public void AddLoci(GameObject loci)
     {
         if (reusePalace)

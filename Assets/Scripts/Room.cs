@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Room
 {
@@ -216,11 +215,21 @@ public class Room
         }
     }
 
+    /// <summary>
+    /// Changes the colour of the walls in the room.
+    /// </summary>
+    /// <param name="newColour">The new colour of the walls</param>
     public void ChangeWallColour(Color newColour)
     {
         WallColour = newColour;
     }
 
+    /// <summary>
+    /// Replaces the representation at the given index with the new representation.
+    /// </summary>
+    /// <param name="index">The index in the Representation List</param>
+    /// <param name="newRepresentation">The prefab of the new Representation</param>
+    /// <param name="newRepresentationInstance">The instantiated GameObject of the new Representation</param>
     public void ReplaceRepresentation(int index, GameObject newRepresentation, GameObject newRepresentationInstance)
     {
         Representations[index] = newRepresentation;
