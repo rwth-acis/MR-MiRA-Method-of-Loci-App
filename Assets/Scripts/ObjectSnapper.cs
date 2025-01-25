@@ -73,6 +73,21 @@ public class ObjectSnapper : MonoBehaviour
         {
             _renderer = GetComponent<Renderer>();
         }
+        // check if the root object has a renderer at all
+        if (_renderer == null)
+        {
+            // Search for the lowest renderer in the children
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            float lowestY = float.MaxValue;
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer.bounds.min.y < lowestY)
+                {
+                    _renderer = renderer;
+                    lowestY = renderer.bounds.min.y;
+                }
+            }
+        }
         // set the rotation to be always upright
         transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 

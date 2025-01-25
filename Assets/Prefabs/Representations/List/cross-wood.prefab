@@ -154,6 +154,18 @@ PrefabInstance:
       value: cross-wood
       objectReference: {fileID: 0}
     - target: {fileID: 7519552348580473784, guid: d5a2d85ffb2937e43b74c1edb72d5adc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7519552348580473784, guid: d5a2d85ffb2937e43b74c1edb72d5adc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7519552348580473784, guid: d5a2d85ffb2937e43b74c1edb72d5adc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7519552348580473784, guid: d5a2d85ffb2937e43b74c1edb72d5adc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.1507812
       objectReference: {fileID: 0}

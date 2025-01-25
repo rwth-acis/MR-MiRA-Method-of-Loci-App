@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 844af7d0-116c-47e4-a8f4-fe04b1e227f8
+  instanceId: ff107591-aed1-4afc-99ee-dab26d487723
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -152,6 +152,18 @@ PrefabInstance:
     - target: {fileID: -3020367004098383252, guid: 5ddaabba2004fe7448c175686d184e8b, type: 3}
       propertyPath: m_Name
       value: animal-dog
+      objectReference: {fileID: 0}
+    - target: {fileID: 164296697696952850, guid: 5ddaabba2004fe7448c175686d184e8b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 164296697696952850, guid: 5ddaabba2004fe7448c175686d184e8b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 164296697696952850, guid: 5ddaabba2004fe7448c175686d184e8b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 164296697696952850, guid: 5ddaabba2004fe7448c175686d184e8b, type: 3}
       propertyPath: m_LocalPosition.x

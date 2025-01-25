@@ -531,4 +531,24 @@ public class RoomManager : MonoBehaviour
         Debug.Log("No free space found");
         return basePosition;
     }
+
+    public void AddLoci(GameObject loci)
+    {
+        if (reusePalace)
+        {
+            //TODO finish this with new menu
+            // Replacing the old representation with a new one
+            GameObject newObject2 = GameObject.Instantiate(loci, Vector3.zero, Quaternion.identity);
+            newObject2.tag = "Information";
+            _currentRoom.ReplaceRepresentation(0, loci, newObject2);
+        }
+        else
+        {
+            GameObject newObject = GameObject.Instantiate(loci, Vector3.zero, Quaternion.identity);
+            newObject.tag = "Information";
+            _currentRoom.AddRepresentation(loci, newObject);
+        }
+        _currentRoom.UpdateTransforms();
+        _currentRoom.SaveRoom();
+    }
 }

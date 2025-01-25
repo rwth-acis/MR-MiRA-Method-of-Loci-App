@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: f2ab6d21-cea7-40f3-b260-e2223926983f
+  instanceId: 9f1484c0-3930-47f9-b500-07597842dd58
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -152,6 +152,18 @@ PrefabInstance:
     - target: {fileID: -2831338154730346832, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
       propertyPath: m_Name
       value: air-hockey
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773038939299672582, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773038939299672582, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1773038939299672582, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 1773038939299672582, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
       propertyPath: m_LocalPosition.x

@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: cd3e840c-187d-4866-a880-346de4fe7f36
+  instanceId: 5525387c-f1cb-4d16-b738-191f0cba1a5c
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -149,6 +149,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f1690c73cdd690a47a869b4c4d7fe706, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1690c73cdd690a47a869b4c4d7fe706, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f1690c73cdd690a47a869b4c4d7fe706, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f1690c73cdd690a47a869b4c4d7fe706, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

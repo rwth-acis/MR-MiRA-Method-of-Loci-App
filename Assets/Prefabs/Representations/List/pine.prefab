@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 606a7566-04a9-4c55-aadf-289ba10b9297
+  instanceId: f3ebd136-acc3-4ffe-a3ea-487f3dba2ecb
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -152,6 +152,18 @@ PrefabInstance:
     - target: {fileID: 3313953846629047715, guid: 050622e5a4d999245a83b7d596623ddc, type: 3}
       propertyPath: m_Name
       value: pine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659070461969225439, guid: 050622e5a4d999245a83b7d596623ddc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659070461969225439, guid: 050622e5a4d999245a83b7d596623ddc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659070461969225439, guid: 050622e5a4d999245a83b7d596623ddc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 7659070461969225439, guid: 050622e5a4d999245a83b7d596623ddc, type: 3}
       propertyPath: m_LocalPosition.x

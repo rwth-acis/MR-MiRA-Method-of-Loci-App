@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockId: f8766c17-aaf8-4b55-9431-de8deea83842
-  instanceId: 38e3754d-815f-460e-a5dc-ad1247c8baae
+  instanceId: 74764362-9f88-45cb-8c98-95b85ad73fb1
   version: 1
   installationRoutineCheckpoint:
     _installationRoutineId: f8338144-8280-4ff6-9455-ae2bb9c20fe8
@@ -152,6 +152,18 @@ PrefabInstance:
     - target: {fileID: -8663648286939952519, guid: 17a2ff4c4faffb34a81c9ad205339dfd, type: 3}
       propertyPath: m_Name
       value: animal-horse
+      objectReference: {fileID: 0}
+    - target: {fileID: -4961580266023904195, guid: 17a2ff4c4faffb34a81c9ad205339dfd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: -4961580266023904195, guid: 17a2ff4c4faffb34a81c9ad205339dfd, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: -4961580266023904195, guid: 17a2ff4c4faffb34a81c9ad205339dfd, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: -4961580266023904195, guid: 17a2ff4c4faffb34a81c9ad205339dfd, type: 3}
       propertyPath: m_LocalPosition.x
