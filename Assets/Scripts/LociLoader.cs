@@ -33,6 +33,7 @@ public class LociLoader : MonoBehaviour
         LociCarsPreview = new List<Texture2D>();
         LociPeoplePreview = new List<Texture2D>();
         LociAnimalsPreview = new List<Texture2D>();
+        RuntimePreviewGenerator.OrthographicMode = true;
         foreach (GameObject loci in LociObjects)
         {
             LociPreview.Add(RuntimePreviewGenerator.GenerateModelPreview(loci.transform));
@@ -115,7 +116,7 @@ public class LociLoader : MonoBehaviour
 
     public void LoadCars(bool value)
     {
-        Title.GetComponent<TextMeshProUGUI>().text = "Autos";
+        Title.GetComponent<TextMeshProUGUI>().text = "Fahrzeuge";
         foreach (Transform child in Content.transform)
         {
             Destroy(child.gameObject);
@@ -159,5 +160,15 @@ public class LociLoader : MonoBehaviour
             currentButton.transform.Find("Content/Background/Elements/Space").GetComponent<RawImage>().texture = LociAnimalsPreview[LociAnimals.IndexOf(animal)];
             currentButton.transform.GetComponent<Toggle>().onValueChanged.AddListener(delegate { RoomManager.Instance.AddLoci(animal);});
         }
+    }
+
+    /// <summary>
+    /// Deactivates the Loci Menu
+    /// </summary>
+    /// <param name="value">The value of the "X" button</param>
+    public void CloseMenu(bool value)
+    {
+        //Deactivate the loci menu
+        gameObject.SetActive(false);
     }
 }

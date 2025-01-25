@@ -33,6 +33,7 @@ public class RoomManager : MonoBehaviour
     private Room _currentRoom;
     private int _furniturePointer = 0;
     private GameObject _menu;
+    private GameObject _lociMenu;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -59,6 +60,9 @@ public class RoomManager : MonoBehaviour
         agentController = FindObjectOfType<AgentController>();
         user = GameObject.Find("CenterEyeAnchor");
         _menu = GameObject.FindGameObjectWithTag("Menu");
+        _lociMenu = GameObject.FindGameObjectWithTag("LociMenu");
+        _lociMenu.SetActive(false);
+
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
@@ -300,36 +304,10 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Adds furniture to the current room when the corresponding button is pressed
     /// </summary>
-    /// <param name="value">The value of the button "Add Furniture"</param>
-    public void AddFurniture(bool value)
+    /// <param name="value">The value of the button "Open Loci Store"</param>
+    public void OpenLociMenu(bool value)
     {
-        // TODO this method is for testing
-        // Debug.Log("LENA: Furniture added to room " + _currentUser.GetCurrentRoom().ID);
-        // // Instantiate the furniture in the scene
-        // GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
-        // GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
-        // newObject.tag = "Furniture";
-        // newObject2.tag = "Furniture";
-        // // Add furniture to the current room's list of furniture
-        // _currentRoom.AddFurniture(furniture, newObject);
-        // _currentRoom.AddFurniture(furniture2, newObject2);
-        // _currentRoom.UpdateTransforms();
-        // _currentRoom.SaveRoom();
-        if (reusePalace)
-        {
-            // Replacing the old representation with a new one
-            GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
-            newObject2.tag = "Information";
-            _currentRoom.ReplaceRepresentation(0, furniture2, newObject2);
-        }
-        else
-        {
-            GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
-            newObject.tag = "Information";
-            _currentRoom.AddRepresentation(furniture, newObject);
-        }
-        _currentRoom.UpdateTransforms();
-        _currentRoom.SaveRoom();
+        _lociMenu.SetActive(true);
     }
 
     /// <summary>
