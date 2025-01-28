@@ -151,7 +151,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2831338154730346832, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
       propertyPath: m_Name
-      value: air-hockey
+      value: Air-Hockey
       objectReference: {fileID: 0}
     - target: {fileID: 1773038939299672582, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
       propertyPath: m_LocalScale.x

@@ -519,13 +519,13 @@ public class RoomManager : MonoBehaviour
         {
             //TODO finish this with new menu
             // Replacing the old representation with a new one
-            GameObject newObject2 = GameObject.Instantiate(loci, Vector3.zero, Quaternion.identity);
+            GameObject newObject2 = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
             newObject2.tag = "Information";
             _currentRoom.ReplaceRepresentation(0, loci, newObject2);
         }
         else
         {
-            GameObject newObject = GameObject.Instantiate(loci, Vector3.zero, Quaternion.identity);
+            GameObject newObject = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
             newObject.tag = "Information";
             _currentRoom.AddRepresentation(loci, newObject);
         }
