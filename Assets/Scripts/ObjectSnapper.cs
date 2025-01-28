@@ -103,14 +103,16 @@ public class ObjectSnapper : MonoBehaviour
         Debug.Log("SNAP: Ground offset: " + groundOffset);
         Vector3 basePosition = transform.position;
         Debug.Log("SNAP: Base position y: " + basePosition.y);
-        basePosition.y = groundOffset;
-
 
         if (Physics.Raycast(basePosition, Vector3.down, out RaycastHit groundHit, Mathf.Infinity))
         {
-            basePosition.y += groundHit.point.y;
+            basePosition.y = groundOffset + groundHit.point.y;
             Debug.Log("SNAP: hit  @ " + Mathf.Round(groundHit.point.y));
             Debug.Log("SNAP: Final base position y: " + basePosition.y);
+        }
+        else
+        {
+            basePosition.y = groundOffset;
         }
         transform.position = basePosition;
     }
