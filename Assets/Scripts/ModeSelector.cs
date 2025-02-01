@@ -10,10 +10,12 @@ public class ModeSelector : MonoBehaviour
     [SerializeField] public GameObject UI;
     [Tooltip("The user object")]
     [SerializeField] public GameObject User;
-    private Camera _cam;
     [Tooltip("Whether the layout mode is selected")]
     public bool layoutMode;
+    [Tooltip("Whether the reuse mode is selected")]
     public bool reuseMode = false;
+    [Tooltip("The camera object")]
+    private Camera _cam;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

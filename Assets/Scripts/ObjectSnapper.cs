@@ -8,6 +8,7 @@ public class ObjectSnapper : MonoBehaviour
     [SerializeField] public Grabbable grabbable;
     [Tooltip("Is the object a door")]
     [SerializeField] public bool isDoor = false;
+    [SerializeField] public bool isTooltip = false;
     private bool grabbed = false;
     private Renderer _renderer;
 
@@ -69,6 +70,17 @@ public class ObjectSnapper : MonoBehaviour
     /// </summary>
     public void snapToFloor()
     {
+        // Tooltips should be snapped to the object they are hovering over
+        if (isTooltip)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit objectHit, Mathf.Infinity))
+            {
+                float y = objectHit.point.y;
+                transform.position = new Vector3(transform.position.x, y, transform.position.z);
+                return;
+            }
+        }
+
         if (_renderer == null)
         {
             _renderer = GetComponent<Renderer>();

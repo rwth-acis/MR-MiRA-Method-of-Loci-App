@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Oculus.Interaction;
+using TMPro;
 
 public class RoomManager : MonoBehaviour
 {
@@ -20,8 +21,11 @@ public class RoomManager : MonoBehaviour
     [SerializeField] public GameObject user;
     [Tooltip("The locus halo")]
     [SerializeField] public GameObject locusHalo;
+    [Tooltip("The tooltip")]
+    [SerializeField] public GameObject tooltip;
     [Tooltip("Whether the layout mode is active")]
     public bool layoutMode { get; set; }
+    [Tooltip("Whether the reuse mode is active")]
     public bool reusePalace { get; set; }
 
     private List<User> _users = new List<User>();
@@ -513,7 +517,7 @@ public class RoomManager : MonoBehaviour
     /// Adds a GameObject to the current room, its transform will be saved as a loci
     /// </summary>
     /// <param name="loci">The GameObject to place</param>
-    public void AddLoci(GameObject loci)
+    public void AddLoci(GameObject loci, string tooltipText = null)
     {
         if (reusePalace)
         {
@@ -527,6 +531,25 @@ public class RoomManager : MonoBehaviour
         {
             GameObject newObject = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
             newObject.tag = "Information";
+
+            // Add a tooltip  as a child the new object
+            if (tooltipText != null)
+            {
+                // TODO give the tooltip texts or let the user input them
+                GameObject tooltipObject = GameObject.Instantiate(tooltip, newObject.transform.position + Vector3.up, Quaternion.identity);
+
+                // Set the tooltip to be on top of the object
+                ObjectSnapper objectsnapper = tooltipObject.GetComponent<ObjectSnapper>();
+                objectsnapper.snapToFloor();
+
+                tooltipObject.transform.SetParent(newObject.transform);
+                TextMeshProUGUI [] texts = tooltipObject.GetComponentsInChildren<TextMeshProUGUI>();
+                string name = newObject.name;
+                // remove clone from the name
+                name = name.Substring(0, name.Length - 7);
+                texts[0].text = name;
+                texts[1].text = tooltipText;
+            }
             _currentRoom.AddRepresentation(loci, newObject);
         }
         _currentRoom.UpdateTransforms();
