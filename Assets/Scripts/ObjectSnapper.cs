@@ -27,6 +27,11 @@ public class ObjectSnapper : MonoBehaviour
             if(!grabbed)
             {
                 Debug.Log("I have been grabbed!");
+                // Spatial anchors prevent the object from being moved, a new anchor will be attached when saving
+                if (this.TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor anchor))
+                {
+                    anchor.EraseAnchorAsync();
+                }
                 grabbed = true;
             }
         }

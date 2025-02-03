@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
+using TMPro;
 
 public class RoomManager : MonoBehaviour
 {
@@ -19,11 +20,15 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
-    [Tooltip("The locus halo")]
+    [Tooltip("The locus halo prefab")]
     [SerializeField] public GameObject locusHalo;
+    [Tooltip("The tooltip prefab")]
+    [SerializeField] public GameObject tooltip;
+
     [Tooltip("Whether the layout mode is active")]
-    public bool layoutMode { get; set; }
-    public bool reusePalace { get; set; }
+    public bool layoutMode { get; set; } = false;
+    [Tooltip("Whether the reuse mode is active")]
+    public bool reusePalace { get; set; } = false;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -33,6 +38,7 @@ public class RoomManager : MonoBehaviour
     private Room _currentRoom;
     private int _furniturePointer = 0;
     private GameObject _menu;
+    private GameObject _lociMenu;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -59,6 +65,8 @@ public class RoomManager : MonoBehaviour
         agentController = FindObjectOfType<AgentController>();
         user = GameObject.Find("CenterEyeAnchor");
         _menu = GameObject.FindGameObjectWithTag("Menu");
+        _lociMenu = GameObject.FindGameObjectWithTag("LociMenu");
+        _lociMenu.SetActive(false);
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
@@ -196,14 +204,16 @@ public class RoomManager : MonoBehaviour
     /// Saves the current room to JSON and loads the given room
     /// </summary>
     /// <param name="room">The room to be loaded</param>
-    public void LoadRoom(Room room)
+    public async void LoadRoom(Room room)
     {
+        Debug.Log("1");
+        await room.LoadUnboundAnchors(room.FurnitureAnchors, room.RepresentationAnchors);
+        Debug.Log("5");
         //_currentRoom.UpdateTransforms();
         // We clear the instances of the *new* room, to forgo issues with old instances having no transforms, etc...
         room.FurnitureInstances.Clear();
         room.RepresentationInstances.Clear();
         room.Loci.Clear();
-
         // Save the current room to JSON
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
@@ -294,42 +304,16 @@ public class RoomManager : MonoBehaviour
                 room.LoadTransforms();
             }
         }
-
+        Debug.Log("6");
     }
 
     /// <summary>
     /// Adds furniture to the current room when the corresponding button is pressed
     /// </summary>
-    /// <param name="value">The value of the button "Add Furniture"</param>
-    public void AddFurniture(bool value)
+    /// <param name="value">The value of the button "Open Loci Store"</param>
+    public void OpenLociMenu(bool value)
     {
-        // TODO this method is for testing
-        // Debug.Log("LENA: Furniture added to room " + _currentUser.GetCurrentRoom().ID);
-        // // Instantiate the furniture in the scene
-        // GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
-        // GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
-        // newObject.tag = "Furniture";
-        // newObject2.tag = "Furniture";
-        // // Add furniture to the current room's list of furniture
-        // _currentRoom.AddFurniture(furniture, newObject);
-        // _currentRoom.AddFurniture(furniture2, newObject2);
-        // _currentRoom.UpdateTransforms();
-        // _currentRoom.SaveRoom();
-        if (reusePalace)
-        {
-            // Replacing the old representation with a new one
-            GameObject newObject2 = GameObject.Instantiate(furniture2, Vector3.zero, Quaternion.identity);
-            newObject2.tag = "Information";
-            _currentRoom.ReplaceRepresentation(0, furniture2, newObject2);
-        }
-        else
-        {
-            GameObject newObject = GameObject.Instantiate(furniture, Vector3.zero, Quaternion.identity);
-            newObject.tag = "Information";
-            _currentRoom.AddRepresentation(furniture, newObject);
-        }
-        _currentRoom.UpdateTransforms();
-        _currentRoom.SaveRoom();
+        _lociMenu.SetActive(true);
     }
 
     /// <summary>
@@ -348,7 +332,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Next Wallcolour"</param>
     public void NextWallColour(bool value)
     {
-        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
+        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == _wallColours.Count - 1)
         {
             _colourPointer = 0;
@@ -368,7 +352,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Previous Wallcolour"</param>
     public void PreviousWallColour(bool value)
     {
-        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
+        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == 0)
         {
             _colourPointer = _wallColours.Count - 1;
@@ -530,5 +514,48 @@ public class RoomManager : MonoBehaviour
         }
         Debug.Log("No free space found");
         return basePosition;
+    }
+
+    /// <summary>
+    /// Adds a GameObject to the current room, its transform will be saved as a loci
+    /// </summary>
+    /// <param name="loci">The GameObject to place</param>
+    public void AddLoci(GameObject loci, string tooltipText = null)
+    {
+        if (reusePalace)
+        {
+            //TODO finish this with new menu
+            // Replacing the old representation with a new one
+            GameObject newObject2 = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            newObject2.tag = "Information";
+            _currentRoom.ReplaceRepresentation(0, loci, newObject2);
+        }
+        else
+        {
+            GameObject newObject = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            newObject.tag = "Information";
+
+            // Add a tooltip  as a child the new object
+            if (tooltipText != null)
+            {
+                // TODO give the tooltip texts or let the user input them
+                GameObject tooltipObject = GameObject.Instantiate(tooltip, newObject.transform.position + Vector3.up, Quaternion.identity);
+
+                // Set the tooltip to be on top of the object
+                ObjectSnapper objectsnapper = tooltipObject.GetComponent<ObjectSnapper>();
+                objectsnapper.snapToFloor();
+
+                tooltipObject.transform.SetParent(newObject.transform);
+                TextMeshProUGUI [] texts = tooltipObject.GetComponentsInChildren<TextMeshProUGUI>();
+                string name = newObject.name;
+                // remove clone from the name
+                name = name.Substring(0, name.Length - 7);
+                texts[0].text = name;
+                texts[1].text = tooltipText;
+            }
+            _currentRoom.AddRepresentation(loci, newObject);
+        }
+        _currentRoom.UpdateTransforms();
+        _currentRoom.SaveRoom();
     }
 }
