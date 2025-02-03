@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Oculus.Interaction;
+using Oculus.Interaction.HandGrab;
 using TMPro;
 
 public class RoomManager : MonoBehaviour
@@ -19,14 +20,17 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
-    [Tooltip("The locus halo")]
+    [Tooltip("The locus halo prefab")]
     [SerializeField] public GameObject locusHalo;
     [Tooltip("The tooltip")]
     [SerializeField] public GameObject tooltip;
+    [Tooltip("The tooltip prefab")]
+    [SerializeField] public GameObject tooltip;
+
     [Tooltip("Whether the layout mode is active")]
-    public bool layoutMode { get; set; }
+    public bool layoutMode { get; set; } = false;
     [Tooltip("Whether the reuse mode is active")]
-    public bool reusePalace { get; set; }
+    public bool reusePalace { get; set; } = false;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -65,7 +69,6 @@ public class RoomManager : MonoBehaviour
         _menu = GameObject.FindGameObjectWithTag("Menu");
         _lociMenu = GameObject.FindGameObjectWithTag("LociMenu");
         _lociMenu.SetActive(false);
-
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
@@ -203,14 +206,16 @@ public class RoomManager : MonoBehaviour
     /// Saves the current room to JSON and loads the given room
     /// </summary>
     /// <param name="room">The room to be loaded</param>
-    public void LoadRoom(Room room)
+    public async void LoadRoom(Room room)
     {
+        Debug.Log("1");
+        await room.LoadUnboundAnchors(room.FurnitureAnchors, room.RepresentationAnchors);
+        Debug.Log("5");
         //_currentRoom.UpdateTransforms();
         // We clear the instances of the *new* room, to forgo issues with old instances having no transforms, etc...
         room.FurnitureInstances.Clear();
         room.RepresentationInstances.Clear();
         room.Loci.Clear();
-
         // Save the current room to JSON
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
@@ -301,7 +306,7 @@ public class RoomManager : MonoBehaviour
                 room.LoadTransforms();
             }
         }
-
+        Debug.Log("6");
     }
 
     /// <summary>
@@ -329,7 +334,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Next Wallcolour"</param>
     public void NextWallColour(bool value)
     {
-        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
+        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == _wallColours.Count - 1)
         {
             _colourPointer = 0;
@@ -349,7 +354,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Previous Wallcolour"</param>
     public void PreviousWallColour(bool value)
     {
-        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);;
+        _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == 0)
         {
             _colourPointer = _wallColours.Count - 1;

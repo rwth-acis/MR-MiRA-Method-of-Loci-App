@@ -320,6 +320,29 @@ public class Room
                     SerializedTransform newTransform = new SerializedTransform(FurnitureInstances[i].transform);
                     if (!FurnitureInstances[i].TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor outanchor) && outanchor.Uuid != Guid.Empty)
                     {
+                        OVRSpatialAnchor newAnchor = FurnitureInstances[i].AddComponent<OVRSpatialAnchor>();
+                        while (!newAnchor.Created)
+                        {
+                            await Task.Delay(100);
+                        }
+                        var result = await newAnchor.SaveAnchorAsync();
+                        if (result.Success)
+                        {
+                            Debug.Log($"ANCHOR: {newAnchor.Uuid} saved successfully.");
+                            FurnitureAnchors.Add(newAnchor.Uuid);
+                        }
+                        else
+                        {
+                            Debug.LogError($"ANCHOR: {newAnchor.Uuid} failed to save with error {result.Status}");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log($"ANCHOR: furniture anchor {outanchor.Uuid} found and reused");
+                        FurnitureAnchors.Add(outanchor.Uuid);
+                    }
+                    if (!FurnitureInstances[i].TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor outanchor) && outanchor.Uuid != Guid.Empty)
+                    {
                         if(FurnitureInstances[i].TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor invalidAnchor))
                         {
                             invalidAnchor.EraseAnchorAsync();
