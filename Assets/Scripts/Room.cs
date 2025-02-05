@@ -172,6 +172,34 @@ public class Room
     /// </summary>
     public void LoadTransforms()
     {
+        if (FurnitureInstances.Count != 0)
+        {
+            if (Furniture != null && Furniture.Count != 0 && FurnitureTransforms != null && FurnitureTransforms.Count != 0)
+            {
+                for (int i = 0; i < Furniture.Count; i++)
+                {
+                    FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i]._position[0], FurnitureTransforms[i]._position[1], FurnitureTransforms[i]._position[2]);
+                    FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i]._rotation[1], FurnitureTransforms[i]._rotation[2], FurnitureTransforms[i]._rotation[3], FurnitureTransforms[i]._rotation[0]);
+                    FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i]._scale[0], FurnitureTransforms[i]._scale[1], FurnitureTransforms[i]._scale[2]);
+                }
+            }
+        }
+        if (RepresentationInstances.Count != 0)
+        {
+            if (Representations != null && Representations.Count != 0 && RepresentationTransforms != null && RepresentationTransforms.Count != 0)
+            {
+                for (int i = 0; i < Representations.Count; i++)
+                {
+                    RepresentationInstances[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
+                    RepresentationInstances[i].transform.localScale = new Vector3(RepresentationTransforms[i]._scale[0], RepresentationTransforms[i]._scale[1],RepresentationTransforms[i]._scale[2]);
+                    RepresentationInstances[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
+                }
+            }
+        }
+    }
+
+    public void LoadAnchors()
+    {
         List<Guid> oldFurnitureAnchors = FurnitureAnchors;
         List<Guid> oldRepresentationAnchors = RepresentationAnchors;
         if (_unboundFurnitureAnchors.Count > 0)
@@ -206,24 +234,11 @@ public class Room
                                 Debug.Log("ANCHOR: furniture success!)");
                                 break;
                             }
-
                             if (!found)
                             {
                                 Debug.Log($"ANCHOR: Localisation furniture {i} failed");
                             }
                         }
-                    }
-                    else
-                    {
-                        if (_unboundFurnitureAnchors.Count > i)
-                        {
-                            Debug.LogError($"ANCHOR: furniture {i} failed to localize");
-                        }
-                        Debug.Log("LENA: Pre-error_:" + Furniture.Count + " =? " + FurnitureTransforms.Count);
-                        // check for existing anchors??
-                        FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i]._position[0], FurnitureTransforms[i]._position[1], FurnitureTransforms[i]._position[2]);
-                        FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i]._rotation[1], FurnitureTransforms[i]._rotation[2], FurnitureTransforms[i]._rotation[3], FurnitureTransforms[i]._rotation[0]);
-                        FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i]._scale[0], FurnitureTransforms[i]._scale[1], FurnitureTransforms[i]._scale[2]);
                     }
                 }
                 _unboundFurnitureAnchors.Clear();
@@ -254,16 +269,6 @@ public class Room
                                 Debug.LogError($"ANCHOR: representation {i} failed to localize");
                             }
                         }
-                    }
-                    else
-                    {
-                        if(!(_unboundRepresentationAnchors.Count > i))
-                        {
-                            Debug.LogError($"ANCHOR: representation {i} failed to localize");
-                        }
-                        RepresentationInstances[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
-                        RepresentationInstances[i].transform.localScale = new Vector3(RepresentationTransforms[i]._scale[0], RepresentationTransforms[i]._scale[1],RepresentationTransforms[i]._scale[2]);
-                        RepresentationInstances[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
                     }
                 }
                 _unboundRepresentationAnchors.Clear();
@@ -373,9 +378,9 @@ public class Room
     }
 
     /// <summary>
-    /// Updates the lists of furniture and representation transforms with the current transforms of the instances. Also creates Spatial Anchors for both, that persist across sessions.
+    /// Updates the list of furniture and representation transforms with the current transforms of the instances.
     /// </summary>
-    public async Task UpdateTransforms()
+    public void UpdateTransforms()
     {
         if(Loci.Count != 0 && RepresentationInstances.Count != 0)
         {
@@ -386,14 +391,44 @@ public class Room
             if (FurnitureInstances.Count != 0)
             {
                 FurnitureTransforms.Clear();
-                FurnitureAnchors.Clear();
                 for (int i = 0; i < FurnitureInstances.Count; i++)
                 {
-                    Debug.Log("UPDATE TRANSFORM: Updating " + FurnitureInstances[i].name);
                     SerializedTransform newTransform = new SerializedTransform(FurnitureInstances[i].transform);
-                    if (!FurnitureInstances[i].TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor outanchor))
+                    FurnitureTransforms.Add(newTransform);
+                }
+            }
+            if (RepresentationInstances.Count != 0)
+            {
+                RepresentationTransforms.Clear();
+                for (int i = 0; i < RepresentationInstances.Count; i++)
+                {
+                    SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
+                    RepresentationTransforms.Add(newRepTransform);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Creates Spatial Anchors for furniture and representations, that persist across sessions.
+    /// </summary>
+    public async Task UpdateAnchors()
+    {
+        if(Loci.Count != 0 && RepresentationInstances.Count != 0)
+        {
+            // Do not change the anchors when reusing the room
+        }
+        else
+        {
+            if (FurnitureInstances.Count != 0)
+            {
+                FurnitureAnchors.Clear();
+                foreach (var instance in FurnitureInstances)
+                {
+                    Debug.Log("UPDATE ANCHOR: Updating " + instance.name);
+                    if (!instance.TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor outanchor))
                     {
-                        OVRSpatialAnchor newAnchor = FurnitureInstances[i].AddComponent<OVRSpatialAnchor>();
+                        OVRSpatialAnchor newAnchor = instance.AddComponent<OVRSpatialAnchor>();
                         while (!newAnchor.Created)
                         {
                             await Task.Delay(100);
@@ -401,7 +436,7 @@ public class Room
                         var result = await newAnchor.SaveAnchorAsync();
                         if (result.Success)
                         {
-                            Debug.Log($"ANCHOR: {newAnchor.Uuid} saved successfully to " + FurnitureInstances[i].name);
+                            Debug.Log($"ANCHOR: {newAnchor.Uuid} saved successfully to " + instance.name);
                             FurnitureAnchors.Add(newAnchor.Uuid);
                         }
                         else
@@ -413,24 +448,21 @@ public class Room
                     {
                         if (outanchor.Uuid != Guid.Empty)
                         {
-                            Debug.Log($"ANCHOR: furniture anchor {outanchor.Uuid} found and reused. Belonging to " + FurnitureInstances[i].name);
+                            Debug.Log($"ANCHOR: furniture anchor {outanchor.Uuid} found and reused. Belonging to " + instance.name);
                             FurnitureAnchors.Add(outanchor.Uuid);
                         }
 
                     }
-                    FurnitureTransforms.Add(newTransform);
                 }
             }
             if (RepresentationInstances.Count != 0)
             {
-                RepresentationTransforms.Clear();
                 RepresentationAnchors.Clear();
-                for (int i = 0; i < RepresentationInstances.Count; i++)
+                foreach (var instance in RepresentationInstances)
                 {
-                    SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
-                    if (!RepresentationInstances[i].TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor outRepanchor))
+                    if (!instance.TryGetComponent<OVRSpatialAnchor>(out OVRSpatialAnchor outRepanchor))
                     {
-                        OVRSpatialAnchor newRepAnchor = RepresentationInstances[i].AddComponent<OVRSpatialAnchor>();
+                        OVRSpatialAnchor newRepAnchor = instance.AddComponent<OVRSpatialAnchor>();
                         while (!newRepAnchor.Created)
                         {
                             await Task.Delay(100);
@@ -438,7 +470,7 @@ public class Room
                         var result = await newRepAnchor.SaveAnchorAsync();
                         if (result.Success)
                         {
-                            Debug.Log($"ANCHOR: {newRepAnchor.Uuid} saved successfully." + RepresentationInstances[i].name);
+                            Debug.Log($"ANCHOR: {newRepAnchor.Uuid} saved successfully." + instance.name);
                             RepresentationAnchors.Add(newRepAnchor.Uuid);
                         }
                         else
@@ -453,9 +485,7 @@ public class Room
                             Debug.Log($"ANCHOR: representation anchor {outRepanchor.Uuid} found and reused");
                             RepresentationAnchors.Add(outRepanchor.Uuid);
                         }
-
                     }
-                    RepresentationTransforms.Add(newRepTransform);
                 }
             }
         }

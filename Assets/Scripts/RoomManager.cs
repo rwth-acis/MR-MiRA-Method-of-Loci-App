@@ -6,6 +6,7 @@ using UnityEngine;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
 using TMPro;
+using GameObject = UnityEngine.GameObject;
 
 public class RoomManager : MonoBehaviour
 {
@@ -148,7 +149,7 @@ public class RoomManager : MonoBehaviour
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
         _currentRoom.AddFurniture(doorPrefabs[0], door);
-        await _currentRoom.UpdateTransforms();
+        _currentRoom.UpdateTransforms();
 
         // Create a new room
         int newRoomID = _currentUser.GetFreeRoomID();
@@ -163,7 +164,8 @@ public class RoomManager : MonoBehaviour
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
         room.AddFurniture(doorPrefabs[1], door);
-        await room.UpdateTransforms();
+        room.UpdateTransforms();
+        await room.UpdateAnchors();
         _currentRoom.SaveRoom();
     }
 
@@ -214,7 +216,8 @@ public class RoomManager : MonoBehaviour
         room.RepresentationInstances.Clear();
         room.Loci.Clear();
         // Save the current room to JSON
-        await _currentRoom.UpdateTransforms();
+        _currentRoom.UpdateTransforms();
+        await _currentRoom.UpdateAnchors();
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
         // First remove all furniture from the scene
@@ -246,6 +249,7 @@ public class RoomManager : MonoBehaviour
                 room.AddFurnitureInstance(myObject);
             }
             room.LoadTransforms();
+            room.LoadAnchors();
         }
 
         if (room != null && room.WallColour != null)
@@ -265,6 +269,7 @@ public class RoomManager : MonoBehaviour
                     room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
+                room.LoadAnchors();
             }
         }
         else if (layoutMode)
@@ -302,6 +307,7 @@ public class RoomManager : MonoBehaviour
                     room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
+                room.LoadAnchors();
             }
         }
         Debug.Log("6");
@@ -330,7 +336,7 @@ public class RoomManager : MonoBehaviour
     ///  Change to the next wall colour in the list
     /// </summary>
     /// <param name="value">The value of the button "Next Wallcolour"</param>
-    public async void NextWallColour(bool value)
+    public void NextWallColour(bool value)
     {
         _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == _wallColours.Count - 1)
@@ -342,7 +348,7 @@ public class RoomManager : MonoBehaviour
             _colourPointer++;
         }
         wallColour.color = _currentRoom.WallColour;
-        await _currentRoom.UpdateTransforms();
+        _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
         Debug.Log("Wall colour: " + _currentRoom.WallColour);
     }
@@ -351,7 +357,7 @@ public class RoomManager : MonoBehaviour
     /// Changes to the previous wall colour in the list
     /// </summary>
     /// <param name="value">The value of the button "Previous Wallcolour"</param>
-    public async void PreviousWallColour(bool value)
+    public void PreviousWallColour(bool value)
     {
         _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == 0)
@@ -363,7 +369,7 @@ public class RoomManager : MonoBehaviour
             _colourPointer--;
         }
         wallColour.color = _currentRoom.WallColour;
-        await _currentRoom.UpdateTransforms();
+        _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
         Debug.Log("Wall colour: " + _currentRoom.WallColour);
     }
@@ -445,7 +451,7 @@ public class RoomManager : MonoBehaviour
     /// Lets the user place the selected furniture in the room
     /// </summary>
     /// <param name="value">The value of the button "Select Furniture"</param>
-    public async void SelectFurniture(bool value)
+    public void SelectFurniture(bool value)
     {
         // Remove the last preview object
         GameObject[] previewObjects = GameObject.FindGameObjectsWithTag("Preview");
@@ -458,7 +464,7 @@ public class RoomManager : MonoBehaviour
 
         // Add furniture to the current room's list of furniture
         _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
-        await _currentRoom.UpdateTransforms();
+        _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
     }
 
@@ -558,7 +564,7 @@ public class RoomManager : MonoBehaviour
             }
             _currentRoom.AddRepresentation(loci, newObject);
         }
-        await _currentRoom.UpdateTransforms();
+        _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
     }
 }
