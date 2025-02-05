@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using Oculus.Interaction;
-using Oculus.Interaction.HandGrab;
 using TMPro;
 using GameObject = UnityEngine.GameObject;
 
@@ -165,7 +164,7 @@ public class RoomManager : MonoBehaviour
         objectsnapper.snapToWall();
         room.AddFurniture(doorPrefabs[1], door);
         room.UpdateTransforms();
-        await room.UpdateAnchors();
+        //await room.UpdateAnchors();
         _currentRoom.SaveRoom();
     }
 
