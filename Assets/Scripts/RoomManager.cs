@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using Oculus.Interaction;
 using Oculus.Interaction.HandGrab;
@@ -22,8 +23,6 @@ public class RoomManager : MonoBehaviour
     [SerializeField] public GameObject user;
     [Tooltip("The locus halo prefab")]
     [SerializeField] public GameObject locusHalo;
-    [Tooltip("The tooltip")]
-    [SerializeField] public GameObject tooltip;
     [Tooltip("The tooltip prefab")]
     [SerializeField] public GameObject tooltip;
 
@@ -111,7 +110,7 @@ public class RoomManager : MonoBehaviour
     /// The first room of the user is loaded.
     /// </summary>
     /// <param name="username">The user that should be loaded</param>
-    public void LoadUser(string username)
+    public async void LoadUser(string username)
     {
         string path = Path.Combine(Application.persistentDataPath, username + ".json");
         User newUser;
@@ -132,14 +131,14 @@ public class RoomManager : MonoBehaviour
         _users.Add(newUser);
         _currentUser = newUser;
         _currentRoom = _currentUser.GetFirstRoom();
-        LoadRoom(_currentRoom);
+        await LoadRoom(_currentRoom);
     }
 
     /// <summary>
     /// Creates a new room when the corresponding button is pressed
     /// </summary>
     /// <param name="value">The value of the button "New Room"</param>
-    public void CreateRoom(bool value)
+    public async void CreateRoom(bool value)
     {
         // add door to the current room
         // TODO make sure that the rooms are actually connected
@@ -149,14 +148,14 @@ public class RoomManager : MonoBehaviour
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
         _currentRoom.AddFurniture(doorPrefabs[0], door);
-        _currentRoom.UpdateTransforms();
+        await _currentRoom.UpdateTransforms();
 
         // Create a new room
         int newRoomID = _currentUser.GetFreeRoomID();
         Room room = new Room(newRoomID);
         _currentUser.AddRoom(room);
         _currentRoom = _currentUser.GetCurrentRoom();
-        LoadRoom(room);
+        await LoadRoom(room);
 
         // Add a door to the new room
         door = GameObject.Instantiate(doorPrefabs[1], user.transform.position - user.transform.forward * 0.5f, user.transform.rotation);
@@ -164,9 +163,7 @@ public class RoomManager : MonoBehaviour
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
         room.AddFurniture(doorPrefabs[1], door);
-        room.UpdateTransforms();
-
-        //LoadRoom(room);
+        await room.UpdateTransforms();
         _currentRoom.SaveRoom();
     }
 
@@ -174,7 +171,7 @@ public class RoomManager : MonoBehaviour
     /// Changes the scene to the next room when the corresponding button is pressed
     /// </summary>
     /// <param name="value">The value of the button "Next Room"</param>
-    public void NextScene(bool value)
+    public async void NextScene(bool value)
     {
         Room nextRoom = _currentUser.NextRoom();
         if (nextRoom == null)
@@ -182,7 +179,7 @@ public class RoomManager : MonoBehaviour
             Debug.Log("There is no next room available in RoomManager");
             return; // TODO: Error Message or Grey out Button
         }
-        LoadRoom(nextRoom);
+        await LoadRoom(nextRoom);
         _currentRoom = _currentUser.GetCurrentRoom();
     }
 
@@ -190,7 +187,7 @@ public class RoomManager : MonoBehaviour
     /// Changes the scene to the previous room when the corresponding button is pressed
     /// </summary>
     /// <param name="value">The value of the button "Previous Room"</param>
-    public void PreviousScene(bool value)
+    public async void PreviousScene(bool value)
     {
         Room previousRoom = _currentUser.PreviousRoom();
         if (previousRoom == null)
@@ -198,7 +195,7 @@ public class RoomManager : MonoBehaviour
             Debug.Log("There is no previous room available in RoomManager");
             return; // TODO: Error Message or Grey out Button
         }
-        LoadRoom(previousRoom);
+        await LoadRoom(previousRoom);
         _currentRoom = _currentUser.GetCurrentRoom();
     }
 
@@ -206,7 +203,7 @@ public class RoomManager : MonoBehaviour
     /// Saves the current room to JSON and loads the given room
     /// </summary>
     /// <param name="room">The room to be loaded</param>
-    public async void LoadRoom(Room room)
+    public async Task LoadRoom(Room room)
     {
         Debug.Log("1");
         await room.LoadUnboundAnchors(room.FurnitureAnchors, room.RepresentationAnchors);
@@ -217,6 +214,7 @@ public class RoomManager : MonoBehaviour
         room.RepresentationInstances.Clear();
         room.Loci.Clear();
         // Save the current room to JSON
+        await _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
         _currentUser.SaveUser();
         // First remove all furniture from the scene
@@ -332,7 +330,7 @@ public class RoomManager : MonoBehaviour
     ///  Change to the next wall colour in the list
     /// </summary>
     /// <param name="value">The value of the button "Next Wallcolour"</param>
-    public void NextWallColour(bool value)
+    public async void NextWallColour(bool value)
     {
         _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == _wallColours.Count - 1)
@@ -344,6 +342,7 @@ public class RoomManager : MonoBehaviour
             _colourPointer++;
         }
         wallColour.color = _currentRoom.WallColour;
+        await _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
         Debug.Log("Wall colour: " + _currentRoom.WallColour);
     }
@@ -352,7 +351,7 @@ public class RoomManager : MonoBehaviour
     /// Changes to the previous wall colour in the list
     /// </summary>
     /// <param name="value">The value of the button "Previous Wallcolour"</param>
-    public void PreviousWallColour(bool value)
+    public async void PreviousWallColour(bool value)
     {
         _currentRoom.ChangeWallColour(_wallColours[_colourPointer]);
         if (_colourPointer == 0)
@@ -364,6 +363,7 @@ public class RoomManager : MonoBehaviour
             _colourPointer--;
         }
         wallColour.color = _currentRoom.WallColour;
+        await _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
         Debug.Log("Wall colour: " + _currentRoom.WallColour);
     }
@@ -445,7 +445,7 @@ public class RoomManager : MonoBehaviour
     /// Lets the user place the selected furniture in the room
     /// </summary>
     /// <param name="value">The value of the button "Select Furniture"</param>
-    public void SelectFurniture(bool value)
+    public async void SelectFurniture(bool value)
     {
         // Remove the last preview object
         GameObject[] previewObjects = GameObject.FindGameObjectsWithTag("Preview");
@@ -458,7 +458,7 @@ public class RoomManager : MonoBehaviour
 
         // Add furniture to the current room's list of furniture
         _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
-        _currentRoom.UpdateTransforms();
+        await _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
     }
 
@@ -522,7 +522,7 @@ public class RoomManager : MonoBehaviour
     /// Adds a GameObject to the current room, its transform will be saved as a loci
     /// </summary>
     /// <param name="loci">The GameObject to place</param>
-    public void AddLoci(GameObject loci, string tooltipText = null)
+    public async void AddLoci(GameObject loci, string tooltipText = null)
     {
         if (reusePalace)
         {
@@ -535,9 +535,10 @@ public class RoomManager : MonoBehaviour
         else
         {
             GameObject newObject = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            newObject.transform.position = findFreeFloorSpace(newObject);
             newObject.tag = "Information";
 
-            // Add a tooltip  as a child the new object
+            // Add a tooltip as a child the new object
             if (tooltipText != null)
             {
                 // TODO give the tooltip texts or let the user input them
@@ -557,7 +558,7 @@ public class RoomManager : MonoBehaviour
             }
             _currentRoom.AddRepresentation(loci, newObject);
         }
-        _currentRoom.UpdateTransforms();
+        await _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
     }
 }
