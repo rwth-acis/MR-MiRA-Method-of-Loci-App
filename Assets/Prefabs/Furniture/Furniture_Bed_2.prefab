@@ -285,3 +285,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: {fileID: 7272842540564258015}
+  isDoor: 0

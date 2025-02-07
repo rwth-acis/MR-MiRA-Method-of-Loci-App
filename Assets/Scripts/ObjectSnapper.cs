@@ -8,6 +8,7 @@ public class ObjectSnapper : MonoBehaviour
     [SerializeField] public Grabbable grabbable;
     [Tooltip("Is the object a door")]
     [SerializeField] public bool isDoor = false;
+    [SerializeField] public bool isTooltip = false;
     private bool grabbed = false;
     private Renderer _renderer;
 
@@ -69,9 +70,35 @@ public class ObjectSnapper : MonoBehaviour
     /// </summary>
     public void snapToFloor()
     {
+        // Tooltips should be snapped to the object they are hovering over
+        if (isTooltip)
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit objectHit, Mathf.Infinity))
+            {
+                float y = objectHit.point.y;
+                transform.position = new Vector3(transform.position.x, y, transform.position.z);
+                return;
+            }
+        }
+
         if (_renderer == null)
         {
             _renderer = GetComponent<Renderer>();
+        }
+        // check if the root object has a renderer at all
+        if (_renderer == null)
+        {
+            // Search for the lowest renderer in the children
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            float lowestY = float.MaxValue;
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer.bounds.min.y < lowestY)
+                {
+                    _renderer = renderer;
+                    lowestY = renderer.bounds.min.y;
+                }
+            }
         }
         // set the rotation to be always upright
         transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
@@ -88,14 +115,16 @@ public class ObjectSnapper : MonoBehaviour
         Debug.Log("SNAP: Ground offset: " + groundOffset);
         Vector3 basePosition = transform.position;
         Debug.Log("SNAP: Base position y: " + basePosition.y);
-        basePosition.y = groundOffset;
-
 
         if (Physics.Raycast(basePosition, Vector3.down, out RaycastHit groundHit, Mathf.Infinity))
         {
-            basePosition.y += groundHit.point.y;
+            basePosition.y = groundOffset + groundHit.point.y;
             Debug.Log("SNAP: hit  @ " + Mathf.Round(groundHit.point.y));
             Debug.Log("SNAP: Final base position y: " + basePosition.y);
+        }
+        else
+        {
+            basePosition.y = groundOffset;
         }
         transform.position = basePosition;
     }
