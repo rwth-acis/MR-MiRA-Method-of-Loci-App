@@ -21,6 +21,8 @@ public class RoomManager : MonoBehaviour
     public List<GameObject> doorPrefabs = new List<GameObject>();
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
+    [Tooltip("The Camera Rig")]
+    [SerializeField] public GameObject cameraRig;
     [Tooltip("The locus halo prefab")]
     [SerializeField] public GameObject locusHalo;
     [Tooltip("The tooltip prefab")]
@@ -51,7 +53,7 @@ public class RoomManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -65,6 +67,7 @@ public class RoomManager : MonoBehaviour
         // Find the agentcontroller in the scene
         agentController = FindObjectOfType<AgentController>();
         user = GameObject.Find("CenterEyeAnchor");
+        cameraRig = GameObject.Find("[BuildingBlock] Camera Rig");
         _menu = GameObject.FindGameObjectWithTag("Menu");
         _lociMenu = GameObject.FindGameObjectWithTag("LociMenu");
         _lociMenu.SetActive(false);
@@ -131,7 +134,7 @@ public class RoomManager : MonoBehaviour
         _users.Add(newUser);
         _currentUser = newUser;
         _currentRoom = _currentUser.GetFirstRoom();
-        await LoadRoom(_currentRoom);
+        await LoadRoom(_currentRoom, true);
     }
 
     /// <summary>
@@ -204,34 +207,38 @@ public class RoomManager : MonoBehaviour
     /// Saves the current room to JSON and loads the given room
     /// </summary>
     /// <param name="room">The room to be loaded</param>
-    public async Task LoadRoom(Room room)
+    public async Task LoadRoom(Room room, bool firstLoad = false)
     {
-        Debug.Log("1");
         await room.LoadUnboundAnchors(room.FurnitureAnchors, room.RepresentationAnchors);
-        Debug.Log("5");
-        //_currentRoom.UpdateTransforms();
         // We clear the instances of the *new* room, to forgo issues with old instances having no transforms, etc...
         room.FurnitureInstances.Clear();
         room.RepresentationInstances.Clear();
-        room.Loci.Clear();
-        // Save the current room to JSON
-        _currentRoom.UpdateTransforms();
-        await _currentRoom.UpdateAnchors();
-        _currentRoom.SaveRoom();
-        _currentUser.SaveUser();
-        // First remove all furniture from the scene
-        GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Furniture");
-        foreach (GameObject obj in allObjects)
+        if (!firstLoad)
         {
-            GameObject.Destroy(obj);
-        }
-        room.RepresentationInstances.Clear();
-        room.Loci.Clear();
-        // Deletes either the representations or the loci halo objects
-        GameObject[] allRepresentations = GameObject.FindGameObjectsWithTag("Information");
-        foreach (GameObject obj in allRepresentations)
-        {
-            GameObject.Destroy(obj);
+            ReturnToRealPosition();
+            Debug.Log("1");
+            Debug.Log("5");
+            //_currentRoom.UpdateTransforms();
+            room.Loci.Clear();
+            // Save the current room to JSON
+            _currentRoom.UpdateTransforms();
+            await _currentRoom.UpdateAnchors();
+            _currentRoom.SaveRoom();
+            _currentUser.SaveUser();
+            // First remove all furniture from the scene
+            GameObject[] allObjects = GameObject.FindGameObjectsWithTag("Furniture");
+            foreach (GameObject obj in allObjects)
+            {
+                GameObject.Destroy(obj);
+            }
+            room.RepresentationInstances.Clear();
+            room.Loci.Clear();
+            // Deletes either the representations or the loci halo objects
+            GameObject[] allRepresentations = GameObject.FindGameObjectsWithTag("Information");
+            foreach (GameObject obj in allRepresentations)
+            {
+                GameObject.Destroy(obj);
+            }
         }
 
         // Load the room
@@ -240,7 +247,6 @@ public class RoomManager : MonoBehaviour
         {
             // List of the prefabs of the furniture in the room
             List<GameObject> roomFurniture = room.Furniture;
-            Debug.Log("Furniture instances :" + room.FurnitureInstances.Count);
             for (int i = 0; i < roomFurniture.Count; i++)
             {
                 GameObject myObject = GameObject.Instantiate(roomFurniture[i]);
@@ -248,7 +254,6 @@ public class RoomManager : MonoBehaviour
                 room.AddFurnitureInstance(myObject);
             }
             room.LoadTransforms();
-            room.LoadAnchors();
         }
 
         if (room != null && room.WallColour != null)
@@ -268,7 +273,7 @@ public class RoomManager : MonoBehaviour
                     room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
-                room.LoadAnchors();
+                //room.LoadAnchors();
             }
         }
         else if (layoutMode)
@@ -306,9 +311,10 @@ public class RoomManager : MonoBehaviour
                     room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
-                room.LoadAnchors();
+                //room.LoadAnchors();
             }
         }
+        room.LoadAnchors();
         Debug.Log("6");
     }
 
@@ -565,5 +571,14 @@ public class RoomManager : MonoBehaviour
         }
         _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
+    }
+
+    public void ReturnToRealPosition()
+    {
+        cameraRig.transform.position = new Vector3(user.transform.localPosition.x, cameraRig.transform.position.y, user.transform.localPosition.z);
+        cameraRig.transform.localPosition = Vector3.zero;
+        user.transform.position = Vector3.zero;
+        cameraRig.transform.rotation = Quaternion.identity;
+        user.transform.rotation = Quaternion.identity;
     }
 }
