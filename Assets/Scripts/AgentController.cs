@@ -16,6 +16,8 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip introductionAudio;
     [Tooltip("The audio clip for the MoL Explanation")]
     [SerializeField] public AudioClip MoLAudio;
+    [Tooltip("The list introduction clip")]
+    [SerializeField] public AudioClip listIntroductionAudio;
     [Tooltip("The audio clips for the list")]
     [SerializeField] public AudioClip[] listAudios;
     [Tooltip("The audio clips for the story")]
@@ -136,5 +138,18 @@ public class AgentController : MonoBehaviour
     public void ActivateAgent()
     {
         agent.gameObject.SetActive(true);
+    }
+
+    public void PlayAudioListPhase(int index)
+    {
+        // Play the audioclip on head layer
+        AgentAudioTask audioTask = new AgentAudioTask(listAudios[index]);
+        taskSystem.ScheduleTask(audioTask, 0, "Head");
+    }
+
+    public void PlayAudio(AudioClip audio)
+    {
+        AgentAudioTask audioTask = new AgentAudioTask(audio);
+        taskSystem.ScheduleTask(audioTask, 0, "Head");
     }
 }

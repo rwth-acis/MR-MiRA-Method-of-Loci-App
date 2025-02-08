@@ -609,41 +609,94 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Furniture Phase"</param>
     public void FurniturePhase(bool value)
     {
+        // Deactivate and activate only necessary buttons
+        newRoomButton.SetActive(true);
+        backButton.SetActive(true);
+        forwardButton.SetActive(true);
+        openLociStoreButton.SetActive(false);
+        nextWallColourButton.SetActive(true);;
+        previousWallColourButton.SetActive(true);
+        nextFurnitureButton.SetActive(true);
+        selectButton.SetActive(true);
+        previousFurnitureButton.SetActive(true);
+        changeUser.SetActive(true);
+        furniturePhaseButton.SetActive(false);
+        listPhaseButton.SetActive(true);
+        storyPhaseButton.SetActive(false);
+        numberPhaseButton.SetActive(false);
+        confirmButton.SetActive(false);
         // Let the agent play the introduction to the furniture setup phase
         agentController.ActivateAgent();
         // TODO
-        // In the end, load the first room again
-        LoadRoom(_currentUser.GetFirstRoom());
     }
 
     /// <summary>
     /// Shows one object at a time to the user to place in the memory palace
     /// </summary>
     /// <param name="value"></param>
-    public void ListPhase(bool value)
+    public async void ListPhase(bool value)
     {
+        // Deactivate and activate only necessary buttons
+        newRoomButton.SetActive(false);
+        backButton.SetActive(true);
+        forwardButton.SetActive(true);
+        openLociStoreButton.SetActive(false);
+        nextWallColourButton.SetActive(false);
+        previousWallColourButton.SetActive(false);
+        nextFurnitureButton.SetActive(false);
+        selectButton.SetActive(false);
+        previousFurnitureButton.SetActive(false);
+        changeUser.SetActive(true);
+        furniturePhaseButton.SetActive(false);
+        listPhaseButton.SetActive(false);
+        storyPhaseButton.SetActive(true);
+        numberPhaseButton.SetActive(false);
+        confirmButton.SetActive(true);
+
         // Let the agent play the introduction to the list phase
         agentController.ActivateAgent();
-        foreach(GameObject obj in evaluationList)
+        agentController.PlayAudio(agentController.listIntroductionAudio);
+        for(int i = 0; i < evaluationList.Count; i++)
         {
-            AddLoci(obj, "");
-            StartCoroutine(WaitForUserConfirmation());
+            AddLoci(evaluationList[i], "");
+            agentController.PlayAudioListPhase(i);
+            await WaitForUserConfirmation();
             _isObjectConfirmed = false;
         }
     }
 
-    private IEnumerator WaitForUserConfirmation()
+    private async Task WaitForUserConfirmation()
     {
-        yield return new WaitUntil(() => _isObjectConfirmed);
+        while (!_isObjectConfirmed)
+        {
+            await Task.Delay(100);
+        }
     }
 
     public void OnConfirmButtonClick(bool value)
     {
-        _isObjectConfirmed = true;
+        _isObjectConfirmed = value;
     }
 
     public void StoryPhase(bool value)
     {
+        // Deactivate and activate only necessary buttons
+        newRoomButton.SetActive(false);
+        backButton.SetActive(true);
+        forwardButton.SetActive(true);
+        openLociStoreButton.SetActive(true);
+        // Keep the wall colour changeable to connect colour to the objects
+        nextWallColourButton.SetActive(true);
+        previousWallColourButton.SetActive(true);
+        nextFurnitureButton.SetActive(false);
+        selectButton.SetActive(false);
+        previousFurnitureButton.SetActive(false);
+        changeUser.SetActive(true);
+        furniturePhaseButton.SetActive(false);
+        listPhaseButton.SetActive(false);
+        storyPhaseButton.SetActive(false);
+        numberPhaseButton.SetActive(true);
+        confirmButton.SetActive(true);
         // Let the agent play the introduction to the story phase
         agentController.ActivateAgent();
         // TODO
@@ -651,6 +704,23 @@ public class RoomManager : MonoBehaviour
 
     public void NumberPhase(bool value)
     {
+        // Deactivate and activate only necessary buttons
+        newRoomButton.SetActive(false);
+        backButton.SetActive(true);
+        forwardButton.SetActive(true);
+        openLociStoreButton.SetActive(true);
+        // Keep the wall colour changeable to connect colour to the objects
+        nextWallColourButton.SetActive(true);
+        previousWallColourButton.SetActive(true);
+        nextFurnitureButton.SetActive(false);
+        selectButton.SetActive(false);
+        previousFurnitureButton.SetActive(false);
+        changeUser.SetActive(true);
+        furniturePhaseButton.SetActive(false);
+        listPhaseButton.SetActive(false);
+        storyPhaseButton.SetActive(false);
+        numberPhaseButton.SetActive(false);
+        confirmButton.SetActive(true);
         // Let the agent play the introduction to the number phase
         agentController.ActivateAgent();
         // TODO
