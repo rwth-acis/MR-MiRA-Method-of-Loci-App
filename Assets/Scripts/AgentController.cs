@@ -16,7 +16,12 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip introductionAudio;
     [Tooltip("The audio clip for the MoL Explanation")]
     [SerializeField] public AudioClip MoLAudio;
-
+    [Tooltip("The audio clips for the list")]
+    [SerializeField] public AudioClip[] listAudios;
+    [Tooltip("The audio clips for the story")]
+    [SerializeField] public AudioClip[] storyAudios;
+    [Tooltip("The audio clips for the number")]
+    [SerializeField] public AudioClip[] numberAudios;
     [Tooltip("To check if the agent is following the user")]
     private bool _isFollowingUser = false;
 
@@ -103,7 +108,8 @@ public class AgentController : MonoBehaviour
 
     public void GuideUserFurnishing()
     {
-        //TODO
+        // Play the audio for the furniture setup
+
     }
 
     public void GuideUserEncodingInformation()

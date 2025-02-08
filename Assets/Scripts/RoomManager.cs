@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -27,11 +28,30 @@ public class RoomManager : MonoBehaviour
     [SerializeField] public GameObject locusHalo;
     [Tooltip("The tooltip prefab")]
     [SerializeField] public GameObject tooltip;
+    [Tooltip("The list for the evaluation")]
+    public List<GameObject> evaluationList = new List<GameObject>();
 
     [Tooltip("Whether the layout mode is active")]
     public bool layoutMode { get; set; } = false;
     [Tooltip("Whether the reuse mode is active")]
     public bool reusePalace { get; set; } = false;
+
+    // All buttons in the user menu
+    public GameObject newRoomButton;
+    public GameObject backButton;
+    public GameObject forwardButton;
+    public GameObject openLociStoreButton;
+    public GameObject nextWallColourButton;
+    public GameObject previousWallColourButton;
+    public GameObject nextFurnitureButton;
+    public GameObject selectButton;
+    public GameObject previousFurnitureButton;
+    public GameObject changeUser;
+    public GameObject furniturePhaseButton;
+    public GameObject listPhaseButton;
+    public GameObject storyPhaseButton;
+    public GameObject numberPhaseButton;
+    public GameObject confirmButton;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -42,6 +62,7 @@ public class RoomManager : MonoBehaviour
     private int _furniturePointer = 0;
     private GameObject _menu;
     private GameObject _lociMenu;
+    private bool _isObjectConfirmed = false;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -580,5 +601,58 @@ public class RoomManager : MonoBehaviour
         user.transform.position = Vector3.zero;
         cameraRig.transform.rotation = Quaternion.identity;
         user.transform.rotation = Quaternion.identity;
+    }
+
+    /// <summary>
+    /// Starts the setup of furniture in the memory palace
+    /// </summary>
+    /// <param name="value">The value of the button "Furniture Phase"</param>
+    public void FurniturePhase(bool value)
+    {
+        // Let the agent play the introduction to the furniture setup phase
+        agentController.ActivateAgent();
+        // TODO
+        // In the end, load the first room again
+        LoadRoom(_currentUser.GetFirstRoom());
+    }
+
+    /// <summary>
+    /// Shows one object at a time to the user to place in the memory palace
+    /// </summary>
+    /// <param name="value"></param>
+    public void ListPhase(bool value)
+    {
+        // Let the agent play the introduction to the list phase
+        agentController.ActivateAgent();
+        foreach(GameObject obj in evaluationList)
+        {
+            AddLoci(obj, "");
+            StartCoroutine(WaitForUserConfirmation());
+            _isObjectConfirmed = false;
+        }
+    }
+
+    private IEnumerator WaitForUserConfirmation()
+    {
+        yield return new WaitUntil(() => _isObjectConfirmed);
+    }
+
+    public void OnConfirmButtonClick(bool value)
+    {
+        _isObjectConfirmed = true;
+    }
+
+    public void StoryPhase(bool value)
+    {
+        // Let the agent play the introduction to the story phase
+        agentController.ActivateAgent();
+        // TODO
+    }
+
+    public void NumberPhase(bool value)
+    {
+        // Let the agent play the introduction to the number phase
+        agentController.ActivateAgent();
+        // TODO
     }
 }
