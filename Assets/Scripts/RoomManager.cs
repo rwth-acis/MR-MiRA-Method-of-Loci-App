@@ -574,11 +574,12 @@ public class RoomManager : MonoBehaviour
             if (tooltipText != null)
             {
                 // TODO give the tooltip texts or let the user input them
-                GameObject tooltipObject = GameObject.Instantiate(tooltip, newObject.transform.position + Vector3.up, Quaternion.identity);
-
+                GameObject tooltipObject = GameObject.Instantiate(tooltip, newObject.transform.position, Quaternion.identity);
                 // Set the tooltip to be on top of the object
-                ObjectSnapper objectsnapper = tooltipObject.GetComponent<ObjectSnapper>();
-                objectsnapper.snapToFloor();
+                ObjectSnapper objectsnapper = newObject.GetComponent<ObjectSnapper>();
+                float TooltipY = objectsnapper.getHighestPoint();
+                tooltipObject.transform.position = new Vector3(tooltipObject.transform.position.x, TooltipY, tooltipObject.transform.position.z);
+
 
                 tooltipObject.transform.SetParent(newObject.transform);
                 TextMeshProUGUI [] texts = tooltipObject.GetComponentsInChildren<TextMeshProUGUI>();

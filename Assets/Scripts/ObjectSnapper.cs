@@ -70,36 +70,24 @@ public class ObjectSnapper : MonoBehaviour
     /// </summary>
     public void snapToFloor()
     {
-        // Tooltips should be snapped to the object they are hovering over
-        if (isTooltip)
+        _renderer = GetComponent<Renderer>();
+        // check if the root object has a renderer at all
+        float lowestY = Mathf.Infinity;
+        if (_renderer != null)
         {
-            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit objectHit, Mathf.Infinity))
+            lowestY = _renderer.bounds.min.y;
+        }
+        // Search for the lowest renderer in the children
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer.bounds.min.y < lowestY)
             {
-                float y = objectHit.point.y;
-                transform.position = new Vector3(transform.position.x, y, transform.position.z);
-                return;
+                _renderer = renderer;
+                lowestY = renderer.bounds.min.y;
             }
         }
 
-        if (_renderer == null)
-        {
-            _renderer = GetComponent<Renderer>();
-        }
-        // check if the root object has a renderer at all
-        if (_renderer == null)
-        {
-            // Search for the lowest renderer in the children
-            Renderer[] renderers = GetComponentsInChildren<Renderer>();
-            float lowestY = float.MaxValue;
-            foreach (Renderer renderer in renderers)
-            {
-                if (renderer.bounds.min.y < lowestY)
-                {
-                    _renderer = renderer;
-                    lowestY = renderer.bounds.min.y;
-                }
-            }
-        }
         // set the rotation to be always upright
         transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 
@@ -127,5 +115,37 @@ public class ObjectSnapper : MonoBehaviour
             basePosition.y = groundOffset;
         }
         transform.position = basePosition;
+    }
+
+    public void snapTooltip(float gameObjectY)
+    {
+        transform.position = new Vector3(transform.position.x, gameObjectY, transform.position.z);
+        // // Tooltips should be snapped to the object they are hovering over
+        // if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit objectHit, Mathf.Infinity))
+        // {
+        //     float y = objectHit.point.y;
+        //     transform.position = new Vector3(transform.position.x, y, transform.position.z);
+        //     return;
+        // }
+    }
+
+    public float getHighestPoint()
+    {
+        // check if the root object has a renderer at all
+        if (_renderer != null) return _renderer.bounds.max.y;
+
+        _renderer = GetComponent<Renderer>();
+        // Search for the highest renderer in the children
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        float highestY = _renderer.bounds.max.y;
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer.bounds.max.y > highestY)
+            {
+                _renderer = renderer;
+                highestY = renderer.bounds.max.y;
+            }
+        }
+        return highestY;
     }
 }
