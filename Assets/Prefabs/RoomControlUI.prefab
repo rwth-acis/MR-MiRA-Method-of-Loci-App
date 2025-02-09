@@ -580,8 +580,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -9.5, y: 99.1}
+  m_SizeDelta: {x: -19, y: 198.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &721525170545929563
 MonoBehaviour:
@@ -625,7 +625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0, z: 0}
-  _size: {x: 649.65137, y: 429.49823, z: 0.01}
+  _size: {x: 624.3248, y: 619.2627, z: 0.01}
 --- !u!114 &2353501324111091442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1702,8 +1702,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.4308, y: 0.092}
-  m_SizeDelta: {x: 649.65137, y: 429.49823}
+  m_AnchoredPosition: {x: -0.4324, y: 0.0899}
+  m_SizeDelta: {x: 643.3248, y: 421.0627}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5263767050985344596
 Canvas:
@@ -2324,8 +2324,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -11.6, y: 98.1}
+  m_SizeDelta: {x: -23.2, y: 196.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8509281304986356856
 MonoBehaviour:
@@ -2369,7 +2369,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _position: {x: 0, y: 0, z: 0}
-  _size: {x: 649.65137, y: 429.49823, z: 0.01}
+  _size: {x: 620.1248, y: 617.1627, z: 0.01}
 --- !u!114 &1419689326613383085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10821,6 +10821,34 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6067706442458617767, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: _size.y
+      value: 634.69824
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706442736845037, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -14.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706442736845037, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 185.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706442736845037, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -7.399994
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706442736845037, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 92.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706442736845039, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: _size.x
+      value: 634.8514
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706442736845039, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: _size.y
+      value: 615.09827
+      objectReference: {fileID: 0}
     - target: {fileID: 6067706442897525986, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Name
       value: RoomControlUI
@@ -10888,6 +10916,22 @@ PrefabInstance:
     - target: {fileID: 6067706443027747048, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_Color.r
       value: 0.13919537
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706443900988971, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706443900988971, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 205.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706443900988971, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6067706443900988971, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 102.6
       objectReference: {fileID: 0}
     - target: {fileID: 6067706444418444452, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
       propertyPath: m_SizeDelta.x

@@ -22318,7 +22318,7 @@ MonoBehaviour:
   PrefabsToSpawn:
   - Labels: 8293
     Prefabs:
-    - {fileID: 609593515707577405, guid: b68fb76c9e51ebe4ea520a4b05389604, type: 3}
+    - {fileID: 609593515707577405, guid: 85906144a4217824ab14913a4f57cce6, type: 3}
     PrefabSelection: 0
     MatchAspectRatio: 0
     CalculateFacingDirection: 0

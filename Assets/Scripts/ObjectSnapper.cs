@@ -8,6 +8,7 @@ public class ObjectSnapper : MonoBehaviour
     [SerializeField] public Grabbable grabbable;
     [Tooltip("Is the object a door")]
     [SerializeField] public bool isDoor = false;
+    [SerializeField] public bool next = false;
     [SerializeField] public bool isTooltip = false;
     private bool grabbed = false;
     private Renderer _renderer;
@@ -29,6 +30,17 @@ public class ObjectSnapper : MonoBehaviour
             {
                 Debug.Log("I have been grabbed!");
                 grabbed = true;
+                if (isDoor)
+                {
+                    if (next)
+                    {
+                        RoomManager.Instance.NextScene(true);
+                    }
+                    else
+                    {
+                        RoomManager.Instance.PreviousScene(true);
+                    }
+                }
             }
         }
         else
@@ -55,14 +67,28 @@ public class ObjectSnapper : MonoBehaviour
         {
             _renderer = GetComponent<Renderer>();
         }
-        // find the wall behind the object
-        if( Physics.Raycast(transform.position, -transform.forward, out RaycastHit hit, Mathf.Infinity))
+
+        Vector3 raycastOrigin = transform.position;
+        Vector3 raycastDirection = -transform.forward;
+        RaycastHit hit;
+
+        for(int i = 0; i < 10; i++)
         {
-            // set the position to be on the wall
-            transform.position = hit.point;
+            if (Physics.Raycast(raycastOrigin, raycastDirection, out hit, Mathf.Infinity))
+            {
+                if (hit.collider.CompareTag("Wall"))
+                {
+                    // Set the position to be on the wall
+                    transform.position = hit.point;
+
+                    // Find the right rotation to be parallel to the wall
+                    transform.rotation = Quaternion.LookRotation(hit.normal);
+                    return;
+                }
+                // Update the origin to the hit point and continue the raycast
+                raycastOrigin = hit.point;
+            }
         }
-        // find the right rotation to be parallel to the wall
-        transform.rotation = Quaternion.LookRotation(hit.normal);
     }
 
     /// <summary>

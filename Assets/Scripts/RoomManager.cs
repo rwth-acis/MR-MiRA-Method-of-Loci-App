@@ -164,10 +164,12 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "New Room"</param>
     public async void CreateRoom(bool value)
     {
+        // Position for door raycast
+        Vector3 raycastOrigin = user.transform.position;
         // add door to the current room
         // TODO make sure that the rooms are actually connected
         Quaternion rotation = Quaternion.LookRotation(- user.transform.forward);
-        GameObject door = GameObject.Instantiate(doorPrefabs[0], user.transform.position + user.transform.forward * 0.5f, rotation);
+        GameObject door = GameObject.Instantiate(doorPrefabs[0], raycastOrigin, rotation);
         ObjectSnapper objectsnapper = door.GetComponent<ObjectSnapper>();
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
@@ -182,7 +184,7 @@ public class RoomManager : MonoBehaviour
         await LoadRoom(room);
 
         // Add a door to the new room
-        door = GameObject.Instantiate(doorPrefabs[1], user.transform.position - user.transform.forward * 0.5f, user.transform.rotation);
+        door = GameObject.Instantiate(doorPrefabs[1], raycastOrigin, user.transform.rotation);
         objectsnapper = door.GetComponent<ObjectSnapper>();
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
