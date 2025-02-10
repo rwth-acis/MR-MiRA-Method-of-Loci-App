@@ -16,6 +16,12 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip introductionAudio;
     [Tooltip("The audio clip for the MoL Explanation")]
     [SerializeField] public AudioClip MoLAudio;
+    [Tooltip("Furniture phase introduction audio")]
+    [SerializeField] public AudioClip furnitureIntroductionAudio;
+    [Tooltip("After placement of 2 furniture items")]
+    [SerializeField] public AudioClip furniturePlacement2Audio;
+    [Tooltip("After creating a new room, explain doors")]
+    [SerializeField] public AudioClip newRoomDoorAudio;
     [Tooltip("The list introduction clip")]
     [SerializeField] public AudioClip listIntroductionAudio;
     [Tooltip("The audio clips for the list")]
@@ -27,6 +33,10 @@ public class AgentController : MonoBehaviour
     [Tooltip("To check if the agent is following the user")]
     private bool _isFollowingUser = false;
 
+    private AgentAudioTask _currentAudio;
+    private bool paused = false;
+    private bool replaying = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,11 +45,17 @@ public class AgentController : MonoBehaviour
         taskSystem = (ScheduleBasedTaskSystem)agent.TaskSystem;
         // Turn to the user
         FaceUser();
-        // TODO Play the introduction audio on the head layer
-        AgentAudioTask audioTask = new AgentAudioTask(introductionAudio);
-        taskSystem.ScheduleTask(audioTask);
-        AgentAudioTask audioTask2 = new AgentAudioTask(MoLAudio);
-        taskSystem.ScheduleTask(audioTask2);
+        // Wave to the user
+        taskSystem.Tasks.PlayAnimation("WaveLeft", 5, "", 0, "Left Arm");
+
+        PlayAudio(introductionAudio);
+        // AgentAudioTask audioTask = new AgentAudioTask(introductionAudio);
+        // taskSystem.ScheduleTask(audioTask, 0, "Head");
+        // _currentAudio = audioTask;
+        PlayAudio(MoLAudio);
+        // AgentAudioTask audioTask2 = new AgentAudioTask(MoLAudio);
+        // taskSystem.ScheduleTask(audioTask2, 0, "Head");
+        // audioTask2.OnTaskStarted += OnAudioTaskStarted(audioTask2);
     }
 
     // Update is called once per frame
@@ -65,12 +81,22 @@ public class AgentController : MonoBehaviour
     }
 
     /// <summary>
+    /// Turns the agent to face the game object
+    /// </summary>
+    public void FaceObject(GameObject gameObject)
+    {
+        float angle = Vector3.SignedAngle(agent.transform.forward, gameObject.transform.position - agent.transform.position, Vector3.up);
+        AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
+        taskSystem.ScheduleTask(rotationTask);
+    }
+
+    /// <summary>
     /// Makes the agent point at a specific object
     /// </summary>
     /// <param name="gameObject">The object to point at</param>
     public void PointAtObject(GameObject gameObject)
     {
-        FaceUser();
+        FaceObject(gameObject);
         taskSystem.Tasks.PointAt(gameObject, true);
     }
 
@@ -105,6 +131,11 @@ public class AgentController : MonoBehaviour
     private void OnTaskFinished()
     {
         _isFollowingUser = false;
+    }
+
+    private void OnAudioTaskStarted(AgentAudioTask task)
+    {
+        _currentAudio = task;
     }
 
 
@@ -145,11 +176,34 @@ public class AgentController : MonoBehaviour
         // Play the audioclip on head layer
         AgentAudioTask audioTask = new AgentAudioTask(listAudios[index]);
         taskSystem.ScheduleTask(audioTask, 0, "Head");
+        audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
     }
 
     public void PlayAudio(AudioClip audio)
     {
         AgentAudioTask audioTask = new AgentAudioTask(audio);
         taskSystem.ScheduleTask(audioTask, 0, "Head");
+        audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
+    }
+
+    public void PauseAudio()
+    {
+        if(paused)
+        {
+            _currentAudio.ContinueAudio();
+            paused = false;
+        }
+        else
+        {
+            _currentAudio.PauseAudio();
+            paused = true;
+        }
+    }
+
+    public void ReplayAudio()
+    {
+        AgentAudioTask audioTask = new AgentAudioTask(_currentAudio.Audio);
+        taskSystem.ScheduleTask(audioTask, 9, "Head");
+        audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
     }
 }

@@ -141,4 +141,9 @@ public class DevMenuController : MonoBehaviour
     {
         roomManager.OnConfirmButtonClick(value);
     }
+
+    public void DeleteJSON(bool value)
+    {
+        roomManager.DeleteJSON(value);
+    }
 }

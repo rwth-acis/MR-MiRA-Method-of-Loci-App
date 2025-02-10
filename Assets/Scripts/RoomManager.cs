@@ -63,6 +63,8 @@ public class RoomManager : MonoBehaviour
     private GameObject _menu;
     private GameObject _lociMenu;
     private bool _isObjectConfirmed = false;
+    private int _deleteCounter = 0;
+    private int furniturePlacementCounter = 0;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -192,6 +194,8 @@ public class RoomManager : MonoBehaviour
         room.UpdateTransforms();
         //await room.UpdateAnchors();
         _currentRoom.SaveRoom();
+        agentController.PlayAudio(agentController.newRoomDoorAudio);
+        agentController.PointAtObject(door);
     }
 
     /// <summary>
@@ -494,6 +498,16 @@ public class RoomManager : MonoBehaviour
         _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
         _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
+        // Let agent play an audio when the first two items have been placed
+        if(_currentRoom==_currentUser.GetFirstRoom())
+        {
+            // Increment the counter and check if two items have been placed
+            furniturePlacementCounter++;
+            if (furniturePlacementCounter == 2)
+            {
+                agentController.PlayAudio(agentController.furniturePlacement2Audio);
+            }
+        }
     }
 
     /// <summary>
@@ -630,6 +644,7 @@ public class RoomManager : MonoBehaviour
         confirmButton.SetActive(false);
         // Let the agent play the introduction to the furniture setup phase
         agentController.ActivateAgent();
+        agentController.PlayAudio(agentController.furnitureIntroductionAudio);
         // TODO
     }
 
@@ -727,5 +742,47 @@ public class RoomManager : MonoBehaviour
         // Let the agent play the introduction to the number phase
         agentController.ActivateAgent();
         // TODO
+    }
+
+    public void DeleteJSON(bool value)
+    {
+        _deleteCounter++;
+        if (_deleteCounter == 2)
+        {
+            string path = Path.Combine(Application.persistentDataPath, _currentUser._name + ".json");
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+                Debug.Log("File deleted: " + path);
+            }
+            else
+            {
+                Debug.Log("File not found: " + path);
+            }
+            _deleteCounter = 0;
+            // delete all objects from the scene
+            GameObject[] allFurnitureObjects = GameObject.FindGameObjectsWithTag("Furniture");
+            foreach (GameObject obj in allFurnitureObjects)
+            {
+                GameObject.Destroy(obj);
+            }
+            GameObject[] allRepresentationObjects = GameObject.FindGameObjectsWithTag("Information");
+            foreach (GameObject obj in allRepresentationObjects)
+            {
+                GameObject.Destroy(obj);
+            }
+            LoadUser(_currentUser._name);
+        }
+    }
+
+    //Audio Control
+    public void PauseAudio(bool value)
+    {
+        agentController.PauseAudio();
+    }
+
+    public void ReplayAudio(bool value)
+    {
+        agentController.ReplayAudio();
     }
 }

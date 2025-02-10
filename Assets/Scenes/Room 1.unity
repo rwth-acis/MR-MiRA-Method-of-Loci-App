@@ -28132,6 +28132,9 @@ MonoBehaviour:
   user: {fileID: 855758748}
   introductionAudio: {fileID: 8300000, guid: b620f14a248ef4c4b8b5f898ff8509d6, type: 3}
   MoLAudio: {fileID: 8300000, guid: adf534da7ea331a45986264cbc56a07a, type: 3}
+  furnitureIntroductionAudio: {fileID: 8300000, guid: 7fbf1cef144589640a5acb61c51311be, type: 3}
+  furniturePlacement2Audio: {fileID: 8300000, guid: 4aa29bd24853c7c4ca9f2f60336213ef, type: 3}
+  newRoomDoorAudio: {fileID: 8300000, guid: 513f029feabe0bc468dff9a5cd2958a8, type: 3}
   listIntroductionAudio: {fileID: 8300000, guid: 6ac9f08006265b645883457046e464db, type: 3}
   listAudios:
   - {fileID: 8300000, guid: d6608ceb5572b77439d343313e757685, type: 3}
