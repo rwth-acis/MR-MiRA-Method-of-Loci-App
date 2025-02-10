@@ -70,6 +70,8 @@ public class RoomManager : MonoBehaviour
     private int _deleteCounter = 0;
     private int furniturePlacementCounter = 0;
     private int _devMenuCounter;
+    // whether doors can be used to switch rooms
+    private bool _doorChangeRoom = false;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -453,13 +455,21 @@ public class RoomManager : MonoBehaviour
     {
         _wallColours.Add(Color.white);
         _wallColours.Add(Color.yellow);
+        _wallColours.Add(new Color(0.94f, 0.9f, 0.55f));
         _wallColours.Add(new Color(1f,0.5f,0));
+        _wallColours.Add(new Color(1f, 0.87f, 0.68f));
         _wallColours.Add(Color.magenta);
+        _wallColours.Add(new Color(1f, 0.71f, 0.76f));
         _wallColours.Add(Color.red);
+        _wallColours.Add(new Color(0.5f, 0f, 0f));
         _wallColours.Add(Color.green);
+        _wallColours.Add(new Color(0f, 0.5f, 0f));
+        _wallColours.Add(new Color(0.77f, 0.88f, 0.78f));
         _wallColours.Add(Color.cyan);
+        _wallColours.Add(new Color(0.69f, 0.77f, 0.87f));
         _wallColours.Add(Color.blue);
         _wallColours.Add(new Color(0.6f,0.3f,1f));
+        _wallColours.Add(new Color(0.87f, 0.68f, 0.98f));
         _wallColours.Add(Color.grey);
         _wallColours.Add(Color.black);
         _colourPointer = 0;
@@ -681,7 +691,7 @@ public class RoomManager : MonoBehaviour
         audioReplayButton.SetActive(true);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
-        listPhaseButton.SetActive(true);
+        listPhaseButton.SetActive(false);
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(false);
         confirmButton.SetActive(false);
@@ -697,6 +707,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value"></param>
     public async void ListPhase(bool value)
     {
+        _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(false);
         backButton.SetActive(true);
@@ -741,6 +752,7 @@ public class RoomManager : MonoBehaviour
 
     public void StoryPhase(bool value)
     {
+        _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(false);
         backButton.SetActive(true);
@@ -768,6 +780,7 @@ public class RoomManager : MonoBehaviour
 
     public void NumberPhase(bool value)
     {
+        _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(false);
         backButton.SetActive(true);
@@ -855,6 +868,31 @@ public class RoomManager : MonoBehaviour
     {
         LoadRoom(_currentUser.GetFirstRoom());
         endFurniturePhaseButton.SetActive(false);
+        listPhaseButton.SetActive(true);
         agentController.PlayAudio(agentController.furnitureFinishAudio);
+    }
+
+    /// <summary>
+    /// To switch to the next room when the user is grabbing a door
+    /// Only possible when the rooms are set up
+    /// </summary>
+    public void DoorNextScene()
+    {
+        if(_doorChangeRoom)
+        {
+            NextScene(true);
+        }
+    }
+
+    /// <summary>
+    /// To switch to the previous room when the user is grabbing a door
+    /// Only possible when the rooms are set up
+    /// </summary>
+    public void DoorPreviousScene()
+    {
+        if (_doorChangeRoom)
+        {
+            PreviousScene(true);
+        }
     }
 }

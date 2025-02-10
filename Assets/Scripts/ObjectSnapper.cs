@@ -30,17 +30,6 @@ public class ObjectSnapper : MonoBehaviour
             {
                 Debug.Log("I have been grabbed!");
                 grabbed = true;
-                if (isDoor)
-                {
-                    if (next)
-                    {
-                        RoomManager.Instance.NextScene(true);
-                    }
-                    else
-                    {
-                        RoomManager.Instance.PreviousScene(true);
-                    }
-                }
             }
         }
         else
@@ -54,6 +43,24 @@ public class ObjectSnapper : MonoBehaviour
                 Debug.Log("I have been released!");
                 snapToFloor();
                 grabbed = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// To change rooms when the door is touched
+    /// </summary>
+    void OnCollisionEnter()
+    {
+        if (isDoor)
+        {
+            if (next)
+            {
+                RoomManager.Instance.DoorNextScene();
+            }
+            else
+            {
+                RoomManager.Instance.DoorPreviousScene();
             }
         }
     }

@@ -740,7 +740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4128271285773969342, guid: 4974c234bcf65234da9c7063b1920fad, type: 3}
       propertyPath: m_text
-      value: "Wenn du diese T\xFCr ber\xFChrst kannst du zum letzten Raum wechseln"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5184963062988352121, guid: 4974c234bcf65234da9c7063b1920fad, type: 3}
       propertyPath: m_AnchorMax.y
@@ -926,7 +926,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4128271285773969342, guid: 4974c234bcf65234da9c7063b1920fad, type: 3}
       propertyPath: m_text
-      value: "Wenn du diese T\xFCr ber\xFChrst kannst du zum letzten Raum wechseln"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5184963062988352121, guid: 4974c234bcf65234da9c7063b1920fad, type: 3}
       propertyPath: m_AnchorMax.y
