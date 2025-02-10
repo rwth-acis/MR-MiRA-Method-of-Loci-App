@@ -47,7 +47,10 @@ public class RoomManager : MonoBehaviour
     public GameObject selectButton;
     public GameObject previousFurnitureButton;
     public GameObject changeUser;
+    public GameObject audioPauseButton;
+    public GameObject audioReplayButton;
     public GameObject furniturePhaseButton;
+    public GameObject endFurniturePhaseButton;
     public GameObject listPhaseButton;
     public GameObject storyPhaseButton;
     public GameObject numberPhaseButton;
@@ -99,6 +102,7 @@ public class RoomManager : MonoBehaviour
         _lociMenu.SetActive(false);
         _devMenu = GameObject.FindGameObjectWithTag("DevMenu");
         _devMenu.SetActive(false);
+        ActivateStartButtons();
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
@@ -114,6 +118,31 @@ public class RoomManager : MonoBehaviour
         LoadUser("Lena");
     }
 
+    /// <summary>
+    /// Only show user change, audio buttons and option to start the furniture phase at the beginning
+    /// </summary>
+    private void ActivateStartButtons()
+    {
+        // Deactivate and activate only necessary buttons
+        newRoomButton.SetActive(false);
+        backButton.SetActive(false);
+        forwardButton.SetActive(false);
+        openLociStoreButton.SetActive(false);
+        nextWallColourButton.SetActive(false);
+        previousWallColourButton.SetActive(false);
+        nextFurnitureButton.SetActive(false);
+        selectButton.SetActive(false);
+        previousFurnitureButton.SetActive(false);
+        changeUser.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
+        furniturePhaseButton.SetActive(true);
+        endFurniturePhaseButton.SetActive(false);
+        listPhaseButton.SetActive(false);
+        storyPhaseButton.SetActive(false);
+        numberPhaseButton.SetActive(false);
+        confirmButton.SetActive(false);
+    }
 
 
     private void Update()
@@ -189,6 +218,12 @@ public class RoomManager : MonoBehaviour
         _currentUser.AddRoom(room);
         _currentRoom = _currentUser.GetCurrentRoom();
         await LoadRoom(room);
+        // After creating 6 rooms the user is allowed to end the furniture phase
+        if (newRoomID == 6)
+        {
+            endFurniturePhaseButton.SetActive(true);
+            agentController.PlayAudio(agentController.furnitureCanBeFinishedAudio);
+        }
 
         // Add a door to the new room
         door = GameObject.Instantiate(doorPrefabs[1], raycastOrigin, user.transform.rotation);
@@ -642,7 +677,10 @@ public class RoomManager : MonoBehaviour
         selectButton.SetActive(true);
         previousFurnitureButton.SetActive(true);
         changeUser.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         furniturePhaseButton.SetActive(false);
+        endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(true);
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(false);
@@ -715,7 +753,10 @@ public class RoomManager : MonoBehaviour
         selectButton.SetActive(false);
         previousFurnitureButton.SetActive(false);
         changeUser.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         furniturePhaseButton.SetActive(false);
+        endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(true);
@@ -739,7 +780,10 @@ public class RoomManager : MonoBehaviour
         selectButton.SetActive(false);
         previousFurnitureButton.SetActive(false);
         changeUser.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         furniturePhaseButton.SetActive(false);
+        endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(false);
@@ -805,5 +849,12 @@ public class RoomManager : MonoBehaviour
     public void CloseDevMenu(bool value)
     {
         _devMenu.SetActive(false);
+    }
+
+    public void FinishFurniturePhase(bool value)
+    {
+        LoadRoom(_currentUser.GetFirstRoom());
+        endFurniturePhaseButton.SetActive(false);
+        agentController.PlayAudio(agentController.furnitureFinishAudio);
     }
 }

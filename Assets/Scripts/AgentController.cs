@@ -22,6 +22,10 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip furniturePlacement2Audio;
     [Tooltip("After creating a new room, explain doors")]
     [SerializeField] public AudioClip newRoomDoorAudio;
+    [Tooltip("The funiture phase can be finished")]
+    [SerializeField] public AudioClip furnitureCanBeFinishedAudio;
+    [Tooltip("Finish Furniture phase")]
+    [SerializeField] public AudioClip furnitureFinishAudio;
     [Tooltip("The list introduction clip")]
     [SerializeField] public AudioClip listIntroductionAudio;
     [Tooltip("The audio clips for the list")]

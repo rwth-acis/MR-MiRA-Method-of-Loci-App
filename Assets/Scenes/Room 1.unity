@@ -28135,6 +28135,8 @@ MonoBehaviour:
   furnitureIntroductionAudio: {fileID: 8300000, guid: 7fbf1cef144589640a5acb61c51311be, type: 3}
   furniturePlacement2Audio: {fileID: 8300000, guid: 4aa29bd24853c7c4ca9f2f60336213ef, type: 3}
   newRoomDoorAudio: {fileID: 8300000, guid: 513f029feabe0bc468dff9a5cd2958a8, type: 3}
+  furnitureCanBeFinishedAudio: {fileID: 8300000, guid: 246689426c9b1b94db9a0b6f99dafaca, type: 3}
+  furnitureFinishAudio: {fileID: 8300000, guid: 7f5575a3dd54a5741b0e785d207a4454, type: 3}
   listIntroductionAudio: {fileID: 8300000, guid: 6ac9f08006265b645883457046e464db, type: 3}
   listAudios:
   - {fileID: 8300000, guid: d6608ceb5572b77439d343313e757685, type: 3}
