@@ -146,4 +146,9 @@ public class DevMenuController : MonoBehaviour
     {
         roomManager.DeleteJSON(value);
     }
+
+    public void CloseMenu(bool value)
+    {
+        roomManager.CloseDevMenu(value);
+    }
 }

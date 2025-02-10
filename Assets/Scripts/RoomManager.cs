@@ -62,13 +62,16 @@ public class RoomManager : MonoBehaviour
     private int _furniturePointer = 0;
     private GameObject _menu;
     private GameObject _lociMenu;
+    private GameObject _devMenu;
     private bool _isObjectConfirmed = false;
     private int _deleteCounter = 0;
     private int furniturePlacementCounter = 0;
+    private int _devMenuCounter;
 
     //for testing
     [SerializeField] public GameObject furniture;
     [SerializeField] public GameObject furniture2;
+
 
     private void Awake()
     {
@@ -94,6 +97,8 @@ public class RoomManager : MonoBehaviour
         _menu = GameObject.FindGameObjectWithTag("Menu");
         _lociMenu = GameObject.FindGameObjectWithTag("LociMenu");
         _lociMenu.SetActive(false);
+        _devMenu = GameObject.FindGameObjectWithTag("DevMenu");
+        _devMenu.SetActive(false);
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
@@ -784,5 +789,21 @@ public class RoomManager : MonoBehaviour
     public void ReplayAudio(bool value)
     {
         agentController.ReplayAudio();
+    }
+
+    public void OpenDevMenu(bool value)
+    {
+        // Only activate when pressed 4 times
+        _devMenuCounter++;
+        if(_devMenuCounter == 4)
+        {
+            _devMenuCounter = 0;
+            _devMenu.SetActive(true);
+        }
+    }
+
+    public void CloseDevMenu(bool value)
+    {
+        _devMenu.SetActive(false);
     }
 }

@@ -33,6 +33,7 @@ TagManager:
   - Information
   - LociMenu
   - Wall
+  - DevMenu
   layers:
   - Default
   - TransparentFX
