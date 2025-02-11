@@ -566,5 +566,27 @@ public class Room
             await Awaitable.NextFrameAsync();
         }
     }
+
+    /// <summary>
+    /// Deletes an anchor from the list of anchors, and erases it from memory. Asynchronous.
+    /// </summary>
+    /// <param name="index">The index in the applicable list</param>
+    /// <param name="isFurniture">If true deletes from furniture list, else from representation list</param>
+    public async Task DeleteAnchorFromList(int index, bool isFurniture)
+    {
+        Guid anchor = isFurniture ? FurnitureAnchors[index] : RepresentationAnchors[index];
+        List<Guid> anchorList = new List<Guid>();
+        anchorList.Add(anchor);
+        await OVRSpatialAnchor.EraseAnchorsAsync(null, anchorList);
+        if (isFurniture)
+        {
+            FurnitureAnchors.RemoveAt(index);
+        }
+        else
+        {
+            RepresentationAnchors.RemoveAt(index);
+        }
+    }
+
 }
 

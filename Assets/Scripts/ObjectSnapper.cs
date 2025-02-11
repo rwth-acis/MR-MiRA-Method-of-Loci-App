@@ -1,3 +1,4 @@
+using System;
 using Oculus.Interaction;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -50,7 +51,7 @@ public class ObjectSnapper : MonoBehaviour
     /// <summary>
     /// To change rooms when the door is touched
     /// </summary>
-    void OnCollisionEnter()
+    private void OnTriggerEnter(Collider other)
     {
         if (isDoor)
         {
@@ -61,6 +62,16 @@ public class ObjectSnapper : MonoBehaviour
             else
             {
                 RoomManager.Instance.DoorPreviousScene();
+            }
+        }
+        // If delete button is pressed delete the object
+        else
+        {
+            Debug.Log("DELETE: Delete mode: " + RoomManager.Instance.isDeleteMode);
+            if(RoomManager.Instance.isDeleteMode)
+            {
+                Debug.Log("DELETE: Object deleted");
+                RoomManager.Instance.DeleteObject(gameObject);
             }
         }
     }

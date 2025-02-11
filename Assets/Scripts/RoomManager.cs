@@ -36,12 +36,16 @@ public class RoomManager : MonoBehaviour
     [Tooltip("Whether the reuse mode is active")]
     public bool reusePalace { get; set; } = false;
 
+    [Tooltip("If true, the next touched object will be deleted")]
+    public bool isDeleteMode { get; private set; } = false;
+
     // All buttons in the user menu
     public GameObject newRoomButton;
     public GameObject backButton;
     public GameObject forwardButton;
     public GameObject openLociStoreButton;
     public GameObject openFurnitureStoreButton;
+    public GameObject deleteButton;
     public GameObject nextWallColourButton;
     public GameObject previousWallColourButton;
     // public GameObject nextFurnitureButton;
@@ -140,6 +144,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        deleteButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -212,7 +217,7 @@ public class RoomManager : MonoBehaviour
         // add door to the current room
         // TODO make sure that the rooms are actually connected
         Quaternion rotation = Quaternion.LookRotation(- user.transform.forward);
-        GameObject door = GameObject.Instantiate(doorPrefabs[0], raycastOrigin, rotation);
+        GameObject door = Instantiate(doorPrefabs[0], raycastOrigin, rotation);
         ObjectSnapper objectsnapper = door.GetComponent<ObjectSnapper>();
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
@@ -233,7 +238,7 @@ public class RoomManager : MonoBehaviour
         }
 
         // Add a door to the new room
-        door = GameObject.Instantiate(doorPrefabs[1], raycastOrigin, user.transform.rotation);
+        door = Instantiate(doorPrefabs[1], raycastOrigin, user.transform.rotation);
         objectsnapper = door.GetComponent<ObjectSnapper>();
         objectsnapper.snapToFloor();
         objectsnapper.snapToWall();
@@ -323,7 +328,7 @@ public class RoomManager : MonoBehaviour
             List<GameObject> roomFurniture = room.Furniture;
             for (int i = 0; i < roomFurniture.Count; i++)
             {
-                GameObject myObject = GameObject.Instantiate(roomFurniture[i]);
+                GameObject myObject = Instantiate(roomFurniture[i]);
                 myObject.tag = "Furniture";
                 room.AddFurnitureInstance(myObject);
             }
@@ -342,7 +347,7 @@ public class RoomManager : MonoBehaviour
                 List<GameObject> roomRepresentations = room.Representations;
                 for (int i = 0; i < roomRepresentations.Count; i++)
                 {
-                    GameObject myRepresentation = GameObject.Instantiate(roomRepresentations[i]);
+                    GameObject myRepresentation = Instantiate(roomRepresentations[i]);
                     myRepresentation.tag = "Information";
                     room.AddRepresentationInstance(myRepresentation);
                 }
@@ -355,7 +360,7 @@ public class RoomManager : MonoBehaviour
             // mark the loci on the transform positions of the representations
             foreach (var loci in room.Representations)
             {
-                GameObject myLocus = GameObject.Instantiate(locusHalo, loci.transform.position, Quaternion.identity);
+                GameObject myLocus = Instantiate(locusHalo, loci.transform.position, Quaternion.identity);
                 myLocus.tag = "Information";
                 room.AddLocusInstance(myLocus);
             }
@@ -380,7 +385,7 @@ public class RoomManager : MonoBehaviour
                 List<GameObject> roomRepresentations = room.Representations;
                 for (int i = 0; i < room.ReplacingLocusIndex; i++)
                 {
-                    GameObject myRepresentation = GameObject.Instantiate(roomRepresentations[i]);
+                    GameObject myRepresentation = Instantiate(roomRepresentations[i]);
                     myRepresentation.tag = "Information";
                     room.AddRepresentationInstance(myRepresentation);
                 }
@@ -510,7 +515,7 @@ public class RoomManager : MonoBehaviour
             _furniturePointer ++;
         }
         // Instantiate the new preview object
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
+        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
         newObject.transform.parent = _menu.transform;
         newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         newObject.tag = "Preview";
@@ -537,7 +542,7 @@ public class RoomManager : MonoBehaviour
             _furniturePointer--;
         }
         // Instantiate the new preview object
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
+        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
         newObject.transform.parent = _menu.transform;
         newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         newObject.tag = "Preview";
@@ -555,7 +560,7 @@ public class RoomManager : MonoBehaviour
         {
             GameObject.Destroy(obj);
         }
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
+        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
         newObject.tag = "Furniture";
 
         // Add furniture to the current room's list of furniture
@@ -640,13 +645,13 @@ public class RoomManager : MonoBehaviour
         {
             //TODO finish this with new menu
             // Replacing the old representation with a new one
-            GameObject newObject2 = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            GameObject newObject2 = Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
             newObject2.tag = "Information";
             _currentRoom.ReplaceRepresentation(0, loci, newObject2);
         }
         else
         {
-            GameObject newObject = GameObject.Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            GameObject newObject = Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
             newObject.transform.position = findFreeFloorSpace(newObject);
             newObject.tag = "Information";
 
@@ -654,7 +659,7 @@ public class RoomManager : MonoBehaviour
             if (tooltipText != null)
             {
                 // TODO give the tooltip texts or let the user input them
-                GameObject tooltipObject = GameObject.Instantiate(tooltip, newObject.transform.position, Quaternion.identity);
+                GameObject tooltipObject = Instantiate(tooltip, newObject.transform.position, Quaternion.identity);
                 // Set the tooltip to be on top of the object
                 ObjectSnapper objectsnapper = newObject.GetComponent<ObjectSnapper>();
                 float TooltipY = objectsnapper.getHighestPoint();
@@ -677,11 +682,11 @@ public class RoomManager : MonoBehaviour
 
     public void AddFurniture(GameObject furniture)
     {
-        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
+        GameObject newObject = GameObject.Instantiate(furniture, findFreeFloorSpace(furniture), Quaternion.identity);
         newObject.tag = "Furniture";
 
         // Add furniture to the current room's list of furniture
-        _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
+        _currentRoom.AddFurniture(furniture, newObject);
         _currentRoom.UpdateTransforms();
         _currentRoom.SaveRoom();
         // Let agent play an audio when the first two items have been placed
@@ -693,6 +698,46 @@ public class RoomManager : MonoBehaviour
             {
                 agentController.PlayAudio(agentController.furniturePlacement2Audio);
             }
+        }
+    }
+
+    /// <summary>
+    /// Delete the next game object that the user touches, or deactivates the delete mode if active
+    /// </summary>
+    /// <param name="value">The value of the corresponding button "Delete Object"</param>
+    public void DeleteButton(bool value)
+    {
+        // await the user to touch an object
+        isDeleteMode = !isDeleteMode;
+    }
+
+    /// <summary>
+    /// Called by the ObjectSnapper when the user touches an object after the delete button has been pressed
+    /// </summary>
+    /// <param name="obj"></param>
+    public async void DeleteObject(GameObject obj)
+    {
+        if (isDeleteMode)
+        {
+            if (_currentRoom.FurnitureInstances.Contains(obj))
+            {
+                int index = _currentRoom.FurnitureInstances.IndexOf(obj);
+                _currentRoom.FurnitureInstances.RemoveAt(index);
+                _currentRoom.Furniture.RemoveAt(index);
+                // As anchors all get deleted and re-detected when changing rooms (UpdateAnchors), we don't need to (or should) delete them here
+                // await _currentRoom.DeleteAnchorFromList(index, true);
+            }
+            else if (_currentRoom.RepresentationInstances.Contains(obj))
+            {
+                int index = _currentRoom.RepresentationInstances.IndexOf(obj);
+                _currentRoom.RepresentationInstances.RemoveAt(index);
+                _currentRoom.Representations.RemoveAt(index);
+                // await _currentRoom.DeleteAnchorFromList(index, false);
+            }
+            Destroy(obj);
+            _currentRoom.UpdateTransforms();
+            _currentRoom.SaveRoom();
+            isDeleteMode = false;
         }
     }
 
@@ -722,6 +767,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(true);
         // previousFurnitureButton.SetActive(true);
         openFurnitureStoreButton.SetActive(true);
+        deleteButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -755,6 +801,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        deleteButton.SetActive(false);
         changeUser.SetActive(true);
         furniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -802,6 +849,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        deleteButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -831,6 +879,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        deleteButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
