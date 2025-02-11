@@ -151,4 +151,9 @@ public class DevMenuController : MonoBehaviour
     {
         roomManager.CloseDevMenu(value);
     }
+
+    public void OpenFurnitureMenu(bool value)
+    {
+        roomManager.OpenFurnitureMenu(value);
+    }
 }

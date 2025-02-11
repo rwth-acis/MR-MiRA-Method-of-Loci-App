@@ -41,6 +41,7 @@ public class RoomManager : MonoBehaviour
     public GameObject backButton;
     public GameObject forwardButton;
     public GameObject openLociStoreButton;
+    public GameObject openFurnitureStoreButton;
     public GameObject nextWallColourButton;
     public GameObject previousWallColourButton;
     // public GameObject nextFurnitureButton;
@@ -138,6 +139,7 @@ public class RoomManager : MonoBehaviour
         // nextFurnitureButton.SetActive(false);
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
+        openFurnitureStoreButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -719,6 +721,7 @@ public class RoomManager : MonoBehaviour
         // nextFurnitureButton.SetActive(true);
         // selectButton.SetActive(true);
         // previousFurnitureButton.SetActive(true);
+        openFurnitureStoreButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -751,6 +754,7 @@ public class RoomManager : MonoBehaviour
         // nextFurnitureButton.SetActive(false);
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
+        openFurnitureStoreButton.SetActive(false);
         changeUser.SetActive(true);
         furniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -797,6 +801,7 @@ public class RoomManager : MonoBehaviour
         // nextFurnitureButton.SetActive(false);
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
+        openFurnitureStoreButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -825,6 +830,7 @@ public class RoomManager : MonoBehaviour
         // nextFurnitureButton.SetActive(false);
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
+        openFurnitureStoreButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
