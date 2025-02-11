@@ -43,9 +43,9 @@ public class RoomManager : MonoBehaviour
     public GameObject openLociStoreButton;
     public GameObject nextWallColourButton;
     public GameObject previousWallColourButton;
-    public GameObject nextFurnitureButton;
-    public GameObject selectButton;
-    public GameObject previousFurnitureButton;
+    // public GameObject nextFurnitureButton;
+    // public GameObject selectButton;
+    // public GameObject previousFurnitureButton;
     public GameObject changeUser;
     public GameObject audioPauseButton;
     public GameObject audioReplayButton;
@@ -66,6 +66,7 @@ public class RoomManager : MonoBehaviour
     private GameObject _menu;
     private GameObject _lociMenu;
     private GameObject _devMenu;
+    private GameObject _furnitureMenu;
     private bool _isObjectConfirmed = false;
     private int _deleteCounter = 0;
     private int furniturePlacementCounter = 0;
@@ -104,6 +105,8 @@ public class RoomManager : MonoBehaviour
         _lociMenu.SetActive(false);
         _devMenu = GameObject.FindGameObjectWithTag("DevMenu");
         _devMenu.SetActive(false);
+        _furnitureMenu = GameObject.FindGameObjectWithTag("FurnitureMenu");
+        _furnitureMenu.SetActive(false);
         ActivateStartButtons();
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
@@ -132,9 +135,9 @@ public class RoomManager : MonoBehaviour
         openLociStoreButton.SetActive(false);
         nextWallColourButton.SetActive(false);
         previousWallColourButton.SetActive(false);
-        nextFurnitureButton.SetActive(false);
-        selectButton.SetActive(false);
-        previousFurnitureButton.SetActive(false);
+        // nextFurnitureButton.SetActive(false);
+        // selectButton.SetActive(false);
+        // previousFurnitureButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -394,6 +397,15 @@ public class RoomManager : MonoBehaviour
     public void OpenLociMenu(bool value)
     {
         _lociMenu.SetActive(true);
+    }
+
+    /// <summary>
+    /// Adds furniture to the current room when the corresponding button is pressed
+    /// </summary>
+    /// <param name="value">The value of the button "Open Furniture Store"</param>
+    public void OpenFurnitureMenu(bool value)
+    {
+        _furnitureMenu.SetActive(true);
     }
 
     /// <summary>
@@ -661,6 +673,27 @@ public class RoomManager : MonoBehaviour
         _currentRoom.SaveRoom();
     }
 
+    public void AddFurniture(GameObject furniture)
+    {
+        GameObject newObject = GameObject.Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
+        newObject.tag = "Furniture";
+
+        // Add furniture to the current room's list of furniture
+        _currentRoom.AddFurniture(furniturePrefabs[_furniturePointer], newObject);
+        _currentRoom.UpdateTransforms();
+        _currentRoom.SaveRoom();
+        // Let agent play an audio when the first two items have been placed
+        if(_currentRoom==_currentUser.GetFirstRoom())
+        {
+            // Increment the counter and check if two items have been placed
+            furniturePlacementCounter++;
+            if (furniturePlacementCounter == 2)
+            {
+                agentController.PlayAudio(agentController.furniturePlacement2Audio);
+            }
+        }
+    }
+
     public void ReturnToRealPosition()
     {
         cameraRig.transform.position = new Vector3(user.transform.localPosition.x, cameraRig.transform.position.y, user.transform.localPosition.z);
@@ -683,9 +716,9 @@ public class RoomManager : MonoBehaviour
         openLociStoreButton.SetActive(false);
         nextWallColourButton.SetActive(true);;
         previousWallColourButton.SetActive(true);
-        nextFurnitureButton.SetActive(true);
-        selectButton.SetActive(true);
-        previousFurnitureButton.SetActive(true);
+        // nextFurnitureButton.SetActive(true);
+        // selectButton.SetActive(true);
+        // previousFurnitureButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -715,9 +748,9 @@ public class RoomManager : MonoBehaviour
         openLociStoreButton.SetActive(false);
         nextWallColourButton.SetActive(false);
         previousWallColourButton.SetActive(false);
-        nextFurnitureButton.SetActive(false);
-        selectButton.SetActive(false);
-        previousFurnitureButton.SetActive(false);
+        // nextFurnitureButton.SetActive(false);
+        // selectButton.SetActive(false);
+        // previousFurnitureButton.SetActive(false);
         changeUser.SetActive(true);
         furniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -761,9 +794,9 @@ public class RoomManager : MonoBehaviour
         // Keep the wall colour changeable to connect colour to the objects
         nextWallColourButton.SetActive(true);
         previousWallColourButton.SetActive(true);
-        nextFurnitureButton.SetActive(false);
-        selectButton.SetActive(false);
-        previousFurnitureButton.SetActive(false);
+        // nextFurnitureButton.SetActive(false);
+        // selectButton.SetActive(false);
+        // previousFurnitureButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
@@ -789,9 +822,9 @@ public class RoomManager : MonoBehaviour
         // Keep the wall colour changeable to connect colour to the objects
         nextWallColourButton.SetActive(true);
         previousWallColourButton.SetActive(true);
-        nextFurnitureButton.SetActive(false);
-        selectButton.SetActive(false);
-        previousFurnitureButton.SetActive(false);
+        // nextFurnitureButton.SetActive(false);
+        // selectButton.SetActive(false);
+        // previousFurnitureButton.SetActive(false);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
