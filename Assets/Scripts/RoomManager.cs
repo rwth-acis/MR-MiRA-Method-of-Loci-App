@@ -60,6 +60,8 @@ public class RoomManager : MonoBehaviour
     public GameObject storyPhaseButton;
     public GameObject numberPhaseButton;
     public GameObject confirmButton;
+    public GameObject devmenuButton;
+    public GameObject resetPositionButton;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -154,6 +156,8 @@ public class RoomManager : MonoBehaviour
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(false);
         confirmButton.SetActive(false);
+        devmenuButton.SetActive(true);
+        resetPositionButton.SetActive(true);
     }
 
 
@@ -294,7 +298,7 @@ public class RoomManager : MonoBehaviour
         room.RepresentationInstances.Clear();
         if (!firstLoad)
         {
-            ReturnToRealPosition();
+            ReturnToRealPosition(true);
             Debug.Log("1");
             Debug.Log("5");
             //_currentRoom.UpdateTransforms();
@@ -741,7 +745,8 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    public void ReturnToRealPosition()
+
+    public void ReturnToRealPosition(bool value)
     {
         cameraRig.transform.position = new Vector3(user.transform.localPosition.x, cameraRig.transform.position.y, user.transform.localPosition.z);
         cameraRig.transform.localPosition = Vector3.zero;
@@ -777,6 +782,8 @@ public class RoomManager : MonoBehaviour
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(false);
         confirmButton.SetActive(false);
+        devmenuButton.SetActive(true);
+        resetPositionButton.SetActive(true);
         // Let the agent play the introduction to the furniture setup phase
         agentController.ActivateAgent();
         agentController.PlayAudio(agentController.furnitureIntroductionAudio);
@@ -808,6 +815,8 @@ public class RoomManager : MonoBehaviour
         storyPhaseButton.SetActive(true);
         numberPhaseButton.SetActive(false);
         confirmButton.SetActive(true);
+        devmenuButton.SetActive(true);
+        resetPositionButton.SetActive(true);
 
         // Let the agent play the introduction to the list phase
         agentController.ActivateAgent();
@@ -859,6 +868,8 @@ public class RoomManager : MonoBehaviour
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(true);
         confirmButton.SetActive(true);
+        devmenuButton.SetActive(true);
+        resetPositionButton.SetActive(true);
         // Let the agent play the introduction to the story phase
         agentController.ActivateAgent();
         // TODO
@@ -889,6 +900,8 @@ public class RoomManager : MonoBehaviour
         storyPhaseButton.SetActive(false);
         numberPhaseButton.SetActive(false);
         confirmButton.SetActive(true);
+        devmenuButton.SetActive(true);
+        resetPositionButton.SetActive(true);
         // Let the agent play the introduction to the number phase
         agentController.ActivateAgent();
         // TODO

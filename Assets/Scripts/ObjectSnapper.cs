@@ -135,12 +135,12 @@ public class ObjectSnapper : MonoBehaviour
         // set the rotation to be always upright
         transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
 
-        Collider collider = GetComponent<Collider>();
-        if (collider == null)
-        {
-            Debug.LogError("No collider found on the grabbable object.");
-            return;
-        }
+        // Collider collider = GetComponent<Collider>();
+        // if (collider == null)
+        // {
+        //     Debug.LogError("No collider found on the grabbable object.");
+        //     return;
+        // }
         // calculate the offset of the object to be actually standing on the ground
         // i.e. the distance between the position to the actual lowest point of the object that should be touching the ground
         float groundOffset = transform.position.y - _renderer.bounds.min.y;
@@ -148,6 +148,13 @@ public class ObjectSnapper : MonoBehaviour
         Vector3 basePosition = transform.position;
         Debug.Log("SNAP: Base position y: " + basePosition.y);
 
+        if (isDoor)
+        {
+            // Doors should always be on the floor to be reachable for the user
+            basePosition.y = groundOffset;
+            transform.position = basePosition;
+            return;
+        }
         if (Physics.Raycast(basePosition, Vector3.down, out RaycastHit groundHit, Mathf.Infinity))
         {
             basePosition.y = groundOffset + groundHit.point.y;
