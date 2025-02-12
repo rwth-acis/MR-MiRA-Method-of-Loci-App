@@ -203,7 +203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 9e6d624dd044e6a4398a67434c5215a0, type: 3}
       propertyPath: m_Name
-      value: Truck
+      value: truck
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -292,6 +292,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 1885258650569770441}
   isDoor: 0
+  next: 0
+  isTooltip: 0
 --- !u!82 &9204572752577678481
 AudioSource:
   m_ObjectHideFlags: 0
@@ -302,12 +304,12 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d39b5aa248f8b894fb3936fca46c687a, type: 3}
-  m_Resource: {fileID: 8300000, guid: d39b5aa248f8b894fb3936fca46c687a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 68c05ec74c30cfb428749590431c5db5, type: 3}
+  m_Resource: {fileID: 8300000, guid: 68c05ec74c30cfb428749590431c5db5, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

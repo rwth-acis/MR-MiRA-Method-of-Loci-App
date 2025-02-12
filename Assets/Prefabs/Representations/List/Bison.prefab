@@ -297,6 +297,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 8347208111580853956}
   isDoor: 0
+  next: 0
+  isTooltip: 0
 --- !u!82 &595651896775965093
 AudioSource:
   m_ObjectHideFlags: 0
@@ -307,12 +309,12 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 58cbb26e0df6ba64089ea1af316dbc40, type: 3}
-  m_Resource: {fileID: 8300000, guid: 58cbb26e0df6ba64089ea1af316dbc40, type: 3}
+  m_audioClip: {fileID: 8300000, guid: b81dd494079753240ad68563c093cf46, type: 3}
+  m_Resource: {fileID: 8300000, guid: b81dd494079753240ad68563c093cf46, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 1
   SpatializePostEffects: 0

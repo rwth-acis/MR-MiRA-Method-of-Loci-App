@@ -151,7 +151,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2831338154730346832, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
       propertyPath: m_Name
-      value: Air-Hockey
+      value: air-hockey
       objectReference: {fileID: 0}
     - target: {fileID: 1773038939299672582, guid: fbb6fe9fe3693b549a3e98bb694fd254, type: 3}
       propertyPath: m_LocalScale.x
@@ -297,6 +297,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 4463121149628899141}
   isDoor: 0
+  next: 0
+  isTooltip: 0
 --- !u!82 &4716999156611042080
 AudioSource:
   m_ObjectHideFlags: 0
@@ -307,12 +309,12 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6a1d37f194ce2814fbee37aa7d565390, type: 3}
-  m_Resource: {fileID: 8300000, guid: 6a1d37f194ce2814fbee37aa7d565390, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f0ec341c8e961204ba7738bb3765a715, type: 3}
+  m_Resource: {fileID: 8300000, guid: f0ec341c8e961204ba7738bb3765a715, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 1
   SpatializePostEffects: 0
