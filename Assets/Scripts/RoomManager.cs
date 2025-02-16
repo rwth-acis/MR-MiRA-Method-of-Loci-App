@@ -80,6 +80,8 @@ public class RoomManager : MonoBehaviour
     private int _devMenuCounter;
     // whether doors can be used to switch rooms
     private bool _doorChangeRoom = false;
+    // used to find out if the user is finished placing the furniture and looks at it again to remember the layout
+    private bool _furniturePhaseRememberLayout = false;
 
     //for testing
     [SerializeField] public GameObject furniture;
@@ -399,6 +401,12 @@ public class RoomManager : MonoBehaviour
         }
         room.LoadAnchors();
         Debug.Log("6");
+        if (_furniturePhaseRememberLayout && room.ID == _currentUser.GetFreeRoomID()-1)
+        {
+            // If we are in the last room again after trying to remember the layout
+            // we play an audio to prepare for the learning part
+            agentController.PlayAudio(agentController.furniturePhaseRememberLayoutLastRoomAudio);
+        }
     }
 
     /// <summary>
@@ -796,6 +804,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value"></param>
     public async void ListPhase(bool value)
     {
+        _furniturePhaseRememberLayout = false;
         _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(false);
@@ -825,6 +834,11 @@ public class RoomManager : MonoBehaviour
         {
             AddLoci(evaluationList[i], "");
             agentController.PlayAudioListPhase(i);
+            if (_currentRoom.FurnitureInstances.Count == 3)
+            {
+                // Play audio: Place about 3 to 5 items in each room
+                agentController.PlayAudio(agentController.listPhase3ItemsAudio);
+            }
             await WaitForUserConfirmation();
             _isObjectConfirmed = false;
         }
@@ -845,6 +859,7 @@ public class RoomManager : MonoBehaviour
 
     public void StoryPhase(bool value)
     {
+        _furniturePhaseRememberLayout = false;
         _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(false);
@@ -877,6 +892,7 @@ public class RoomManager : MonoBehaviour
 
     public void NumberPhase(bool value)
     {
+        _furniturePhaseRememberLayout = false;
         _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(false);
@@ -967,6 +983,7 @@ public class RoomManager : MonoBehaviour
 
     public void FinishFurniturePhase(bool value)
     {
+        _furniturePhaseRememberLayout = true;
         LoadRoom(_currentUser.GetFirstRoom());
         endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(true);
