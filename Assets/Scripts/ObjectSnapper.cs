@@ -9,6 +9,8 @@ public class ObjectSnapper : MonoBehaviour
     [SerializeField] public Grabbable grabbable;
     [Tooltip("Is the object a door")]
     [SerializeField] public bool isDoor = false;
+    [SerializeField] public bool isImage = false;
+    [SerializeField] public bool isVerticalImage = false;
     [SerializeField] public bool next = false;
     [SerializeField] public bool isTooltip = false;
     private bool grabbed = false;
@@ -17,6 +19,11 @@ public class ObjectSnapper : MonoBehaviour
     void Start()
     {
         _renderer = GetComponent<Renderer>();
+        if (isImage)
+        {
+            snapToWall();
+            transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
+        }
     }
     // Update is called once per frame
     void Update()
@@ -37,6 +44,16 @@ public class ObjectSnapper : MonoBehaviour
         {
             if (grabbed)
             {
+                if (isImage)
+                {
+                    snapToWall();
+                    if (transform.position.y > 2)
+                    {
+                        transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
+                    }
+                    grabbed = false;
+                    return;
+                }
                 if (isDoor)
                 {
                     snapToWall();
@@ -101,6 +118,10 @@ public class ObjectSnapper : MonoBehaviour
 
                     // Find the right rotation to be parallel to the wall
                     transform.rotation = Quaternion.LookRotation(hit.normal);
+                    if (isVerticalImage)
+                    {
+                        transform.Rotate(0, 0, -90);
+                    }
                     return;
                 }
                 // Update the origin to the hit point and continue the raycast
@@ -114,6 +135,16 @@ public class ObjectSnapper : MonoBehaviour
     /// </summary>
     public void snapToFloor()
     {
+        if (isImage)
+        {
+            snapToWall();
+            if (transform.position.y > 2)
+            {
+                transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
+            }
+
+            return;
+        }
         _renderer = GetComponent<Renderer>();
         // check if the root object has a renderer at all
         float lowestY = Mathf.Infinity;

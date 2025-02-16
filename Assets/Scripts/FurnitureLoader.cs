@@ -240,6 +240,25 @@ public class FurnitureLoader : MonoBehaviour
             }
         }
     }
+
+    public void LoadImages(bool value)
+    {
+        Title.GetComponent<TextMeshProUGUI>().text = "Bilder";
+        foreach (Transform child in Content.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (GameObject furniture in FurnitureObjects)
+        {
+            if (furniture.name.Contains("Bild"))
+            {
+                GameObject currentButton = Instantiate(Button, Content.transform);
+                currentButton.transform.Find("Content/Background/Elements/Label").GetComponentInChildren<TextMeshProUGUI>().text = furniture.name;
+                currentButton.transform.Find("Content/Background/Elements/Space").GetComponent<RawImage>().texture = FurniturePreview[FurnitureObjects.IndexOf(furniture)];
+                currentButton.transform.GetComponent<Toggle>().onValueChanged.AddListener(delegate { RoomManager.Instance.AddFurniture(furniture);});
+            }
+        }
+    }
     /// <summary>
     /// Deactivates the Furniture Menu
     /// </summary>
