@@ -30,6 +30,12 @@ public class RoomManager : MonoBehaviour
     [SerializeField] public GameObject tooltip;
     [Tooltip("The list for the evaluation")]
     public List<GameObject> evaluationList = new List<GameObject>();
+    [Tooltip("The wood texture in colour")]
+    [SerializeField] public Texture woodTexture;
+    [Tooltip("The wood texture in black and white")]
+    [SerializeField] public Texture woodTextureBW;
+    [Tooltip("The wood  material")]
+    [SerializeField] public Material woodMaterial;
 
     [Tooltip("Whether the layout mode is active")]
     public bool layoutMode { get; set; } = false;
@@ -54,6 +60,7 @@ public class RoomManager : MonoBehaviour
     public GameObject changeUser;
     public GameObject audioPauseButton;
     public GameObject audioReplayButton;
+    public GameObject greyOutFurnitureButton;
     public GameObject furniturePhaseButton;
     public GameObject endFurniturePhaseButton;
     public GameObject listPhaseButton;
@@ -73,6 +80,7 @@ public class RoomManager : MonoBehaviour
     private GameObject _menu;
     private GameObject _lociMenu;
     private GameObject _devMenu;
+    private GameObject _storyText;
     private GameObject _furnitureMenu;
     private bool _isObjectConfirmed = false;
     private int _deleteCounter = 0;
@@ -116,6 +124,8 @@ public class RoomManager : MonoBehaviour
         _devMenu.SetActive(false);
         _furnitureMenu = GameObject.FindGameObjectWithTag("FurnitureMenu");
         _furnitureMenu.SetActive(false);
+        _storyText = GameObject.FindGameObjectWithTag("Story");
+        _storyText.SetActive(false);
         ActivateStartButtons();
         _cam = user.GetComponent(typeof(Camera)) as Camera;
         ModeSelector mode = FindObjectOfType<ModeSelector>();
@@ -129,6 +139,7 @@ public class RoomManager : MonoBehaviour
         Debug.Log("Layout mode: " + layoutMode);
         //Set up the colour list
         colourListSetup();
+        woodMaterial.mainTexture = woodTexture;
         LoadUser("Lena");
     }
 
@@ -152,6 +163,7 @@ public class RoomManager : MonoBehaviour
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
+        greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(true);
         endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -507,6 +519,24 @@ public class RoomManager : MonoBehaviour
     }
 
     /// <summary>
+    /// To grey out the furniture objects in the room when the corresponding button is pressed
+    /// </summary>
+    /// <param name="value">The value of the button "Grey out furniture"</param>
+    public void GreyOutFurnitureButton(bool value)
+    {
+        if(woodMaterial.mainTexture == woodTexture)
+        {
+            woodMaterial.mainTexture = woodTextureBW;
+            Debug.Log("Greyed out");
+        }
+        else
+        {
+            woodMaterial.mainTexture = woodTexture;
+            Debug.Log("Not greyed out");
+        }
+    }
+
+    /// <summary>
     /// Shows the next furniture prefab in the list
     /// </summary>
     /// <param name="value">The value of the button "Next Furniture"</param>
@@ -769,6 +799,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Furniture Phase"</param>
     public void FurniturePhase(bool value)
     {
+        _storyText.SetActive(false);
         // Deactivate and activate only necessary buttons
         newRoomButton.SetActive(true);
         backButton.SetActive(true);
@@ -784,6 +815,7 @@ public class RoomManager : MonoBehaviour
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
         audioReplayButton.SetActive(true);
+        greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -804,6 +836,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value"></param>
     public async void ListPhase(bool value)
     {
+        _storyText.SetActive(false);
         _furniturePhaseRememberLayout = false;
         _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
@@ -817,6 +850,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        greyOutFurnitureButton.SetActive(true);
         deleteButton.SetActive(false);
         changeUser.SetActive(true);
         furniturePhaseButton.SetActive(false);
@@ -859,6 +893,7 @@ public class RoomManager : MonoBehaviour
 
     public void StoryPhase(bool value)
     {
+        _storyText.SetActive(true);
         _furniturePhaseRememberLayout = false;
         _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
@@ -873,6 +908,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        greyOutFurnitureButton.SetActive(true);
         deleteButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);
@@ -892,6 +928,7 @@ public class RoomManager : MonoBehaviour
 
     public void NumberPhase(bool value)
     {
+        _storyText.SetActive(true); // leave visible after story loci setup to be read again
         _furniturePhaseRememberLayout = false;
         _doorChangeRoom = true;
         // Deactivate and activate only necessary buttons
@@ -906,6 +943,7 @@ public class RoomManager : MonoBehaviour
         // selectButton.SetActive(false);
         // previousFurnitureButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
+        greyOutFurnitureButton.SetActive(true);
         deleteButton.SetActive(true);
         changeUser.SetActive(true);
         audioPauseButton.SetActive(true);

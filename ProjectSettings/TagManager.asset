@@ -35,6 +35,7 @@ TagManager:
   - Wall
   - DevMenu
   - FurnitureMenu
+  - Story
   layers:
   - Default
   - TransparentFX

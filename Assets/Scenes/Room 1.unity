@@ -28137,6 +28137,7 @@ MonoBehaviour:
   newRoomDoorAudio: {fileID: 8300000, guid: 513f029feabe0bc468dff9a5cd2958a8, type: 3}
   furnitureCanBeFinishedAudio: {fileID: 8300000, guid: 246689426c9b1b94db9a0b6f99dafaca, type: 3}
   furnitureFinishAudio: {fileID: 8300000, guid: 7f5575a3dd54a5741b0e785d207a4454, type: 3}
+  furniturePhaseRememberLayoutLastRoomAudio: {fileID: 8300000, guid: 1ee4f14ff009be244bb40af5bbf5aa95, type: 3}
   listIntroductionAudio: {fileID: 8300000, guid: 6ac9f08006265b645883457046e464db, type: 3}
   listAudios:
   - {fileID: 8300000, guid: d6608ceb5572b77439d343313e757685, type: 3}
@@ -28154,6 +28155,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 54647bcad7a83c04fa58918546b1e97b, type: 3}
   - {fileID: 8300000, guid: be6b587228965c344ae694c13c79bb0a, type: 3}
   - {fileID: 8300000, guid: 9f3410a11d39aa4449f08aa55ba009f9, type: 3}
+  listPhase3ItemsAudio: {fileID: 8300000, guid: ebe9bcb0da8aad54fa8ff36ea238fd5d, type: 3}
   storyAudios: []
   numberAudios:
   - {fileID: 8300000, guid: 4f377ff334849b441b925e6a2072256e, type: 3}
