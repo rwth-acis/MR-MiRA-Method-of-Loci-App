@@ -34,10 +34,16 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip[] listAudios;
     [Tooltip("To encourage the user to place 3 to 5 items per room")]
     [SerializeField] public AudioClip listPhase3ItemsAudio;
+    [Tooltip("Introfuction to the story")]
+    [SerializeField] public AudioClip storyIntroductionAudio;
     [Tooltip("The audio clips for the story")]
     [SerializeField] public AudioClip[] storyAudios;
+    [Tooltip("The introduction to the number phase")]
+    [SerializeField] public AudioClip numberIntroductionAudio;
     [Tooltip("The audio clips for the number")]
     [SerializeField] public AudioClip[] numberAudios;
+    [Tooltip("Tell user to repeat the information, starting with the first room")]
+    [SerializeField] public AudioClip repetitionAudio;
     [Tooltip("To check if the agent is following the user")]
     private bool _isFollowingUser = false;
 
@@ -193,6 +199,7 @@ public class AgentController : MonoBehaviour
         taskSystem.ScheduleTask(audioTask, 0, "Head");
         audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
     }
+
 
     public void PauseAudio()
     {

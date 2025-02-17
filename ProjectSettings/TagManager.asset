@@ -36,6 +36,7 @@ TagManager:
   - DevMenu
   - FurnitureMenu
   - Story
+  - Tooltip
   layers:
   - Default
   - TransparentFX
