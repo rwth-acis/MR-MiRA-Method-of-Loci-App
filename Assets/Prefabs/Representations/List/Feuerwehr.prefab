@@ -357,6 +357,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 6747287354743280001}
   isDoor: 0
+  isImage: 0
+  isVerticalImage: 0
   next: 0
   isTooltip: 0
 --- !u!82 &4465970833728796023
@@ -372,7 +374,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: 08b391301b4ec4b41b354066cc463fb2, type: 3}
   m_Resource: {fileID: 8300000, guid: 08b391301b4ec4b41b354066cc463fb2, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.492
   m_Pitch: 1
   Loop: 1
   Mute: 0
