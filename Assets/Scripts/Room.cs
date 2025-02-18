@@ -266,7 +266,7 @@ public class Room
                 {
                     if (unboundFurnitureCount > i) // && _unboundFurnitureAnchors[i].Localized
                     {
-                        DeleteAnchor(FurnitureInstances[i], false); // This acts as a check for an existing anchor
+                        await DeleteAnchor(FurnitureInstances[i], false); // This acts as a check for an existing anchor
                         OVRSpatialAnchor spatialAnchor = FurnitureInstances[i].AddComponent<OVRSpatialAnchor>();
                         foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundFurnitureAnchors)
                         {
@@ -277,7 +277,7 @@ public class Room
                                 Debug.Log("ANCHOR: bound " + spatialAnchor.Uuid + " to " + FurnitureInstances[i].name);
                                 FurnitureAnchors.Add(spatialAnchor.Uuid);
                                 // We destroy the anchor after binding, to make the object movable, grabbable and allow for teleportation
-                                DeleteAnchor(spatialAnchor.GameObject(), false);
+                                await DeleteAnchor(spatialAnchor.GameObject(), false);
                                 Debug.Log("ANCHOR: furniture success!)");
                                 break;
                             }
@@ -303,7 +303,7 @@ public class Room
                 {
                     if (unboundRepresentationCount > i) // && _unboundRepresentationAnchors[i].Localized
                     {
-                        DeleteAnchor(FurnitureInstances[i], false); // This acts as a check for an existing anchor
+                        await DeleteAnchor(RepresentationInstances[i], false); // This acts as a check for an existing anchor
                         OVRSpatialAnchor spatialAnchor = RepresentationInstances[i].AddComponent<OVRSpatialAnchor>();
                         foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundRepresentationAnchors)
                         {
@@ -438,18 +438,18 @@ public class Room
             if (FurnitureInstances.Count != 0)
             {
                 FurnitureTransforms.Clear();
-                for (int i = 0; i < FurnitureInstances.Count; i++)
+                foreach (GameObject instance in FurnitureInstances)
                 {
-                    SerializedTransform newTransform = new SerializedTransform(FurnitureInstances[i].transform);
+                    SerializedTransform newTransform = new SerializedTransform(instance.transform);
                     FurnitureTransforms.Add(newTransform);
                 }
             }
             if (RepresentationInstances.Count != 0)
             {
                 RepresentationTransforms.Clear();
-                for (int i = 0; i < RepresentationInstances.Count; i++)
+                foreach (GameObject instance in RepresentationInstances)
                 {
-                    SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
+                    SerializedTransform newRepTransform = new SerializedTransform(instance.transform);
                     RepresentationTransforms.Add(newRepTransform);
                 }
             }

@@ -10,7 +10,7 @@ public class User
     [Tooltip("The JSON data of the user")]
     public string SaveDataJSON { get; private set; }
     [Tooltip("Place in the list of rooms")]
-    public int CurrentRoomID { get; private set; } = 0;
+    public int CurrentRoomID { get; set; } = 0;
 
     private List<Room> _rooms = new List<Room>();
     private SaveData _saveData;

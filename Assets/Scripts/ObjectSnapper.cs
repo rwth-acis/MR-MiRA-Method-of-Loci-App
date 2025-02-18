@@ -1,5 +1,6 @@
 using System;
 using Oculus.Interaction;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -70,6 +71,10 @@ public class ObjectSnapper : MonoBehaviour
     /// </summary>
     private void OnTriggerEnter(Collider other)
     {
+        if (!other.GameObject().name.Contains("PinchArea")) // pinch area contains the finger's collider
+        {
+            return;
+        }
         if (isDoor)
         {
             if (next)
