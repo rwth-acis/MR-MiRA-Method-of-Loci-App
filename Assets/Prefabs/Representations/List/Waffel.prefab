@@ -276,7 +276,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabbable: {fileID: 1299083253347697515}
-  isDoor: 1
+  isDoor: 0
+  isImage: 0
+  isVerticalImage: 0
+  next: 0
+  isTooltip: 0
 --- !u!4 &7642225294378227588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2d0a449dd958d604eb25beaa14cdfc61, type: 3}

@@ -227,7 +227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1242750712253496615
 Transform:
   m_ObjectHideFlags: 0
@@ -962,6 +962,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 4750309745621934612}
   isDoor: 0
+  isImage: 0
+  isVerticalImage: 0
+  next: 0
   isTooltip: 1
 --- !u!54 &311453116178294409
 Rigidbody:

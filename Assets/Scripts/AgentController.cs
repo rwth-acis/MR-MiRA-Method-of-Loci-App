@@ -1,7 +1,9 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using i5.VirtualAgents;
 using i5.VirtualAgents.AgentTasks;
 using i5.VirtualAgents.ScheduleBasedExecution;
+using Unity.VisualScripting;
 
 public class AgentController : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip furniturePlacement2Audio;
     [Tooltip("After creating a new room, explain doors")]
     [SerializeField] public AudioClip newRoomDoorAudio;
-    [Tooltip("The funiture phase can be finished")]
+    [Tooltip("The furniture phase can be finished")]
     [SerializeField] public AudioClip furnitureCanBeFinishedAudio;
     [Tooltip("Finish Furniture phase")]
     [SerializeField] public AudioClip furnitureFinishAudio;
@@ -34,7 +36,7 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip[] listAudios;
     [Tooltip("To encourage the user to place 3 to 5 items per room")]
     [SerializeField] public AudioClip listPhase3ItemsAudio;
-    [Tooltip("Introfuction to the story")]
+    [Tooltip("Introduction to the story")]
     [SerializeField] public AudioClip storyIntroductionAudio;
     [Tooltip("The audio clips for the story")]
     [SerializeField] public AudioClip[] storyAudios;
@@ -42,12 +44,16 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip numberIntroductionAudio;
     [Tooltip("The audio clips for the number")]
     [SerializeField] public AudioClip[] numberAudios;
+    [Tooltip("Tell the user that they can continue learning")]
+    [SerializeField] public AudioClip backInLearningModeAudio;
     [Tooltip("Tell user to repeat the information, starting with the first room")]
     [SerializeField] public AudioClip repetitionAudio;
     [Tooltip("To check if the agent is following the user")]
     private bool _isFollowingUser = false;
 
     private AgentAudioTask _currentAudio;
+    private AudioSource _audioSource;
+    //private AgentAudioTask _currentAudio = new AgentAudioTask(null);
     private bool paused = false;
     private bool replaying = false;
 
@@ -57,6 +63,9 @@ public class AgentController : MonoBehaviour
         ActivateAgent();
         // Get the task system of the agent
         taskSystem = (ScheduleBasedTaskSystem)agent.TaskSystem;
+
+        _audioSource = agent.transform.gameObject.GetComponent<AudioSource>();
+
         // Turn to the user
         FaceUser();
         // Wave to the user
@@ -75,11 +84,11 @@ public class AgentController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // If the user is too far away, and there is no walking task already, follow the user
-        if (Vector3.Distance(transform.position, user.transform.position) > 2 && !_isFollowingUser)
-        {
-            FollowUser();
-        }
+        // // If the user is too far away, and there is no walking task already, follow the user
+        // if (Vector3.Distance(transform.position, user.transform.position) > 2 && !_isFollowingUser)
+        // {
+        //     FollowUser();
+        // }
     }
 
     /// <summary>
@@ -90,16 +99,16 @@ public class AgentController : MonoBehaviour
         float angle = Vector3.SignedAngle(agent.transform.forward, user.transform.position - agent.transform.position, Vector3.up);
         AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
         taskSystem.ScheduleTask(rotationTask);
-        _isFollowingUser = true;
-        rotationTask.OnTaskFinished += OnTaskFinished;
+        // _isFollowingUser = true;
+        // rotationTask.OnTaskFinished += OnTaskFinished;
     }
 
     /// <summary>
     /// Turns the agent to face the game object
     /// </summary>
-    public void FaceObject(GameObject gameObject)
+    public void FaceObject(GameObject faceObject)
     {
-        float angle = Vector3.SignedAngle(agent.transform.forward, gameObject.transform.position - agent.transform.position, Vector3.up);
+        float angle = Vector3.SignedAngle(agent.transform.forward, faceObject.transform.position - agent.transform.position, Vector3.up);
         AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
         taskSystem.ScheduleTask(rotationTask);
     }
@@ -107,11 +116,36 @@ public class AgentController : MonoBehaviour
     /// <summary>
     /// Makes the agent point at a specific object
     /// </summary>
-    /// <param name="gameObject">The object to point at</param>
-    public void PointAtObject(GameObject gameObject)
+    /// <param name="pointObject">The object to point at</param>
+    public void PointAtObject(GameObject pointObject)
     {
-        FaceObject(gameObject);
-        taskSystem.Tasks.PointAt(gameObject, true);
+        Debug.Log("Agent: Pointing at object");
+        taskSystem.Tasks.PointAt(pointObject, true);
+    }
+
+    public void GoToObject(GameObject targetObject)
+    {
+        Debug.Log("Agent: Going to object");
+        // let the agent stand a bit away from the object
+        Vector3 position = targetObject.transform.position;
+        AgentMovementTask task = new AgentMovementTask(targetObject, default, true);
+        taskSystem.ScheduleTask(task);
+    }
+
+    public void GoToAndPointAtObject(GameObject targetObject)
+    {
+        FaceObject(targetObject);
+        AgentAnimationTask pointing = null;
+        pointing = new AgentAnimationTask("PointingLeft", 5, "", "Left Arm", targetObject);
+        taskSystem.ScheduleTask(pointing, 0, "Left Arm");
+        // // wait before moving
+        // AgentWaitTask waitTask = new AgentWaitTask(3);
+        // taskSystem.ScheduleTask(waitTask, 9);
+        Vector3 position = targetObject.transform.position;
+        //change position so that agent can stand next to object
+        position = position + (agent.transform.position - position).normalized * 0.5f;
+        AgentMovementTask task = new AgentMovementTask(position);
+        taskSystem.ScheduleTask(task,0);
     }
 
     /// <summary>
@@ -134,8 +168,7 @@ public class AgentController : MonoBehaviour
             float angle = Vector3.SignedAngle(agent.transform.forward, user.transform.position - agent.transform.position, Vector3.up);
             AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
             taskSystem.ScheduleTask(rotationTask);
-            rotationTask.OnTaskFinished -= OnTaskFinished;
-            rotationTask.OnTaskFinished += OnTaskFinished;
+            //rotationTask.OnTaskFinished += OnTaskFinished;
         }
     }
 
@@ -182,22 +215,33 @@ public class AgentController : MonoBehaviour
     /// </summary>
     public void ActivateAgent()
     {
+        if (agent.gameObject.activeSelf)
+        {
+            return;
+        }
         agent.gameObject.SetActive(true);
     }
 
     public void PlayAudioListPhase(int index)
     {
         // Play the audioclip on head layer
-        AgentAudioTask audioTask = new AgentAudioTask(listAudios[index]);
-        taskSystem.ScheduleTask(audioTask, 0, "Head");
-        audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
+        //AgentAudioTask audioTask = new AgentAudioTask(listAudios[index]);
+        //taskSystem.ScheduleTask(audioTask, 0, "Head");
+        //audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
+        PlayAudio(listAudios[index]);
     }
 
-    public void PlayAudio(AudioClip audio)
+    public async Task PlayAudio(AudioClip audioClip)
     {
-        AgentAudioTask audioTask = new AgentAudioTask(audio);
-        taskSystem.ScheduleTask(audioTask, 0, "Head");
-        audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
+        //AgentAudioTask audioTask = new AgentAudioTask(audioClip);
+        //taskSystem.ScheduleTask(audioTask, 0, "Head");
+        while (_audioSource.isPlaying)
+        {
+            await Task.Delay(100);
+        }
+        _audioSource.clip = audioClip;
+        _audioSource.Play();
+        //audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
     }
 
 

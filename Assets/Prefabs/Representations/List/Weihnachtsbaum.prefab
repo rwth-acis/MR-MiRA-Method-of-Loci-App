@@ -154,6 +154,18 @@ PrefabInstance:
       value: Weihnachtsbaum
       objectReference: {fileID: 0}
     - target: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.90557635
       objectReference: {fileID: 0}
@@ -192,6 +204,10 @@ PrefabInstance:
     - target: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -277,6 +293,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 3611899330979370690}
   isDoor: 0
+  isImage: 0
+  isVerticalImage: 0
+  next: 0
+  isTooltip: 0
 --- !u!4 &9052657650073671794 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1120332932567566275, guid: e6bd1243357d9f4418f01cbfe089fea6, type: 3}
