@@ -3,6 +3,7 @@ using Oculus.Interaction;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 
 public class ObjectSnapper : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class ObjectSnapper : MonoBehaviour
     [SerializeField] public bool isVerticalImage = false;
     [SerializeField] public bool next = false;
     [SerializeField] public bool isTooltip = false;
+    [SerializeField] public bool isCone = false;
     private bool grabbed = false;
     private Renderer _renderer;
 
@@ -29,6 +31,10 @@ public class ObjectSnapper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isCone)
+        {
+            return;
+        }
         if(grabbable == null)
         {
             return;
@@ -219,7 +225,7 @@ public class ObjectSnapper : MonoBehaviour
     public float getHighestPoint()
     {
         // check if the root object has a renderer at all
-        if (_renderer != null) return _renderer.bounds.max.y;
+        if (_renderer != null && _renderer.bounds.max.y >= gameObject.transform.lossyScale.y) return _renderer.bounds.max.y;
 
         _renderer = GetComponent<Renderer>();
         // Search for the highest renderer in the children
@@ -237,6 +243,10 @@ public class ObjectSnapper : MonoBehaviour
                 _renderer = renderer;
                 highestY = renderer.bounds.max.y;
             }
+        }
+        if(highestY <= gameObject.transform.lossyScale.y)
+        {
+            return gameObject.transform.lossyScale.y;
         }
         return highestY;
     }

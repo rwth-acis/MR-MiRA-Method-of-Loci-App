@@ -330,7 +330,7 @@ public class Room
     /// Loads the transforms of the loci after images to mark them as instantiated.
     /// This cannot be called before the instances are created as Transform is a component of GameObject.
     /// </summary>
-    public void LoadTransformsLoci()
+    public async Task LoadTransformsLoci()
     {
         if (Loci.Count == 0) return;
         if (Representations == null || Representations.Count == 0 || RepresentationTransforms == null ||
@@ -340,6 +340,12 @@ public class Room
             Loci[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
             Loci[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
             Loci[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            if (_unboundRepresentationAnchors.Count > i)
+            {
+                OVRSpatialAnchor spatialAnchor = Loci[i].AddComponent<OVRSpatialAnchor>();
+                _unboundRepresentationAnchors[i].BindTo(spatialAnchor);
+                await DeleteAnchor(spatialAnchor.GameObject(), false);
+            }
         }
     }
 
@@ -539,11 +545,11 @@ public class Room
     /// <param name="index">The index in the Representation List</param>
     /// <param name="newRepresentation">The prefab of the new Representation</param>
     /// <param name="newRepresentationInstance">The instantiated GameObject of the new Representation</param>
-    public void ReplaceRepresentation(int index, GameObject newRepresentation, GameObject newRepresentationInstance)
+    public void ReplaceRepresentation(GameObject newRepresentation, GameObject newRepresentationInstance)
     {
-        Representations[index] = newRepresentation;
+        Representations[ReplacingLocusIndex] = newRepresentation;
         RepresentationInstances.Add(newRepresentationInstance);
-        ReplacingLocusIndex = index + 1;
+        ReplacingLocusIndex++;
     }
 
     /// <summary>

@@ -13,8 +13,6 @@ GameObject:
   - component: {fileID: 210939616066456932}
   - component: {fileID: 1674023381035302577}
   - component: {fileID: 2704905901861695918}
-  - component: {fileID: 7225278312221470750}
-  - component: {fileID: 1394966248051248706}
   m_Layer: 0
   m_Name: '[BuildingBlock] HandGrab'
   m_TagString: Untagged
@@ -143,34 +141,6 @@ MonoBehaviour:
   _releaseDistance: 0
   _resetGrabOnGrabsUpdated: 1
   _physicsGrabbable: {fileID: 0}
---- !u!114 &7225278312221470750
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4321111946515024896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56b7e2fcd69003141938ddfa014233c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabbable: {fileID: 210939616066456932}
-  isDoor: 0
---- !u!114 &1394966248051248706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4321111946515024896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56b7e2fcd69003141938ddfa014233c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabbable: {fileID: 210939616066456932}
-  isDoor: 0
 --- !u!1001 &6881345817699701605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -223,6 +193,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Speck
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cd84b49becbd3fe4195ccb073c73d272, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -236,6 +210,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd84b49becbd3fe4195ccb073c73d272, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7603554549141107442}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cd84b49becbd3fe4195ccb073c73d272, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2394284769180230130}
   m_SourcePrefab: {fileID: 100100000, guid: cd84b49becbd3fe4195ccb073c73d272, type: 3}
 --- !u!1 &6034289542097366580 stripped
 GameObject:
@@ -290,6 +267,24 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.13, y: 0.03, z: 0.52}
   m_Center: {x: 0, y: 0.015, z: 0}
+--- !u!114 &2394284769180230130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6034289542097366580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56b7e2fcd69003141938ddfa014233c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbable: {fileID: 210939616066456932}
+  isDoor: 0
+  isImage: 0
+  isVerticalImage: 0
+  next: 0
+  isTooltip: 0
 --- !u!4 &6410252787747206286 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cd84b49becbd3fe4195ccb073c73d272, type: 3}

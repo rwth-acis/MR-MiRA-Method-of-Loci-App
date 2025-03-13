@@ -157,8 +157,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 4176098405017674476}
   isDoor: 1
+  isImage: 0
+  isVerticalImage: 0
   next: 1
   isTooltip: 0
+  isCone: 0
 --- !u!1 &5544378312938915404
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,7 +713,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tooltip (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3785215759913826596, guid: 4974c234bcf65234da9c7063b1920fad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -900,7 +904,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3785215759913826596, guid: 4974c234bcf65234da9c7063b1920fad, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

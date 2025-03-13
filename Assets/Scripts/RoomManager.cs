@@ -72,6 +72,7 @@ public class RoomManager : MonoBehaviour
     public GameObject goToFirstRoomButton;
     public GameObject addMoreRoomsButton;
     public GameObject enoughRoomsButton;
+    public GameObject spotLight;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -130,7 +131,6 @@ public class RoomManager : MonoBehaviour
 
     void Start()
     {
-        // TODO get name as input from user
         // Find the agentcontroller in the scene
         agentController = FindObjectOfType<AgentController>();
         user = GameObject.Find("CenterEyeAnchor");
@@ -151,16 +151,22 @@ public class RoomManager : MonoBehaviour
         ModeSelector mode = FindObjectOfType<ModeSelector>();
         layoutMode = mode.layoutMode;
         reusePalace = mode.reuseMode;
+        if (reusePalace)
+        {
+            _lociMenu.SetActive(true);
+            // change the name on the button
+            goToFirstRoomButton.SetActive(true);
+        }
         GameObject.Destroy(mode);
         if (layoutMode && !reusePalace)
         {
             agentController.DeactivateAgent();
+            setButtonsPhases("layout");
         }
-        Debug.Log("Layout mode: " + layoutMode);
-        //Set up the colour list
         colourListSetup();
         storyListSetup();
         woodMaterial.mainTexture = woodTexture;
+        spotLight.SetActive(false);
         LoadUser("Lena");
     }
 
@@ -182,8 +188,8 @@ public class RoomManager : MonoBehaviour
         openFurnitureStoreButton.SetActive(false);
         deleteButton.SetActive(false);
         changeUser.SetActive(true);
-        audioPauseButton.SetActive(true);
-        audioReplayButton.SetActive(true);
+        audioPauseButton.SetActive(false);
+        audioReplayButton.SetActive(false);
         greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(true);
         endFurniturePhaseButton.SetActive(false);
@@ -241,6 +247,10 @@ public class RoomManager : MonoBehaviour
             // Read the user's save file
             string userjson = File.ReadAllText(path);
             newUser = new User(username, JsonUtility.FromJson<SaveData>(userjson));
+            if (!layoutMode)
+            {
+                goToFirstRoomButton.SetActive(true);
+            }
         }
         _users.Add(newUser);
         _currentUser = newUser;
@@ -258,7 +268,6 @@ public class RoomManager : MonoBehaviour
         // Position for door raycast
         Vector3 raycastOrigin = user.transform.position;
         // add door to the current room
-        // TODO make sure that the rooms are actually connected
         Quaternion rotation = Quaternion.LookRotation(- user.transform.forward);
         GameObject door = Instantiate(doorPrefabs[0], raycastOrigin, rotation);
         ObjectSnapper objectsnapper = door.GetComponent<ObjectSnapper>();
@@ -275,7 +284,7 @@ public class RoomManager : MonoBehaviour
         Debug.Log("LOADROOM: CreateRoom");
         await LoadRoom(room);
         // After creating 6 rooms the user is allowed to end the furniture phase
-        if (newRoomID == 6)
+        if (newRoomID == 5)
         {
             endFurniturePhaseButton.SetActive(true);
             agentController.PlayAudio(agentController.furnitureCanBeFinishedAudio);
@@ -307,8 +316,20 @@ public class RoomManager : MonoBehaviour
             return; // TODO: Error Message or Grey out Button
         }
         Debug.Log("LOADROOM: NextScene");
+        forwardButton.SetActive(false);
+        backButton.SetActive(false);
         await LoadRoom(nextRoom);
+        forwardButton.SetActive(true);
+        backButton.SetActive(true);
         _currentRoom = _currentUser.GetCurrentRoom();
+        if (_currentRoom.ID == _currentUser.GetFreeRoomID() -1)
+        {
+            forwardButton.SetActive(false);
+        }
+        if (_currentRoom.ID != 0)
+        {
+            backButton.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -324,8 +345,20 @@ public class RoomManager : MonoBehaviour
             return; // TODO: Error Message or Grey out Button
         }
         Debug.Log("LOADROOM: PreviousScene");
+        backButton.SetActive(false);
+        forwardButton.SetActive(false);
         await LoadRoom(previousRoom);
+        backButton.SetActive(true);
+        forwardButton.SetActive(true);
         _currentRoom = _currentUser.GetCurrentRoom();
+        if (_currentRoom.ID != _currentUser.GetFreeRoomID() -1)
+        {
+            forwardButton.SetActive(true);
+        }
+        if (_currentRoom.ID == 0)
+        {
+            backButton.SetActive(false);
+        }
     }
 
     /// <summary>
@@ -719,7 +752,7 @@ public class RoomManager : MonoBehaviour
     private Vector3 findFreeFloatingSpace()
     {
         Vector3 basePosition = user.transform.position + user.transform.forward * 1;
-        basePosition.y = user.transform.position.y;
+        basePosition.y = 1.5f; // Start at a height of 1.5m
 
         float offset = 0.2f; // Distance to move left or right
         int maxAttempts = 20; // Maximum number of attempts to find a free space
@@ -730,10 +763,6 @@ public class RoomManager : MonoBehaviour
 
             if (!Physics.Raycast(user.transform.position, freeSpace - user.transform.position, out RaycastHit hit, 2f))
             {
-                if(freeSpace.y > 2)
-                {
-                    freeSpace.y = 1.5f;
-                }
                 return freeSpace;
             }
         }
@@ -758,16 +787,31 @@ public class RoomManager : MonoBehaviour
         }
         if (reusePalace)
         {
-            //TODO finish this with new menu
+            if(_currentRoom.Representations.Count <= _currentRoom.ReplacingLocusIndex)
+            {
+                Debug.Log("All representations have been replaced");
+                Debug.Log("The index of the representation to be replaced is: " + _currentRoom.ReplacingLocusIndex);
+                Debug.Log("The number of representations is: " + _currentRoom.Representations.Count);
+
+                return;
+            }
             // Replacing the old representation with a new one
             GameObject newObject2 = Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
             newObject2.tag = "Information";
-            _currentRoom.ReplaceRepresentation(0, loci, newObject2);
+            _currentRoom.ReplaceRepresentation(loci, newObject2);
+            newObject2.transform.position = _currentRoom.Loci[0].transform.position;
+            // Remove the loci halo
+            GameObject halo = _currentRoom.Loci[0];
+            _currentRoom.Loci.RemoveAt(0);
+            Destroy(halo);
+
         }
         else
         {
             GameObject newObject = Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
-            newObject.transform.position = findFreeFloorSpace(newObject);
+            ObjectSnapper objectSnapper = newObject.GetComponent<ObjectSnapper>();
+            objectSnapper.snapToFloor();
+            //newObject.transform.position = findFreeFloorSpace(newObject);
             newObject.tag = "Information";
 
             // Add a tooltip as a child the new object
@@ -778,7 +822,6 @@ public class RoomManager : MonoBehaviour
                 ObjectSnapper objectsnapper = newObject.GetComponent<ObjectSnapper>();
                 float TooltipY = objectsnapper.getHighestPoint();
                 tooltipObject.transform.position = new Vector3(tooltipObject.transform.position.x, TooltipY, tooltipObject.transform.position.z);
-
 
                 tooltipObject.transform.SetParent(newObject.transform);
                 TextMeshProUGUI [] texts = tooltipObject.GetComponentsInChildren<TextMeshProUGUI>();
@@ -884,9 +927,9 @@ public class RoomManager : MonoBehaviour
         // previousFurnitureButton.SetActive(true);
         openFurnitureStoreButton.SetActive(true);
         deleteButton.SetActive(true);
-        changeUser.SetActive(true);
-        audioPauseButton.SetActive(true);
-        audioReplayButton.SetActive(true);
+        changeUser.SetActive(false);
+        // audioPauseButton.SetActive(true);
+        // audioReplayButton.SetActive(true);
         greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
@@ -934,7 +977,7 @@ public class RoomManager : MonoBehaviour
                 _storyText.SetActive(false);
                 _tooltipMenu.SetActive(false);
                 setButtonsPhases("list");
-                // TODO: Play Audio: you are back in the list phase
+                agentController.PlayAudio(agentController.backInLearningModeAudio);
             }
             else
             {
@@ -942,6 +985,7 @@ public class RoomManager : MonoBehaviour
             }
             _isObjectConfirmed = false;
         }
+        storyPhaseButton.SetActive(true);
     }
 
     private async Task WaitForUserConfirmation()
@@ -954,7 +998,7 @@ public class RoomManager : MonoBehaviour
 
     public void OnConfirmButtonClick(bool value)
     {
-        _isObjectConfirmed = value;
+        _isObjectConfirmed = true;
     }
 
     public async void StoryPhase(bool value)
@@ -979,7 +1023,7 @@ public class RoomManager : MonoBehaviour
                 _storyText.SetActive(true);
                 _tooltipMenu.SetActive(true);
                 setButtonsPhases("story");
-                // TODO: Play Audio: you are back in the story phase
+                agentController.PlayAudio(agentController.backInLearningModeAudio);
             }
             else
             {
@@ -987,9 +1031,11 @@ public class RoomManager : MonoBehaviour
                 _isObjectConfirmed = false;
             }
         }
+        numberPhaseButton.SetActive(true);
         _currentStoryPart = "";
         texts[0].text = "Ende der Geschichte";
         texts[1].text = "Drücke auf 'Zahlen merken' um fortzufahren";
+        _isObjectConfirmed = false;
     }
 
     public async void NumberPhase(bool value)
@@ -1001,6 +1047,7 @@ public class RoomManager : MonoBehaviour
 
         _tooltipMenu.SetActive(true);
         TextMeshProUGUI [] texts = _tooltipMenu.GetComponentsInChildren<TextMeshProUGUI>();
+        _isObjectConfirmed = false;
         for(int i = 0; i < agentController.numberAudios.Length; i++)
         {
             agentController.PlayAudio(agentController.numberAudios[i]);
@@ -1014,7 +1061,7 @@ public class RoomManager : MonoBehaviour
                 _storyText.SetActive(false);
                 _tooltipMenu.SetActive(true);
                 setButtonsPhases("number");
-                // TODO: Play Audio: you are back in the number phase
+                agentController.PlayAudio(agentController.backInLearningModeAudio);
             }
             else
             {
@@ -1027,6 +1074,7 @@ public class RoomManager : MonoBehaviour
         texts[0].text = "Ende der Zahlen";
         texts[1].text = "Drücke auf 'Erster Raum' um fortzufahren";
         goToFirstRoomButton.SetActive(true);
+        agentController.PlayAudio(agentController.repetitionAudio);
     }
 
     /// <summary>
@@ -1037,22 +1085,28 @@ public class RoomManager : MonoBehaviour
     public async void GoToFirstRoom(bool value)
     {
         _isNextRoom = false;
-        _storyText.SetActive(true); // leave visible after story loci setup to be read again
+        if (!reusePalace)
+        {
+            _storyText.SetActive(true);
+        }
+        else
+        {
+            _storyText.SetActive(false);
+        }
         _doorChangeRoom = true;
         _tooltipMenu.SetActive(false);
         newRoomButton.SetActive(false);
         backButton.SetActive(true);
         forwardButton.SetActive(true);
         openLociStoreButton.SetActive(false);
-        // Keep the wall colour changeable to connect colour to the objects
         nextWallColourButton.SetActive(false);
         previousWallColourButton.SetActive(false);
         openFurnitureStoreButton.SetActive(false);
         greyOutFurnitureButton.SetActive(true);
         deleteButton.SetActive(false);
-        changeUser.SetActive(true);
-        audioPauseButton.SetActive(true);
-        audioReplayButton.SetActive(true);
+        changeUser.SetActive(false);
+        // audioPauseButton.SetActive(true);
+        // audioReplayButton.SetActive(true);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -1064,27 +1118,50 @@ public class RoomManager : MonoBehaviour
         addMoreRoomsButton.SetActive(false);
         enoughRoomsButton.SetActive(false);
         Debug.Log("LOADROOM: GoToFirstRoom");
-        await LoadRoom(_currentUser.GetFirstRoom());
-        _currentUser.CurrentRoomID = 0;
-        _currentRoom = _currentUser.GetCurrentRoom();
-
-        int currentRepresentationIndex = 0;
-        TextMeshProUGUI [] texts = _tooltipMenu.GetComponentsInChildren<TextMeshProUGUI>();
+        if (_currentRoom != _currentUser.GetFirstRoom())
+        {
+            await LoadRoom(_currentUser.GetFirstRoom());
+            _currentRoom.SaveRoom();
+            _currentUser.CurrentRoomID = 0;
+            _currentRoom = _currentUser.GetCurrentRoom();
+        }
+        GameObject spotlight = Instantiate(spotLight, Vector3.zero, Quaternion.Euler(90,0,0));
+        spotlight.SetActive(false);
         for(int i = 0; i < _currentUser.GetFreeRoomID(); i++)
         {
+            Debug.Log("AGENT: in Schleife Raum " + i);
             foreach (var representation in _currentRoom.RepresentationInstances)
             {
+                Debug.Log("AGENT: in Schleife Objekt "+representation.name);
                 //TODO agent guiding
-                agentController.PointAtObject(representation);
+                spotlight.SetActive(true);
+                spotlight.transform.position = new Vector3(representation.transform.position.x, 2.5f, representation.transform.position.z);
+                agentController.GoToAndPointAtObject(representation);
+                Debug.Log("AGENT: "+representation.name);
+                //await WaitForUserNearObjectOrTimeOut(representation);
                 await WaitForUserConfirmation();
                 _isObjectConfirmed = false;
+                if(_isNextRoom)
+                {
+                    break;
+                }
             }
             await WaitForNextRoom();
             _isNextRoom = false;
         }
         goToFirstRoomButton.SetActive(true);
+        spotLight.SetActive(false);
     }
 
+    private async Task WaitForUserNearObjectOrTimeOut(GameObject representation)
+    {
+        float time = Time.time;
+        Debug.Log("AGENT: "+ representation.name);
+        while (Vector3.Distance(representation.transform.position, user.transform.position) > 1 ||  Time.time - time > 5)
+        {
+            await Task.Delay(100);
+        }
+    }
     private async Task WaitForNextRoom()
     {
         while (!_isNextRoom)
@@ -1116,13 +1193,13 @@ public class RoomManager : MonoBehaviour
         backButton.SetActive(false);
         forwardButton.SetActive(true);
         openLociStoreButton.SetActive(false);
-        nextWallColourButton.SetActive(true);
-        previousWallColourButton.SetActive(true);
+        nextWallColourButton.SetActive(false);
+        previousWallColourButton.SetActive(false);
         openFurnitureStoreButton.SetActive(true);
         deleteButton.SetActive(true);
-        changeUser.SetActive(true);
-        audioPauseButton.SetActive(true);
-        audioReplayButton.SetActive(true);
+        changeUser.SetActive(false);
+        // audioPauseButton.SetActive(true);
+        // audioReplayButton.SetActive(true);
         greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
@@ -1139,6 +1216,7 @@ public class RoomManager : MonoBehaviour
         // Load the new room
         Room evaluationRoom = _currentRoom;
         CreateRoom(true);
+        _currentRoom.SaveRoom();
         await WaitForAddMoreRooms();
         Debug.Log("LOADROOM: ReturnToFurniturePhase");
         await LoadRoom(evaluationRoom);
@@ -1184,10 +1262,10 @@ public class RoomManager : MonoBehaviour
                 openFurnitureStoreButton.SetActive(false);
                 greyOutFurnitureButton.SetActive(true);
                 deleteButton.SetActive(false);
-                changeUser.SetActive(true);
+                changeUser.SetActive(false);
                 furniturePhaseButton.SetActive(false);
                 listPhaseButton.SetActive(false);
-                storyPhaseButton.SetActive(true);
+                storyPhaseButton.SetActive(false);
                 numberPhaseButton.SetActive(false);
                 confirmButton.SetActive(true);
                 devmenuButton.SetActive(true);
@@ -1203,20 +1281,19 @@ public class RoomManager : MonoBehaviour
                 backButton.SetActive(true);
                 forwardButton.SetActive(true);
                 openLociStoreButton.SetActive(true);
-                // Keep the wall colour changeable to connect colour to the objects
-                nextWallColourButton.SetActive(true);
-                previousWallColourButton.SetActive(true);
+                nextWallColourButton.SetActive(false);
+                previousWallColourButton.SetActive(false);
                 openFurnitureStoreButton.SetActive(false);
                 greyOutFurnitureButton.SetActive(true);
                 deleteButton.SetActive(true);
-                changeUser.SetActive(true);
-                audioPauseButton.SetActive(true);
-                audioReplayButton.SetActive(true);
+                changeUser.SetActive(false);
+                // audioPauseButton.SetActive(true);
+                // audioReplayButton.SetActive(true);
                 furniturePhaseButton.SetActive(false);
                 endFurniturePhaseButton.SetActive(false);
                 listPhaseButton.SetActive(false);
                 storyPhaseButton.SetActive(false);
-                numberPhaseButton.SetActive(true);
+                numberPhaseButton.SetActive(false);
                 confirmButton.SetActive(true);
                 devmenuButton.SetActive(true);
                 resetPositionButton.SetActive(true);
@@ -1233,14 +1310,14 @@ public class RoomManager : MonoBehaviour
                 forwardButton.SetActive(true);
                 openLociStoreButton.SetActive(true);
                 // Keep the wall colour changeable to connect colour to the objects
-                nextWallColourButton.SetActive(true);
-                previousWallColourButton.SetActive(true);
+                nextWallColourButton.SetActive(false);
+                previousWallColourButton.SetActive(false);
                 openFurnitureStoreButton.SetActive(false);
                 greyOutFurnitureButton.SetActive(true);
                 deleteButton.SetActive(true);
-                changeUser.SetActive(true);
-                audioPauseButton.SetActive(true);
-                audioReplayButton.SetActive(true);
+                changeUser.SetActive(false);
+                // audioPauseButton.SetActive(true);
+                // audioReplayButton.SetActive(true);
                 furniturePhaseButton.SetActive(false);
                 endFurniturePhaseButton.SetActive(false);
                 listPhaseButton.SetActive(false);
@@ -1251,6 +1328,15 @@ public class RoomManager : MonoBehaviour
                 resetPositionButton.SetActive(true);
                 addMoreRoomsButton.SetActive(false);
                 enoughRoomsButton.SetActive(false);
+                break;
+            case "layout":
+                _doorChangeRoom = true;
+                backButton.SetActive(true);
+                forwardButton.SetActive(true);
+                deleteButton.SetActive(false);
+                furniturePhaseButton.SetActive(false);
+                devmenuButton.SetActive(true);
+                resetPositionButton.SetActive(true);
                 break;
         }
     }

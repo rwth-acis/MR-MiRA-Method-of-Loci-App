@@ -37,6 +37,7 @@ TagManager:
   - FurnitureMenu
   - Story
   - Tooltip
+  - Light
   layers:
   - Default
   - TransparentFX
