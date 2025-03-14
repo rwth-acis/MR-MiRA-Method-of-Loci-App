@@ -118,7 +118,7 @@
       "url": "https://packages.unity.com"
     },
     "com.readyplayerme.core": {
-      "version": "https://github.com/readyplayerme/rpm-unity-sdk-core.git",
+      "version": "https://github.com/readyplayerme/rpm-unity-sdk-core.git#v7.3.1",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -253,6 +253,13 @@
     "com.unity.nuget.newtonsoft-json": {
       "version": "3.2.1",
       "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.performance.profile-analyzer": {
+      "version": "1.2.3",
+      "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
