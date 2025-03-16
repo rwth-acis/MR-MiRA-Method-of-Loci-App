@@ -1434,4 +1434,10 @@ public class RoomManager : MonoBehaviour
             PreviousScene(true);
         }
     }
+
+    public void ChangeMenuHeight(bool value)
+    {
+        _menu.transform.position = new Vector3(_menu.transform.position.x, user.transform.position.y - 0.2f, _menu.transform.position.z);
+
+    }
 }
