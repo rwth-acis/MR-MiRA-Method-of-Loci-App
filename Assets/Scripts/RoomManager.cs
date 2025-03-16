@@ -251,6 +251,9 @@ public class RoomManager : MonoBehaviour
             if (!layoutMode)
             {
                 goToFirstRoomButton.SetActive(true);
+                listPhaseButton.SetActive(true);
+                storyPhaseButton.SetActive(true);
+                numberPhaseButton.SetActive(true);
             }
         }
         _users.Add(newUser);
