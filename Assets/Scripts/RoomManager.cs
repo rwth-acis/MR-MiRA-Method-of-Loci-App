@@ -96,6 +96,7 @@ public class RoomManager : MonoBehaviour
     private int _deleteCounter = 0;
     private int furniturePlacementCounter = 0;
     private int _devMenuCounter;
+    private int _recommendationsIndex;
 
     // Flags
     private bool _doorChangeRoom = false; // whether doors can be used to switch rooms
@@ -1029,6 +1030,7 @@ public class RoomManager : MonoBehaviour
             {
                 await WaitForUserConfirmation();
                 _isObjectConfirmed = false;
+                _recommendationsIndex++;
             }
         }
         numberPhaseButton.SetActive(true);
@@ -1040,6 +1042,7 @@ public class RoomManager : MonoBehaviour
 
     public async void NumberPhase(bool value)
     {
+        _recommendationsIndex = 16;
         setButtonsPhases("number");
         // Let the agent play the introduction to the number phase
         agentController.ActivateAgent();
@@ -1067,6 +1070,7 @@ public class RoomManager : MonoBehaviour
             {
                 await WaitForUserConfirmation();
                 _isObjectConfirmed = false;
+                _recommendationsIndex++;
             }
         }
         _finished = true;
@@ -1439,5 +1443,10 @@ public class RoomManager : MonoBehaviour
     {
         _menu.transform.position = new Vector3(_menu.transform.position.x, user.transform.position.y - 0.2f, _menu.transform.position.z);
 
+    }
+
+    public int LoadRecommendations()
+    {
+        return _recommendationsIndex;
     }
 }

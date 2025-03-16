@@ -24,6 +24,8 @@ public class LociLoader : MonoBehaviour
     public List<GameObject> LociPeople;
     [Tooltip("The list of objects categorized as 'Animals'")]
     public List<GameObject> LociAnimals;
+    [Tooltip("The list of recommendations")]
+    public List<GameObject> Recommendations;
 
     [Tooltip("The list of loci object previews")]
     public List<Texture2D> LociPreview;
@@ -210,5 +212,22 @@ public class LociLoader : MonoBehaviour
     {
         //Deactivate the loci menu
         gameObject.SetActive(false);
+    }
+
+    public void LoadRecommendations(bool value)
+    {
+        Title.GetComponent<TextMeshProUGUI>().text = "Vorschläge";
+        foreach (Transform child in Content.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        int index = RoomManager.Instance.LoadRecommendations();
+        for (int i = index * 3 ; i < (index*3)+3 ; i++)
+        {
+            GameObject currentButton = Instantiate(Button, Content.transform);
+            currentButton.transform.Find("Content/Background/Elements/Label").GetComponentInChildren<TextMeshProUGUI>().text = Recommendations[i].name;
+            currentButton.transform.Find("Content/Background/Elements/Space").GetComponent<RawImage>().texture = LociPreview[LociObjects.IndexOf(Recommendations[i])];
+            currentButton.transform.GetComponent<Toggle>().onValueChanged.AddListener(delegate { RoomManager.Instance.AddLoci(Recommendations[i]);});
+        }
     }
 }
