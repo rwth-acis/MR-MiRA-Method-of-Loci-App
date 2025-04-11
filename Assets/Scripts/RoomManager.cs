@@ -176,8 +176,8 @@ public class RoomManager : MonoBehaviour
         openFurnitureStoreButton.SetActive(false);
         deleteButton.SetActive(false);
         changeUser.SetActive(true);
-        audioPauseButton.SetActive(false);
-        audioReplayButton.SetActive(false);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(true);
         endFurniturePhaseButton.SetActive(false);
@@ -814,8 +814,8 @@ public class RoomManager : MonoBehaviour
         openFurnitureStoreButton.SetActive(true);
         deleteButton.SetActive(true);
         changeUser.SetActive(false);
-        // audioPauseButton.SetActive(true);
-        // audioReplayButton.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
@@ -1010,8 +1010,8 @@ public class RoomManager : MonoBehaviour
         greyOutFurnitureButton.SetActive(true);
         deleteButton.SetActive(false);
         changeUser.SetActive(false);
-        // audioPauseButton.SetActive(true);
-        // audioReplayButton.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
         listPhaseButton.SetActive(false);
@@ -1095,8 +1095,8 @@ public class RoomManager : MonoBehaviour
         openFurnitureStoreButton.SetActive(true);
         deleteButton.SetActive(true);
         changeUser.SetActive(false);
-        // audioPauseButton.SetActive(true);
-        // audioReplayButton.SetActive(true);
+        audioPauseButton.SetActive(true);
+        audioReplayButton.SetActive(true);
         greyOutFurnitureButton.SetActive(false);
         furniturePhaseButton.SetActive(false);
         endFurniturePhaseButton.SetActive(false);
@@ -1189,8 +1189,8 @@ public class RoomManager : MonoBehaviour
                 greyOutFurnitureButton.SetActive(true);
                 deleteButton.SetActive(true);
                 changeUser.SetActive(false);
-                // audioPauseButton.SetActive(true);
-                // audioReplayButton.SetActive(true);
+                audioPauseButton.SetActive(true);
+                audioReplayButton.SetActive(true);
                 furniturePhaseButton.SetActive(false);
                 endFurniturePhaseButton.SetActive(false);
                 listPhaseButton.SetActive(false);
@@ -1217,8 +1217,8 @@ public class RoomManager : MonoBehaviour
                 greyOutFurnitureButton.SetActive(true);
                 deleteButton.SetActive(true);
                 changeUser.SetActive(false);
-                // audioPauseButton.SetActive(true);
-                // audioReplayButton.SetActive(true);
+                audioPauseButton.SetActive(true);
+                audioReplayButton.SetActive(true);
                 furniturePhaseButton.SetActive(false);
                 endFurniturePhaseButton.SetActive(false);
                 listPhaseButton.SetActive(false);

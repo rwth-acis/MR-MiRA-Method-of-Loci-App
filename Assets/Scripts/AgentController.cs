@@ -51,7 +51,7 @@ public class AgentController : MonoBehaviour
     [Tooltip("To check if the agent is following the user")]
     private bool _isFollowingUser = false;
 
-    private AgentAudioTask _currentAudio;
+    private AudioClip _currentAudio;
     private AudioSource _audioSource;
     //private AgentAudioTask _currentAudio = new AgentAudioTask(null);
     private bool paused = false;
@@ -180,28 +180,6 @@ public class AgentController : MonoBehaviour
         _isFollowingUser = false;
     }
 
-    private void OnAudioTaskStarted(AgentAudioTask task)
-    {
-        _currentAudio = task;
-    }
-
-
-    public void GuideUserFurnishing()
-    {
-        // Play the audio for the furniture setup
-
-    }
-
-    public void GuideUserEncodingInformation()
-    {
-        //TODO
-    }
-
-    public void GuideUserEmptyPalace()
-    {
-        //TODO
-    }
-
     /// <summary>
     /// Deactivate the agent
     /// </summary>
@@ -239,6 +217,7 @@ public class AgentController : MonoBehaviour
         {
             await Task.Delay(100);
         }
+        _currentAudio = audioClip;
         _audioSource.clip = audioClip;
         _audioSource.Play();
         //audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
@@ -247,22 +226,31 @@ public class AgentController : MonoBehaviour
 
     public void PauseAudio()
     {
-        if(paused)
+        if(_audioSource.isPlaying)
         {
-            _currentAudio.ContinueAudio();
-            paused = false;
-        }
-        else
-        {
-            _currentAudio.PauseAudio();
             paused = true;
+            _audioSource.Pause();
+        }
+        else if(_audioSource.clip != null)
+        {
+            paused = false;
+            _audioSource.UnPause();
         }
     }
 
     public void ReplayAudio()
     {
-        AgentAudioTask audioTask = new AgentAudioTask(_currentAudio.Audio);
-        taskSystem.ScheduleTask(audioTask, 9, "Head");
-        audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
+        if (_audioSource.isPlaying)
+        {
+            replaying = true;
+            _audioSource.Stop();
+            _audioSource.Play();
+        }
+        else if (_currentAudio != null)
+        {
+            replaying = false;
+            _audioSource.clip = _currentAudio;
+            _audioSource.Play();
+        }
     }
 }
