@@ -43,7 +43,6 @@ public class ObjectSnapper : MonoBehaviour
         {
             if(!grabbed)
             {
-                Debug.Log("I have been grabbed!");
                 grabbed = true;
             }
         }
@@ -65,7 +64,6 @@ public class ObjectSnapper : MonoBehaviour
                 {
                     snapToWall();
                 }
-                Debug.Log("I have been released!");
                 snapToFloor();
                 grabbed = false;
             }
@@ -95,10 +93,8 @@ public class ObjectSnapper : MonoBehaviour
         // If delete button is pressed delete the object
         else
         {
-            Debug.Log("DELETE: Delete mode: " + RoomManager.Instance.isDeleteMode);
             if(RoomManager.Instance.isDeleteMode)
             {
-                Debug.Log("DELETE: Object deleted");
                 RoomManager.Instance.DeleteObject(gameObject);
             }
         }

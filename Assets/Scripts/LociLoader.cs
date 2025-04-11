@@ -78,12 +78,6 @@ public class LociLoader : MonoBehaviour
         LoadLoci(true);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     /// Loads the loci objects into the menu
     /// </summary>
@@ -214,6 +208,10 @@ public class LociLoader : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Loads the recommendations into the menu
+    /// </summary>
+    /// <param name="value">The value of the "Vorschläge"" button</param>
     public void LoadRecommendations(bool value)
     {
         Title.GetComponent<TextMeshProUGUI>().text = "Vorschläge";

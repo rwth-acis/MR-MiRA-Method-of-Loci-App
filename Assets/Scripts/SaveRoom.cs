@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [Serializable]
 public class SaveRoom
@@ -22,7 +21,4 @@ public class SaveRoom
     public List<SerializedTransform> representationTransforms = new List<SerializedTransform>();
     [Tooltip("The colour of the walls in the room")]
     public Color wallColour;
-    //[Tooltip("The tooltips to be shown above representations")]
-    //public List<String> tooltips = new List<string>();
-
 }

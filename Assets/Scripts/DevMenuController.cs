@@ -31,7 +31,7 @@ public class DevMenuController : MonoBehaviour
     /// <param name="value">Value of the corresponding button</param>
     public void NextScene(bool value)
     {
-        roomManager.NextScene(value);
+        roomManager.NextRoom(value);
     }
 
     /// <summary>
@@ -40,7 +40,7 @@ public class DevMenuController : MonoBehaviour
     /// <param name="value">Value of the corresponding button</param>
     public void PreviousScene(bool value)
     {
-        roomManager.PreviousScene(value);
+        roomManager.PreviousRoom(value);
     }
 
     /// <summary>
