@@ -3,17 +3,16 @@ using UnityEngine;
 using i5.VirtualAgents;
 using i5.VirtualAgents.AgentTasks;
 using i5.VirtualAgents.ScheduleBasedExecution;
-using Unity.VisualScripting;
 
 public class AgentController : MonoBehaviour
 {
     [Tooltip("The agent which is controlled by this controller")]
     public Agent agent;
     [Tooltip("The task system of the agent")]
-    protected ScheduleBasedTaskSystem taskSystem;
-    // The "center" eye anchor of the user
+    protected ScheduleBasedTaskSystem TaskSystem;
     [Tooltip("The center eye anchor of the user")]
     [SerializeField] public GameObject user;
+    // Audio clips for the agent
     [Tooltip("The audio clip for the introduction")]
     [SerializeField] public AudioClip introductionAudio;
     [Tooltip("The audio clip for the MoL Explanation")]
@@ -48,12 +47,10 @@ public class AgentController : MonoBehaviour
     [SerializeField] public AudioClip backInLearningModeAudio;
     [Tooltip("Tell user to repeat the information, starting with the first room")]
     [SerializeField] public AudioClip repetitionAudio;
-    [Tooltip("To check if the agent is following the user")]
-    private bool _isFollowingUser = false;
 
+    private bool _isFollowingUser = false;
     private AudioClip _currentAudio;
     private AudioSource _audioSource;
-    //private AgentAudioTask _currentAudio = new AgentAudioTask(null);
     private bool paused = false;
     private bool replaying = false;
 
@@ -62,33 +59,15 @@ public class AgentController : MonoBehaviour
     {
         ActivateAgent();
         // Get the task system of the agent
-        taskSystem = (ScheduleBasedTaskSystem)agent.TaskSystem;
-
+        TaskSystem = (ScheduleBasedTaskSystem)agent.TaskSystem;
         _audioSource = agent.transform.gameObject.GetComponent<AudioSource>();
-
         // Turn to the user
         FaceUser();
         // Wave to the user
-        taskSystem.Tasks.PlayAnimation("WaveLeft", 5, "", 0, "Left Arm");
+        TaskSystem.Tasks.PlayAnimation("WaveLeft", 5, "", 0, "Left Arm");
 
         PlayAudio(introductionAudio);
-        // AgentAudioTask audioTask = new AgentAudioTask(introductionAudio);
-        // taskSystem.ScheduleTask(audioTask, 0, "Head");
-        // _currentAudio = audioTask;
         PlayAudio(MoLAudio);
-        // AgentAudioTask audioTask2 = new AgentAudioTask(MoLAudio);
-        // taskSystem.ScheduleTask(audioTask2, 0, "Head");
-        // audioTask2.OnTaskStarted += OnAudioTaskStarted(audioTask2);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // // If the user is too far away, and there is no walking task already, follow the user
-        // if (Vector3.Distance(transform.position, user.transform.position) > 2 && !_isFollowingUser)
-        // {
-        //     FollowUser();
-        // }
     }
 
     /// <summary>
@@ -98,9 +77,7 @@ public class AgentController : MonoBehaviour
     {
         float angle = Vector3.SignedAngle(agent.transform.forward, user.transform.position - agent.transform.position, Vector3.up);
         AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
-        taskSystem.ScheduleTask(rotationTask);
-        // _isFollowingUser = true;
-        // rotationTask.OnTaskFinished += OnTaskFinished;
+        TaskSystem.ScheduleTask(rotationTask);
     }
 
     /// <summary>
@@ -110,7 +87,7 @@ public class AgentController : MonoBehaviour
     {
         float angle = Vector3.SignedAngle(agent.transform.forward, faceObject.transform.position - agent.transform.position, Vector3.up);
         AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
-        taskSystem.ScheduleTask(rotationTask);
+        TaskSystem.ScheduleTask(rotationTask);
     }
 
     /// <summary>
@@ -119,33 +96,35 @@ public class AgentController : MonoBehaviour
     /// <param name="pointObject">The object to point at</param>
     public void PointAtObject(GameObject pointObject)
     {
-        Debug.Log("Agent: Pointing at object");
-        taskSystem.Tasks.PointAt(pointObject, true);
+        TaskSystem.Tasks.PointAt(pointObject, true);
     }
 
+    /// <summary>
+    /// Instructs the agent to go to a specific object
+    /// </summary>
+    /// <param name="targetObject"></param>
     public void GoToObject(GameObject targetObject)
     {
-        Debug.Log("Agent: Going to object");
         // let the agent stand a bit away from the object
         Vector3 position = targetObject.transform.position;
         AgentMovementTask task = new AgentMovementTask(targetObject, default, true);
-        taskSystem.ScheduleTask(task);
+        TaskSystem.ScheduleTask(task);
     }
 
+    /// <summary>
+    /// Instructs the agent to go to a specific object and point at it for 5 seconds
+    /// </summary>
+    /// <param name="targetObject"></param>
     public void GoToAndPointAtObject(GameObject targetObject)
     {
         FaceObject(targetObject);
         AgentAnimationTask pointing = null;
         pointing = new AgentAnimationTask("PointingLeft", 5, "", "Left Arm", targetObject);
-        taskSystem.ScheduleTask(pointing, 0, "Left Arm");
-        // // wait before moving
-        // AgentWaitTask waitTask = new AgentWaitTask(3);
-        // taskSystem.ScheduleTask(waitTask, 9);
+        TaskSystem.ScheduleTask(pointing, 0, "Left Arm");
         Vector3 position = targetObject.transform.position;
-        //change position so that agent can stand next to object
         position = position + (agent.transform.position - position).normalized * 0.5f;
         AgentMovementTask task = new AgentMovementTask(position);
-        taskSystem.ScheduleTask(task,0);
+        TaskSystem.ScheduleTask(task,0);
     }
 
     /// <summary>
@@ -160,15 +139,13 @@ public class AgentController : MonoBehaviour
         }
         else
         {
-            //AgentMovementTask task = (AgentMovementTask)taskSystem.Tasks.GoTo(user, default, default, true);
             AgentMovementTask task = new AgentMovementTask(user, default, true);
             task.MinDistance = 1;
-            taskSystem.ScheduleTask(task);
+            TaskSystem.ScheduleTask(task);
             _isFollowingUser = true;
             float angle = Vector3.SignedAngle(agent.transform.forward, user.transform.position - agent.transform.position, Vector3.up);
             AgentRotationTask rotationTask = new AgentRotationTask(angle, true);
-            taskSystem.ScheduleTask(rotationTask);
-            //rotationTask.OnTaskFinished += OnTaskFinished;
+            TaskSystem.ScheduleTask(rotationTask);
         }
     }
 
@@ -200,19 +177,21 @@ public class AgentController : MonoBehaviour
         agent.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Plays the audio clip from the list at the given index
+    /// </summary>
+    /// <param name="index"></param>
     public void PlayAudioListPhase(int index)
     {
-        // Play the audioclip on head layer
-        //AgentAudioTask audioTask = new AgentAudioTask(listAudios[index]);
-        //taskSystem.ScheduleTask(audioTask, 0, "Head");
-        //audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
         PlayAudio(listAudios[index]);
     }
 
+    /// <summary>
+    /// Plays the given audio clip
+    /// </summary>
+    /// <param name="audioClip">The audio clip to be played</param>
     public async Task PlayAudio(AudioClip audioClip)
     {
-        //AgentAudioTask audioTask = new AgentAudioTask(audioClip);
-        //taskSystem.ScheduleTask(audioTask, 0, "Head");
         while (_audioSource.isPlaying)
         {
             await Task.Delay(100);
@@ -220,10 +199,11 @@ public class AgentController : MonoBehaviour
         _currentAudio = audioClip;
         _audioSource.clip = audioClip;
         _audioSource.Play();
-        //audioTask.OnTaskStarted += () => OnAudioTaskStarted(audioTask);
     }
 
-
+    /// <summary>
+    /// To toggle the pause state of the audio
+    /// </summary>
     public void PauseAudio()
     {
         if(_audioSource.isPlaying)
@@ -238,6 +218,9 @@ public class AgentController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// To replay the audio clip or restart the audio clip if it is already playing
+    /// </summary>
     public void ReplayAudio()
     {
         if (_audioSource.isPlaying)

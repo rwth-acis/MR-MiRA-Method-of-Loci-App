@@ -4,16 +4,10 @@ public class DevMenuController : MonoBehaviour
 {
     public RoomManager roomManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        //Get the roommanager instance
+        //Get the RoomManager instance
         roomManager = RoomManager.Instance;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     /// <summary>

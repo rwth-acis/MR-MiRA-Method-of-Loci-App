@@ -1,9 +1,6 @@
-using System;
 using Oculus.Interaction;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Object = UnityEngine.Object;
 
 public class ObjectSnapper : MonoBehaviour
 {
@@ -11,12 +8,17 @@ public class ObjectSnapper : MonoBehaviour
     [SerializeField] public Grabbable grabbable;
     [Tooltip("Is the object a door")]
     [SerializeField] public bool isDoor = false;
+    [Tooltip("Is the object an image")]
     [SerializeField] public bool isImage = false;
+    [Tooltip("Is the object a vertical image")]
     [SerializeField] public bool isVerticalImage = false;
+    [Tooltip("Used to determine if the door leads to the next scene")]
     [SerializeField] public bool next = false;
+    [Tooltip("Is the object a tooltip")]
     [SerializeField] public bool isTooltip = false;
+    [Tooltip("Is the object a light cone")]
     [SerializeField] public bool isCone = false;
-    private bool grabbed = false;
+    private bool _grabbed = false;
     private Renderer _renderer;
 
     void Start()
@@ -24,7 +26,7 @@ public class ObjectSnapper : MonoBehaviour
         _renderer = GetComponent<Renderer>();
         if (isImage)
         {
-            snapToWall();
+            SnapToWall();
             transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
         }
     }
@@ -41,31 +43,31 @@ public class ObjectSnapper : MonoBehaviour
         }
         if (grabbable.SelectingPointsCount > 0)
         {
-            if(!grabbed)
+            if(!_grabbed)
             {
-                grabbed = true;
+                _grabbed = true;
             }
         }
         else
         {
-            if (grabbed)
+            if (_grabbed)
             {
                 if (isImage)
                 {
-                    snapToWall();
+                    SnapToWall();
                     if (transform.position.y > 2)
                     {
                         transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
                     }
-                    grabbed = false;
+                    _grabbed = false;
                     return;
                 }
                 if (isDoor)
                 {
-                    snapToWall();
+                    SnapToWall();
                 }
-                snapToFloor();
-                grabbed = false;
+                SnapToFloor();
+                _grabbed = false;
             }
         }
     }
@@ -93,7 +95,7 @@ public class ObjectSnapper : MonoBehaviour
         // If delete button is pressed delete the object
         else
         {
-            if(RoomManager.Instance.isDeleteMode)
+            if(RoomManager.Instance.IsDeleteMode)
             {
                 RoomManager.Instance.DeleteObject(gameObject);
             }
@@ -103,7 +105,7 @@ public class ObjectSnapper : MonoBehaviour
     /// <summary>
     /// Snaps the object to the wall behind it
     /// </summary>
-    public void snapToWall()
+    public void SnapToWall()
     {
         if (_renderer == null)
         {
@@ -112,11 +114,10 @@ public class ObjectSnapper : MonoBehaviour
 
         Vector3 raycastOrigin = transform.position;
         Vector3 raycastDirection = -transform.forward;
-        RaycastHit hit;
 
         for(int i = 0; i < 10; i++)
         {
-            if (Physics.Raycast(raycastOrigin, raycastDirection, out hit, Mathf.Infinity))
+            if (Physics.Raycast(raycastOrigin, raycastDirection, out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.collider.CompareTag("Wall"))
                 {
@@ -140,11 +141,11 @@ public class ObjectSnapper : MonoBehaviour
     /// <summary>
     /// Snaps the object to the floor and makes it upright
     /// </summary>
-    public void snapToFloor()
+    public void SnapToFloor()
     {
         if (isImage)
         {
-            snapToWall();
+            SnapToWall();
             if (transform.position.y > 2)
             {
                 transform.position = new Vector3(transform.position.x, 1.5f, transform.position.z);
@@ -176,16 +177,12 @@ public class ObjectSnapper : MonoBehaviour
         Collider collider = GetComponent<Collider>();
         if (collider == null)
         {
-            Debug.LogError("No collider found on the grabbable object.");
             return;
         }
         // calculate the offset of the object to be actually standing on the ground
         // i.e. the distance between the position to the actual lowest point of the object that should be touching the ground
         float groundOffset = transform.position.y - _renderer.bounds.min.y;
-        Debug.Log("SNAP: Ground offset: " + groundOffset);
         Vector3 basePosition = transform.position;
-        Debug.Log("SNAP: Base position y: " + basePosition.y);
-
         if (isDoor)
         {
             // Doors should always be on the floor to be reachable for the user
@@ -196,8 +193,6 @@ public class ObjectSnapper : MonoBehaviour
         if (Physics.Raycast(basePosition, Vector3.down, out RaycastHit groundHit, Mathf.Infinity))
         {
             basePosition.y = groundOffset + groundHit.point.y;
-            Debug.Log("SNAP: hit  @ " + Mathf.Round(groundHit.point.y));
-            Debug.Log("SNAP: Final base position y: " + basePosition.y);
         }
         else
         {
@@ -206,19 +201,20 @@ public class ObjectSnapper : MonoBehaviour
         transform.position = basePosition;
     }
 
-    public void snapTooltip(float gameObjectY)
+    /// <summary>
+    /// Snaps the tooltip to the object
+    /// </summary>
+    /// <param name="gameObjectY"></param>
+    public void SnapTooltip(float gameObjectY)
     {
         transform.position = new Vector3(transform.position.x, gameObjectY, transform.position.z);
-        // // Tooltips should be snapped to the object they are hovering over
-        // if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit objectHit, Mathf.Infinity))
-        // {
-        //     float y = objectHit.point.y;
-        //     transform.position = new Vector3(transform.position.x, y, transform.position.z);
-        //     return;
-        // }
     }
 
-    public float getHighestPoint()
+    /// <summary>
+    /// Returns the highest point of the object
+    /// </summary>
+    /// <returns>The highest point of the object</returns>
+    public float GetHighestPoint()
     {
         // check if the root object has a renderer at all
         if (_renderer != null && _renderer.bounds.max.y >= gameObject.transform.lossyScale.y) return _renderer.bounds.max.y;

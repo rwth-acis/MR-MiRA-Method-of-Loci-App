@@ -121,7 +121,6 @@ public class User
         // Save JSON data to file
         SaveDataJSON = JsonUtility.ToJson(_saveData);
         string path = Path.Combine(Application.persistentDataPath, _name + ".json");
-        Debug.Log("Save to:" + path);
         File.WriteAllText(path, SaveDataJSON);
     }
 }

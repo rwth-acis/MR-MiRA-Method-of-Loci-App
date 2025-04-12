@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Oculus.Interaction;
 using TMPro;
+using UnityEngine.Serialization;
 using GameObject = UnityEngine.GameObject;
 
 public class RoomManager : MonoBehaviour
@@ -30,48 +31,73 @@ public class RoomManager : MonoBehaviour
     [SerializeField] public List<GameObject> evaluationList = new List<GameObject>();
     [Tooltip("The wood texture in colour")]
     [SerializeField] public Texture woodTexture;
+    [FormerlySerializedAs("woodTextureBW")]
     [Tooltip("The wood texture in black and white")]
-    [SerializeField] public Texture woodTextureBW;
+    [SerializeField] public Texture woodTextureBw;
     [Tooltip("The wood  material")]
     [SerializeField] public Material woodMaterial;
 
     [Tooltip("Whether the layout mode is active")]
-    public bool layoutMode { get; set; } = false;
+    public bool LayoutMode { get; set; } = false;
     [Tooltip("Whether the reuse mode is active")]
-    public bool reusePalace { get; set; } = false;
+    public bool ReusePalace { get; set; } = false;
 
     [Tooltip("If true, the next touched object will be deleted")]
-    public bool isDeleteMode { get; private set; } = false;
+    public bool IsDeleteMode { get; private set; } = false;
 
     // All buttons in the user menu
+    [Tooltip("The button to create a new room")]
     public GameObject newRoomButton;
+    [Tooltip("The button to go to the previous room")]
     public GameObject backButton;
+    [Tooltip("The button to go to the next room")]
     public GameObject forwardButton;
+    [Tooltip("The button to open the menu to add objects for loci")]
     public GameObject openLociStoreButton;
+    [Tooltip("The button to open the menu to add furniture")]
     public GameObject openFurnitureStoreButton;
+    [Tooltip("The button to delete an object")]
     public GameObject deleteButton;
+    [Tooltip("The button to change the wall colour to the next one in the list")]
     public GameObject nextWallColourButton;
+    [Tooltip("The button to change the wall colour to the previous one in the list")]
     public GameObject previousWallColourButton;
+    [Tooltip("The button to change the user, to load a different save file")]
     public GameObject changeUser;
+    [Tooltip("The button to pause and play the audio")]
     public GameObject audioPauseButton;
+    [Tooltip("The button to replay the audio")]
     public GameObject audioReplayButton;
+    [Tooltip("The button to grey out the furniture")]
     public GameObject greyOutFurnitureButton;
+    [Tooltip("The button to start the furniture phase")]
     public GameObject furniturePhaseButton;
+    [Tooltip("The button to end the furniture phase")]
     public GameObject endFurniturePhaseButton;
+    [Tooltip("The button to start the list phase")]
     public GameObject listPhaseButton;
+    [Tooltip("The button to start the story phase")]
     public GameObject storyPhaseButton;
+    [Tooltip("The button to start the number phase")]
     public GameObject numberPhaseButton;
+    [Tooltip("The button to confirm the object")]
     public GameObject confirmButton;
+    [Tooltip("The button to open the dev menu")]
     public GameObject devmenuButton;
+    [Tooltip("The button to reset the position of the user to the real position")]
     public GameObject resetPositionButton;
+    [Tooltip("The button to go to the first room and start the agent guiding")]
     public GameObject goToFirstRoomButton;
+    [Tooltip("The button to add more rooms after the furniture phase")]
     public GameObject addMoreRoomsButton;
+    [Tooltip("The button to continue the evaluation after adding more rooms")]
     public GameObject enoughRoomsButton;
+    [Tooltip("The orange spotlight to highlight the current object")]
     public GameObject spotLight;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
-    private List<Color> _wallColours = new List<Color>();
+    private readonly List<Color> _wallColours = new List<Color>();
     private int _colourPointer;
     private User _currentUser;
     private Room _currentRoom;
@@ -89,7 +115,7 @@ public class RoomManager : MonoBehaviour
 
     // Counter
     private int _deleteCounter = 0;
-    private int furniturePlacementCounter = 0;
+    private int _furniturePlacementCounter = 0;
     private int _devMenuCounter;
     private int _recommendationsIndex;
 
@@ -142,22 +168,22 @@ public class RoomManager : MonoBehaviour
         spotLight.SetActive(false);
 
         ModeSelector mode = FindObjectOfType<ModeSelector>();
-        layoutMode = mode.layoutMode;
-        reusePalace = mode.reuseMode;
-        if (reusePalace)
+        LayoutMode = mode.layoutMode;
+        ReusePalace = mode.reuseMode;
+        if (ReusePalace)
         {
             _lociMenu.SetActive(true);
             goToFirstRoomButton.SetActive(true);
         }
         GameObject.Destroy(mode);
-        if (layoutMode && !reusePalace)
+        if (LayoutMode && !ReusePalace)
         {
             agentController.DeactivateAgent();
-            setButtonsPhases("layout");
+            SetButtonsPhases("layout");
         }
 
-        storyListSetup();
-        colourListSetup();
+        StoryListSetup();
+        ColourListSetup();
         woodMaterial.mainTexture = woodTexture;
         LoadUser("Lena");
     }
@@ -233,7 +259,7 @@ public class RoomManager : MonoBehaviour
             // Read the user's save file
             string userjson = File.ReadAllText(path);
             newUser = new User(username, JsonUtility.FromJson<SaveData>(userjson));
-            if (!layoutMode)
+            if (!LayoutMode)
             {
                 goToFirstRoomButton.SetActive(true);
                 listPhaseButton.SetActive(true);
@@ -258,9 +284,9 @@ public class RoomManager : MonoBehaviour
         // add door to the current room
         Quaternion rotation = Quaternion.LookRotation(- user.transform.forward);
         GameObject door = Instantiate(doorPrefabs[0], raycastOrigin, rotation);
-        ObjectSnapper objectsnapper = door.GetComponent<ObjectSnapper>();
-        objectsnapper.snapToFloor();
-        objectsnapper.snapToWall();
+        ObjectSnapper objectSnapper = door.GetComponent<ObjectSnapper>();
+        objectSnapper.SnapToFloor();
+        objectSnapper.SnapToWall();
         _currentRoom.AddFurniture(doorPrefabs[0], door);
         _currentRoom.UpdateTransforms();
 
@@ -280,12 +306,11 @@ public class RoomManager : MonoBehaviour
 
         // Add a door to the new room
         door = Instantiate(doorPrefabs[1], raycastOrigin, user.transform.rotation);
-        objectsnapper = door.GetComponent<ObjectSnapper>();
-        objectsnapper.snapToFloor();
-        objectsnapper.snapToWall();
+        objectSnapper = door.GetComponent<ObjectSnapper>();
+        objectSnapper.SnapToFloor();
+        objectSnapper.SnapToWall();
         room.AddFurniture(doorPrefabs[1], door);
         room.UpdateTransforms();
-        //await room.UpdateAnchors();
         _currentRoom.SaveRoom();
         agentController.PlayAudio(agentController.newRoomDoorAudio);
         agentController.PointAtObject(door);
@@ -394,9 +419,9 @@ public class RoomManager : MonoBehaviour
         {
             // List of the prefabs of the furniture in the room
             List<GameObject> roomFurniture = room.Furniture;
-            for (int i = 0; i < roomFurniture.Count; i++)
+            foreach (GameObject furniture in roomFurniture)
             {
-                GameObject myObject = Instantiate(roomFurniture[i]);
+                GameObject myObject = Instantiate(furniture);
                 myObject.tag = "Furniture";
                 room.AddFurnitureInstance(myObject);
             }
@@ -408,21 +433,21 @@ public class RoomManager : MonoBehaviour
             wallColour.color = room.WallColour;
         }
 
-        if(!layoutMode)
+        if(!LayoutMode)
         {
             if (room != null && room.HasRepresentations())
             {
                 List<GameObject> roomRepresentations = room.Representations;
-                for (int i = 0; i < roomRepresentations.Count; i++)
+                foreach (GameObject representation in roomRepresentations)
                 {
-                    GameObject myRepresentation = Instantiate(roomRepresentations[i]);
+                    GameObject myRepresentation = Instantiate(representation);
                     myRepresentation.tag = "Information";
                     room.AddRepresentationInstance(myRepresentation);
                 }
                 room.LoadTransforms();
             }
         }
-        else if (layoutMode)
+        else if (LayoutMode)
         {
             // mark the loci on the transform positions of the representations
             foreach (var loci in room.Representations)
@@ -435,7 +460,7 @@ public class RoomManager : MonoBehaviour
             foreach (var loci in room.Loci)
             {
                 ObjectSnapper objectSnapper = loci.GetComponent<ObjectSnapper>();
-                objectSnapper.snapToFloor();
+                objectSnapper.SnapToFloor();
             }
             // Make sure the furniture is not grabbable in the layout mode
             foreach (GameObject instance in room.FurnitureInstances)
@@ -444,7 +469,7 @@ public class RoomManager : MonoBehaviour
             }
         }
 
-        if (reusePalace)
+        if (ReusePalace)
         {
             // Show all the representations that have been replaced already
             if (room != null && room.HasRepresentations())
@@ -545,7 +570,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// To set up the list of colours for the walls
     /// </summary>
-    private void colourListSetup()
+    private void ColourListSetup()
     {
         _wallColours.Add(Color.white);
         _wallColours.Add(Color.yellow);
@@ -572,7 +597,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     ///  To set up the list of story parts for the evaluation
     /// </summary>
-    private void storyListSetup()
+    private void StoryListSetup()
     {
         _evaluationStory.Add("Gestern habe ich sehr viel erlebt.");
         _evaluationStory.Add("Ich war auf dem Weg zum Air-Hockey spielen, mit meinen Freunden, Mira und Loki");
@@ -598,14 +623,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the button "Grey out furniture"</param>
     public void GreyOutFurnitureButton(bool value)
     {
-        if(woodMaterial.mainTexture == woodTexture)
-        {
-            woodMaterial.mainTexture = woodTextureBW;
-        }
-        else
-        {
-            woodMaterial.mainTexture = woodTexture;
-        }
+        woodMaterial.mainTexture = woodMaterial.mainTexture == woodTexture ? woodTextureBw : woodTexture;
     }
 
     /// <summary>
@@ -613,7 +631,7 @@ public class RoomManager : MonoBehaviour
     /// </summary>
     /// <param name="newObject">The object to be placed</param>
     /// <returns>A free position on the ground</returns>
-    private Vector3 findFreeFloorSpace(GameObject newObject)
+    private Vector3 FindFreeFloorSpace(GameObject newObject)
     {
         Vector3 basePosition = user.transform.position + user.transform.forward;
         basePosition.y = newObject.transform.position.y; // use the y position of the object to be placed
@@ -642,7 +660,7 @@ public class RoomManager : MonoBehaviour
     /// Finds a free space to place an object in the air
     /// </summary>
     /// <returns>A free position to float in front of the user</returns>
-    private Vector3 findFreeFloatingSpace()
+    private Vector3 FindFreeFloatingSpace()
     {
         Vector3 basePosition = user.transform.position + user.transform.forward * 1;
         basePosition.y = 1.5f; // Start at a height of 1.5m
@@ -666,6 +684,7 @@ public class RoomManager : MonoBehaviour
     /// Adds a GameObject to the current room, its transform will be saved as a loci
     /// </summary>
     /// <param name="loci">The GameObject to place</param>
+    /// <param name="tooltipText">The text displayed on the Tooltip above the object</param>
     public void AddLoci(GameObject loci, string tooltipText = null)
     {
         // for evaluation story part
@@ -677,14 +696,14 @@ public class RoomManager : MonoBehaviour
         {
             tooltipText = _currentStoryPart;
         }
-        if (reusePalace)
+        if (ReusePalace)
         {
             if(_currentRoom.Representations.Count <= _currentRoom.ReplacingLocusIndex)
             {
                 return;
             }
             // Replacing the old representation with a new one
-            GameObject newObject2 = Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            GameObject newObject2 = Instantiate(loci, FindFreeFloatingSpace(), Quaternion.identity);
             newObject2.tag = "Information";
             _currentRoom.ReplaceRepresentation(loci, newObject2);
             newObject2.transform.position = _currentRoom.Loci[0].transform.position;
@@ -696,9 +715,9 @@ public class RoomManager : MonoBehaviour
         }
         else
         {
-            GameObject newObject = Instantiate(loci, findFreeFloatingSpace(), Quaternion.identity);
+            GameObject newObject = Instantiate(loci, FindFreeFloatingSpace(), Quaternion.identity);
             ObjectSnapper objectSnapper = newObject.GetComponent<ObjectSnapper>();
-            objectSnapper.snapToFloor();
+            objectSnapper.SnapToFloor();
             newObject.tag = "Information";
 
             // Add a tooltip as a child the new object
@@ -707,8 +726,8 @@ public class RoomManager : MonoBehaviour
                 GameObject tooltipObject = Instantiate(tooltip, newObject.transform.position, Quaternion.identity);
                 // Set the tooltip to be on top of the object
                 ObjectSnapper objectsnapper = newObject.GetComponent<ObjectSnapper>();
-                float TooltipY = objectsnapper.getHighestPoint();
-                tooltipObject.transform.position = new Vector3(tooltipObject.transform.position.x, TooltipY, tooltipObject.transform.position.z);
+                float tooltipY = objectsnapper.GetHighestPoint();
+                tooltipObject.transform.position = new Vector3(tooltipObject.transform.position.x, tooltipY, tooltipObject.transform.position.z);
 
                 tooltipObject.transform.SetParent(newObject.transform);
                 TextMeshProUGUI [] texts = tooltipObject.GetComponentsInChildren<TextMeshProUGUI>();
@@ -726,7 +745,7 @@ public class RoomManager : MonoBehaviour
 
     public void AddFurniture(GameObject furniture)
     {
-        GameObject newObject = GameObject.Instantiate(furniture, findFreeFloorSpace(furniture), Quaternion.identity);
+        GameObject newObject = GameObject.Instantiate(furniture, FindFreeFloorSpace(furniture), Quaternion.identity);
         newObject.tag = "Furniture";
 
         // Add furniture to the current room's list of furniture
@@ -737,8 +756,8 @@ public class RoomManager : MonoBehaviour
         if(_currentRoom==_currentUser.GetFirstRoom())
         {
             // Increment the counter and check if two items have been placed
-            furniturePlacementCounter++;
-            if (furniturePlacementCounter == 2)
+            _furniturePlacementCounter++;
+            if (_furniturePlacementCounter == 2)
             {
                 agentController.PlayAudio(agentController.furniturePlacement2Audio);
             }
@@ -752,7 +771,7 @@ public class RoomManager : MonoBehaviour
     public void DeleteButton(bool value)
     {
         // await the user to touch an object
-        isDeleteMode = !isDeleteMode;
+        IsDeleteMode = !IsDeleteMode;
     }
 
     /// <summary>
@@ -761,7 +780,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="obj">The object to be deleted</param>
     public void DeleteObject(GameObject obj)
     {
-        if (isDeleteMode)
+        if (IsDeleteMode)
         {
             if (_currentRoom.FurnitureInstances.Contains(obj))
             {
@@ -779,7 +798,7 @@ public class RoomManager : MonoBehaviour
             Destroy(obj);
             _currentRoom.UpdateTransforms();
             _currentRoom.SaveRoom();
-            isDeleteMode = false;
+            IsDeleteMode = false;
         }
     }
 
@@ -842,7 +861,7 @@ public class RoomManager : MonoBehaviour
         _currentUser.CurrentRoomID = 0;
         _currentRoom = _currentUser.GetCurrentRoom();
 
-        setButtonsPhases("list");
+        SetButtonsPhases("list");
         // Let the agent play the introduction to the list phase
         agentController.ActivateAgent();
         agentController.PlayAudio(agentController.listIntroductionAudio);
@@ -861,7 +880,7 @@ public class RoomManager : MonoBehaviour
                 await WaitForContinueEvaluation();
                 _storyText.SetActive(false);
                 _tooltipMenu.SetActive(false);
-                setButtonsPhases("list");
+                SetButtonsPhases("list");
                 agentController.PlayAudio(agentController.backInLearningModeAudio);
             }
             else
@@ -900,7 +919,7 @@ public class RoomManager : MonoBehaviour
     /// <param name="value">The value of the corresponding button</param>
     public async void StoryPhase(bool value)
     {
-        setButtonsPhases("story");
+        SetButtonsPhases("story");
         // Let the agent play the introduction to the story phase
         agentController.ActivateAgent();
         agentController.PlayAudio(agentController.storyIntroductionAudio);
@@ -919,7 +938,7 @@ public class RoomManager : MonoBehaviour
                 await WaitForContinueEvaluation();
                 _storyText.SetActive(true);
                 _tooltipMenu.SetActive(true);
-                setButtonsPhases("story");
+                SetButtonsPhases("story");
                 agentController.PlayAudio(agentController.backInLearningModeAudio);
             }
             else
@@ -943,7 +962,7 @@ public class RoomManager : MonoBehaviour
     public async void NumberPhase(bool value)
     {
         _recommendationsIndex = 16;
-        setButtonsPhases("number");
+        SetButtonsPhases("number");
         // Let the agent play the introduction to the number phase
         agentController.ActivateAgent();
         agentController.PlayAudio(agentController.numberIntroductionAudio);
@@ -951,19 +970,19 @@ public class RoomManager : MonoBehaviour
         _tooltipMenu.SetActive(true);
         TextMeshProUGUI [] texts = _tooltipMenu.GetComponentsInChildren<TextMeshProUGUI>();
         _isObjectConfirmed = false;
-        for(int i = 0; i < agentController.numberAudios.Length; i++)
+        foreach (AudioClip audio in agentController.numberAudios)
         {
-            agentController.PlayAudio(agentController.numberAudios[i]);
-            _currentStoryPart = "Steht für die Zahl " + agentController.numberAudios[i].name;
+            agentController.PlayAudio(audio);
+            _currentStoryPart = "Steht für die Zahl " + audio.name;
             // Show story part on the menu
             texts[0].text = "74920318475061238756";
-            texts[1].text ="Merke dir als nächstes: Die Zahl " + agentController.numberAudios[i].name;
+            texts[1].text ="Merke dir als nächstes: Die Zahl " + audio.name;
             if (_addingMoreRooms)
             {
                 await WaitForContinueEvaluation();
                 _storyText.SetActive(false);
                 _tooltipMenu.SetActive(true);
-                setButtonsPhases("number");
+                SetButtonsPhases("number");
                 agentController.PlayAudio(agentController.backInLearningModeAudio);
             }
             else
@@ -990,14 +1009,7 @@ public class RoomManager : MonoBehaviour
     public async void GoToFirstRoom(bool value)
     {
         _isNextRoom = false;
-        if (!reusePalace)
-        {
-            _storyText.SetActive(true);
-        }
-        else
-        {
-            _storyText.SetActive(false);
-        }
+        _storyText.SetActive(!ReusePalace);
         _doorChangeRoom = true;
         _tooltipMenu.SetActive(false);
         newRoomButton.SetActive(false);
@@ -1146,7 +1158,7 @@ public class RoomManager : MonoBehaviour
     /// Used to set the buttons for the different phases of the evaluation
     /// </summary>
     /// <param name="phase">either "list", "story", "number" or "layout"</param>
-    private void setButtonsPhases(string phase)
+    private void SetButtonsPhases(string phase)
     {
         _learning = true;
         switch (phase)
@@ -1393,7 +1405,7 @@ public class RoomManager : MonoBehaviour
             _furniturePointer ++;
         }
         // Instantiate the new preview object
-        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
+        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], FindFreeFloatingSpace(), Quaternion.identity);
         newObject.transform.parent = _menu.transform;
         newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         newObject.tag = "Preview";
@@ -1420,7 +1432,7 @@ public class RoomManager : MonoBehaviour
             _furniturePointer--;
         }
         // Instantiate the new preview object
-        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], findFreeFloatingSpace(), Quaternion.identity);
+        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], FindFreeFloatingSpace(), Quaternion.identity);
         newObject.transform.parent = _menu.transform;
         newObject.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         newObject.tag = "Preview";
@@ -1438,7 +1450,7 @@ public class RoomManager : MonoBehaviour
         {
             GameObject.Destroy(obj);
         }
-        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], findFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
+        GameObject newObject = Instantiate(furniturePrefabs[_furniturePointer], FindFreeFloorSpace(furniturePrefabs[_furniturePointer]), Quaternion.identity);
         newObject.tag = "Furniture";
 
         // Add furniture to the current room's list of furniture
@@ -1449,8 +1461,8 @@ public class RoomManager : MonoBehaviour
         if(_currentRoom==_currentUser.GetFirstRoom())
         {
             // Increment the counter and check if two items have been placed
-            furniturePlacementCounter++;
-            if (furniturePlacementCounter == 2)
+            _furniturePlacementCounter++;
+            if (_furniturePlacementCounter == 2)
             {
                 agentController.PlayAudio(agentController.furniturePlacement2Audio);
             }
