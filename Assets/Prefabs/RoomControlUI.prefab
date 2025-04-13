@@ -7221,6 +7221,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2859147190401906268, guid: b16424dcc3deba241b1457370a8e5b5e, type: 3}
+      propertyPath: m_TagString
+      value: Subtitle
+      objectReference: {fileID: 0}
     - target: {fileID: 2859147190401906338, guid: b16424dcc3deba241b1457370a8e5b5e, type: 3}
       propertyPath: m_text
       value: "Gestern habe ich sehr viel erlebt. Ich war auf dem Weg zum Air-Hockey
@@ -14635,10 +14639,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbcf4f6e193eabe45a96e59ab7d304df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 3785617491724507600, guid: a78623f963e40b44c95858ce9ef3735e, type: 3}
-  Content: {fileID: 7482960899112343843}
-  Title: {fileID: 7482960899807039822}
-  FurnitureObjects:
+  button: {fileID: 3785617491724507600, guid: a78623f963e40b44c95858ce9ef3735e, type: 3}
+  content: {fileID: 7482960899112343843}
+  title: {fileID: 7482960899807039822}
+  furnitureObjects:
   - {fileID: 6684038756483129766, guid: 313766ad4577d074fac7838a43cb97e1, type: 3}
   - {fileID: 3371889403479897360, guid: 63e87fd1bd3964644b53926f76ca26f7, type: 3}
   - {fileID: 9060652066865877222, guid: e11d779f72c7b1d42ba9a8dc87d74ce8, type: 3}
@@ -14700,7 +14704,7 @@ MonoBehaviour:
   - {fileID: 8424916234211116134, guid: 94cf7cfb365f24c4bb841e0e41d8d6cd, type: 3}
   - {fileID: 2330855430096419217, guid: 4d56bcb29cc599049bd4f26cec4bec22, type: 3}
   - {fileID: 4907328226568114544, guid: 0b5293ccf0383c542b613554b879dcd1, type: 3}
-  FurniturePreview: []
+  furniturePreview: []
 --- !u!1 &7482960899112343843 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6475179787885369030, guid: 015d50c6ae209554ca438fae7e311d27, type: 3}
@@ -17679,8 +17683,9 @@ MonoBehaviour:
   - {fileID: 5979507848331056269, guid: 674bcefabf30e704b816f7f5bc78dbb7, type: 3}
   - {fileID: 1301499831976573491, guid: 32121005b6a709f44a1d899babb49a6d, type: 3}
   woodTexture: {fileID: 2800000, guid: 74b098f2dec527547b60073c53346172, type: 3}
-  woodTextureBW: {fileID: 2800000, guid: a96d3de93ba982240ad12422ef6495ab, type: 3}
+  woodTextureBw: {fileID: 2800000, guid: a96d3de93ba982240ad12422ef6495ab, type: 3}
   woodMaterial: {fileID: 2100000, guid: b9a3fab1736912a4984ecc84abb75919, type: 2}
+  spotLight: {fileID: 2863039436427035185, guid: 9e52a3f8ee04d824c9ae626d9f86cf5c, type: 3}
   newRoomButton: {fileID: 2987023582437787220}
   backButton: {fileID: 2987023581642280890}
   forwardButton: {fileID: 2987023582329671727}
@@ -17704,7 +17709,6 @@ MonoBehaviour:
   goToFirstRoomButton: {fileID: 6616593752691811967}
   addMoreRoomsButton: {fileID: 7826237086911255795}
   enoughRoomsButton: {fileID: 3112076536025367498}
-  spotLight: {fileID: 2863039436427035185, guid: 9e52a3f8ee04d824c9ae626d9f86cf5c, type: 3}
 --- !u!224 &1262246705847404927 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6067706443764739711, guid: 1dbf6a36e6fa4ba46a0ad47eebc48ae3, type: 3}
@@ -32682,10 +32686,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e774db71cbc827a45a47573b17159e1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 3785617491724507600, guid: a78623f963e40b44c95858ce9ef3735e, type: 3}
-  Content: {fileID: 2317404594811078946}
-  Title: {fileID: 2317404594164646223}
-  LociObjects:
+  button: {fileID: 3785617491724507600, guid: a78623f963e40b44c95858ce9ef3735e, type: 3}
+  content: {fileID: 2317404594811078946}
+  title: {fileID: 2317404594164646223}
+  lociObjects:
   - {fileID: 135584308073528724, guid: a9f650cff81a5f54db761521007c3f47, type: 3}
   - {fileID: 8320685964509537683, guid: 01051b6191666ee40bc071abe248ebae, type: 3}
   - {fileID: 7148493720940834049, guid: ac1ff2d949a32d548909a89b5ad09db5, type: 3}
@@ -32789,7 +32793,7 @@ MonoBehaviour:
   - {fileID: 7009135692103748926, guid: a83dc35bc6a3c834facf388b4f85ab1d, type: 3}
   - {fileID: 2937751320486047204, guid: 1d057136283290347b39e2f9a6d29943, type: 3}
   - {fileID: 7120455192074586383, guid: 89918d22b4a9b724f8f1b84509602ea1, type: 3}
-  LociOther:
+  lociOther:
   - {fileID: 8320685964509537683, guid: 01051b6191666ee40bc071abe248ebae, type: 3}
   - {fileID: 7148493720940834049, guid: ac1ff2d949a32d548909a89b5ad09db5, type: 3}
   - {fileID: 5979507848331056269, guid: 674bcefabf30e704b816f7f5bc78dbb7, type: 3}
@@ -32819,7 +32823,7 @@ MonoBehaviour:
   - {fileID: 8637111899504289079, guid: b4bb99846497a1f42a3877699d2d356f, type: 3}
   - {fileID: 6462785465697956139, guid: a4d49a6235e4cde43a6dfd42736e97d3, type: 3}
   - {fileID: 7120455192074586383, guid: 89918d22b4a9b724f8f1b84509602ea1, type: 3}
-  LociFood:
+  lociFood:
   - {fileID: 135584308073528724, guid: a9f650cff81a5f54db761521007c3f47, type: 3}
   - {fileID: 1301499831976573491, guid: 32121005b6a709f44a1d899babb49a6d, type: 3}
   - {fileID: 6034289542097366580, guid: 1ce6d64710a86c24bbbb4e87b7718f43, type: 3}
@@ -32873,7 +32877,7 @@ MonoBehaviour:
   - {fileID: 2937751320486047204, guid: 1d057136283290347b39e2f9a6d29943, type: 3}
   - {fileID: 5689835318795417779, guid: 3641a9e76111f1b40ae45de77a396c38, type: 3}
   - {fileID: 7009135692103748926, guid: a83dc35bc6a3c834facf388b4f85ab1d, type: 3}
-  LociCars:
+  lociCars:
   - {fileID: 5548272220935993897, guid: 78102065b1bd09b4c9fe1e8a1c7c30b8, type: 3}
   - {fileID: 4720156279100621151, guid: 4c1babb2dcc7b004e86bbac63202bd93, type: 3}
   - {fileID: 6900252017888026986, guid: b95da982cda398b4eb27588e5bbb39aa, type: 3}
@@ -32884,7 +32888,7 @@ MonoBehaviour:
   - {fileID: 2031821861015045258, guid: ffb73cbfefccdba40bd7b3780a91c835, type: 3}
   - {fileID: 6848523084683249678, guid: 55299bda60d077e4db3fc6a0c3bc4e6b, type: 3}
   - {fileID: 123060280100077697, guid: 158dd660df779f94c85ef0d15891ea09, type: 3}
-  LociPeople:
+  lociPeople:
   - {fileID: 273228352953409233, guid: a8e146134e9025f4ba306d8e4bf3f848, type: 3}
   - {fileID: 2888249883901262912, guid: 85813e1773e01c04da3283e0b0bd4e4b, type: 3}
   - {fileID: 5597710486157477566, guid: 6d5693a1ee8b2b34f94ffe6442565eb3, type: 3}
@@ -32893,12 +32897,12 @@ MonoBehaviour:
   - {fileID: 6893838694573767010, guid: 05badfd893ee5e24eb3544d9fbcd3912, type: 3}
   - {fileID: 1978945696099022972, guid: b7a59c3f1afb84e47bbd94f936d2da91, type: 3}
   - {fileID: 1954226373518137117, guid: 874b3f4bc7782c546a1badf0fd784dfd, type: 3}
-  LociAnimals:
+  lociAnimals:
   - {fileID: 4884516228187997469, guid: 7d5abedc44fce6d48897fa21a57aa716, type: 3}
   - {fileID: 7721943496265143070, guid: ef15097f8cfa7244e9c5294a387ccf00, type: 3}
   - {fileID: 183751676175091518, guid: 811ca96a8a17f5343aa1550ecc46ea3b, type: 3}
   - {fileID: 5123450017537217083, guid: 6c4df4b0720072c408a0755431296fb1, type: 3}
-  Recommendations:
+  recommendations:
   - {fileID: 5548272220935993897, guid: 78102065b1bd09b4c9fe1e8a1c7c30b8, type: 3}
   - {fileID: 8320685964509537683, guid: 01051b6191666ee40bc071abe248ebae, type: 3}
   - {fileID: 1978945696099022972, guid: b7a59c3f1afb84e47bbd94f936d2da91, type: 3}
@@ -33007,12 +33011,12 @@ MonoBehaviour:
   - {fileID: 6846928555170863331, guid: ffee4d2ac20535a41a8c8d20f35e51fe, type: 3}
   - {fileID: 6034289542097366580, guid: 1ce6d64710a86c24bbbb4e87b7718f43, type: 3}
   - {fileID: 6583038644530003472, guid: ea7b2bb4799bc4c4e8b3f777d11c9d87, type: 3}
-  LociPreview: []
-  LociOtherPreview: []
-  LociFoodPreview: []
-  LociCarsPreview: []
-  LociPeoplePreview: []
-  LociAnimalsPreview: []
+  lociPreview: []
+  lociOtherPreview: []
+  lociFoodPreview: []
+  lociCarsPreview: []
+  lociPeoplePreview: []
+  lociAnimalsPreview: []
 --- !u!1001 &8877083184733572367
 PrefabInstance:
   m_ObjectHideFlags: 0

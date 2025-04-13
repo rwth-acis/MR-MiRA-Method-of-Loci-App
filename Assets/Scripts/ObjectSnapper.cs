@@ -21,7 +21,7 @@ public class ObjectSnapper : MonoBehaviour
     private bool _grabbed = false;
     private Renderer _renderer;
 
-    void Start()
+    private void Start()
     {
         _renderer = GetComponent<Renderer>();
         if (isImage)
@@ -31,7 +31,7 @@ public class ObjectSnapper : MonoBehaviour
         }
     }
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (isCone)
         {
@@ -204,7 +204,7 @@ public class ObjectSnapper : MonoBehaviour
     /// <summary>
     /// Snaps the tooltip to the object
     /// </summary>
-    /// <param name="gameObjectY"></param>
+    /// <param name="gameObjectY>The highest point of the object to snap onto</param>"
     public void SnapTooltip(float gameObjectY)
     {
         transform.position = new Vector3(transform.position.x, gameObjectY, transform.position.z);

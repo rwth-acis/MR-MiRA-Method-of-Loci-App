@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class LociLoader : MonoBehaviour
 {
-    [FormerlySerializedAs("Button")] [Tooltip("The button prefab to spawn for each loci object")]
+    [Tooltip("The button prefab to spawn for each loci object")]
     public GameObject button;
     [FormerlySerializedAs("Content")] [Tooltip("The content object to spawn the buttons in")]
     public GameObject content;
@@ -28,17 +28,17 @@ public class LociLoader : MonoBehaviour
     [FormerlySerializedAs("Recommendations")] [Tooltip("The list of recommendations")]
     public List<GameObject> recommendations;
 
-    [FormerlySerializedAs("LociPreview")] [Tooltip("The list of loci object previews")]
+    [Tooltip("The list of loci object previews")]
     public List<Texture2D> lociPreview;
-    [FormerlySerializedAs("LociOtherPreview")] [Tooltip("The list of 'Other' object previews")]
+    [Tooltip("The list of 'Other' object previews")]
     public List<Texture2D> lociOtherPreview;
-    [FormerlySerializedAs("LociFoodPreview")] [Tooltip("The list of 'Food' object previews")]
+    [Tooltip("The list of 'Food' object previews")]
     public List<Texture2D> lociFoodPreview;
-    [FormerlySerializedAs("LociCarsPreview")] [Tooltip("The list of 'Cars' object previews")]
+    [Tooltip("The list of 'Cars' object previews")]
     public List<Texture2D> lociCarsPreview;
-    [FormerlySerializedAs("LociPeoplePreview")] [Tooltip("The list of 'People' object previews")]
+    [Tooltip("The list of 'People' object previews")]
     public List<Texture2D> lociPeoplePreview;
-    [FormerlySerializedAs("LociAnimalsPreview")] [Tooltip("The list of 'Animals' object previews")]
+    [Tooltip("The list of 'Animals' object previews")]
     public List<Texture2D> lociAnimalsPreview;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

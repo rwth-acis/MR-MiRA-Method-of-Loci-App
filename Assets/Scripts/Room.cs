@@ -82,10 +82,10 @@ public class Room
         if (furnitureAnchors.Count != 0)
         {
             _unboundFurnitureAnchors.Clear();
-            var result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(furnitureAnchors, _unboundFurnitureAnchors);
+            OVRResult<List<OVRSpatialAnchor.UnboundAnchor>, OVRAnchor.FetchResult> result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(furnitureAnchors, _unboundFurnitureAnchors);
             if (result.Success)
             {
-                foreach (var unboundAnchor in result.Value)
+                foreach (OVRSpatialAnchor.UnboundAnchor unboundAnchor in result.Value)
                 {
                     await unboundAnchor.LocalizeAsync();
                 }
@@ -93,7 +93,7 @@ public class Room
                 while (!done)
                 {
                     done = true;
-                    foreach (var anchor in _unboundFurnitureAnchors)
+                    foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundFurnitureAnchors)
                     {
                         if (!anchor.Localized)
                         {
@@ -112,18 +112,18 @@ public class Room
         if (representationAnchors.Count != 0)
         {
             _unboundRepresentationAnchors.Clear();
-            var result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(representationAnchors, _unboundRepresentationAnchors);
+            OVRResult<List<OVRSpatialAnchor.UnboundAnchor>, OVRAnchor.FetchResult> result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(representationAnchors, _unboundRepresentationAnchors);
             if (result.Success)
             {
-                foreach (var unboundAnchor in result.Value)
+                foreach (OVRSpatialAnchor.UnboundAnchor unboundAnchor in result.Value)
                 {
-                    var result2 = await unboundAnchor.LocalizeAsync();
+                    await unboundAnchor.LocalizeAsync();
                 }
                 bool done = false;
                 while (!done)
                 {
                     done = true;
-                    foreach (var anchor in _unboundRepresentationAnchors)
+                    foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundRepresentationAnchors)
                     {
                         if (!anchor.Localized)
                         {
@@ -152,9 +152,9 @@ public class Room
             {
                 for (int i = 0; i < Furniture.Count; i++)
                 {
-                    FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i]._position[0], FurnitureTransforms[i]._position[1], FurnitureTransforms[i]._position[2]);
-                    FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i]._rotation[1], FurnitureTransforms[i]._rotation[2], FurnitureTransforms[i]._rotation[3], FurnitureTransforms[i]._rotation[0]);
-                    FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i]._scale[0], FurnitureTransforms[i]._scale[1], FurnitureTransforms[i]._scale[2]);
+                    FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i].position[0], FurnitureTransforms[i].position[1], FurnitureTransforms[i].position[2]);
+                    FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i].rotation[1], FurnitureTransforms[i].rotation[2], FurnitureTransforms[i].rotation[3], FurnitureTransforms[i].rotation[0]);
+                    FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i].scale[0], FurnitureTransforms[i].scale[1], FurnitureTransforms[i].scale[2]);
                 }
             }
         }
@@ -164,9 +164,9 @@ public class Room
             {
                 for (int i = 0; i < Representations.Count; i++)
                 {
-                    RepresentationInstances[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
-                    RepresentationInstances[i].transform.localScale = new Vector3(RepresentationTransforms[i]._scale[0], RepresentationTransforms[i]._scale[1],RepresentationTransforms[i]._scale[2]);
-                    RepresentationInstances[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
+                    RepresentationInstances[i].transform.position = new Vector3(RepresentationTransforms[i].position[0], RepresentationTransforms[i].position[1], RepresentationTransforms[i].position[2]);
+                    RepresentationInstances[i].transform.localScale = new Vector3(RepresentationTransforms[i].scale[0], RepresentationTransforms[i].scale[1],RepresentationTransforms[i].scale[2]);
+                    RepresentationInstances[i].transform.rotation = new Quaternion(RepresentationTransforms[i].rotation[1], RepresentationTransforms[i].rotation[2], RepresentationTransforms[i].rotation[3], RepresentationTransforms[i].rotation[0]);
                 }
             }
         }
@@ -180,12 +180,12 @@ public class Room
         // We rebuild these lists to cross-reference the UUIDs, as the order of the unbound anchors is not guaranteed
         // Simply assigning doesn't work, as we need to copy by value, not by reference
         List<Guid> oldFurnitureAnchors = new List<Guid>();
-        foreach (var guid in FurnitureAnchors)
+        foreach (Guid guid in FurnitureAnchors)
         {
             oldFurnitureAnchors.Add(guid);
         }
         List<Guid> oldRepresentationAnchors = new List<Guid>();
-        foreach (var guid in RepresentationAnchors)
+        foreach (Guid guid in RepresentationAnchors)
         {
             oldRepresentationAnchors.Add(guid);
         }
@@ -268,8 +268,8 @@ public class Room
             RepresentationTransforms.Count == 0) return;
         for (int i = 0; i < Loci.Count; i++)
         {
-            Loci[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
-            Loci[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
+            Loci[i].transform.position = new Vector3(RepresentationTransforms[i].position[0], RepresentationTransforms[i].position[1], RepresentationTransforms[i].position[2]);
+            Loci[i].transform.rotation = new Quaternion(RepresentationTransforms[i].rotation[1], RepresentationTransforms[i].rotation[2], RepresentationTransforms[i].rotation[3], RepresentationTransforms[i].rotation[0]);
             Loci[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
             if (_unboundRepresentationAnchors.Count > i)
             {
@@ -305,7 +305,7 @@ public class Room
     /// <summary>
     /// Add a locus halo instance to the list of Loci
     /// </summary>
-    /// <param name="locus"></param>
+    /// <param name="locus">The halo instance</param>
     public void AddLocusInstance(GameObject locus)
     {
         this.Loci.Add(locus);
@@ -315,6 +315,7 @@ public class Room
     /// Add a representation prefab to the list of representations in the room.
     /// </summary>
     /// <param name="representation">The prefab to add to the representations list</param>
+    /// <param name="instance">An instance of the prefab</param>
     public void AddRepresentation(GameObject representation, GameObject instance)
     {
         this.Representations.Add(representation);
@@ -325,7 +326,7 @@ public class Room
     /// Add a representation instance to the list of representations in the room.
     /// Only after the representation has been instantiated.
     /// </summary>
-    /// <param name="representationInstance"></param>
+    /// <param name="representationInstance">The instance of the representation object to be added</param>
     public void AddRepresentationInstance(GameObject representationInstance)
     {
         this.RepresentationInstances.Add(representationInstance);
@@ -408,7 +409,7 @@ public class Room
             {
                 await OVRSpatialAnchor.EraseAnchorsAsync(uuids: FurnitureAnchors, anchors: null);
                 FurnitureAnchors.Clear();
-                foreach (var instance in FurnitureInstances)
+                foreach (GameObject instance in FurnitureInstances)
                 {
                     // We delete and recreate existing anchors
                     await DeleteAnchor(instance, true);
@@ -417,7 +418,7 @@ public class Room
                     {
                         await Task.Delay(100);
                     }
-                    var result = await newAnchor.SaveAnchorAsync();
+                    OVRResult<OVRAnchor.SaveResult> result = await newAnchor.SaveAnchorAsync();
                     if (result.Success)
                     {
                         FurnitureAnchors.Add(newAnchor.Uuid);
@@ -429,7 +430,7 @@ public class Room
             {
                 await OVRSpatialAnchor.EraseAnchorsAsync(uuids: RepresentationAnchors, anchors: null);
                 RepresentationAnchors.Clear();
-                foreach (var instance in RepresentationInstances)
+                foreach (GameObject instance in RepresentationInstances)
                 {
                     await DeleteAnchor(instance, true);
                     OVRSpatialAnchor newRepAnchor = instance.AddComponent<OVRSpatialAnchor>();
@@ -437,7 +438,7 @@ public class Room
                     {
                         await Task.Delay(100);
                     }
-                    var result = await newRepAnchor.SaveAnchorAsync();
+                    OVRResult<OVRAnchor.SaveResult> result = await newRepAnchor.SaveAnchorAsync();
                     if (result.Success)
                     {
                         RepresentationAnchors.Add(newRepAnchor.Uuid);
@@ -460,7 +461,6 @@ public class Room
     /// <summary>
     /// Replaces the representation at the given index with the new representation.
     /// </summary>
-    /// <param name="index">The index in the Representation List</param>
     /// <param name="newRepresentation">The prefab of the new Representation</param>
     /// <param name="newRepresentationInstance">The instantiated GameObject of the new Representation</param>
     public void ReplaceRepresentation(GameObject newRepresentation, GameObject newRepresentationInstance)
@@ -498,8 +498,7 @@ public class Room
     public async Task DeleteAnchorFromList(int index, bool isFurniture)
     {
         Guid anchor = isFurniture ? FurnitureAnchors[index] : RepresentationAnchors[index];
-        List<Guid> anchorList = new List<Guid>();
-        anchorList.Add(anchor);
+        List<Guid> anchorList = new List<Guid> { anchor };
         await OVRSpatialAnchor.EraseAnchorsAsync(null, anchorList);
         if (isFurniture)
         {

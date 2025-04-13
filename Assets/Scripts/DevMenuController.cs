@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DevMenuController : MonoBehaviour
 {
+    [Tooltip("The RoomManager instance")]
     public RoomManager roomManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Start()
@@ -136,16 +137,28 @@ public class DevMenuController : MonoBehaviour
         roomManager.OnConfirmButtonClick(value);
     }
 
+    /// <summary>
+    /// Deletes the current user's json file
+    /// </summary>
+    /// <param name="value">The value of the corresponding button</param>
     public void DeleteJSON(bool value)
     {
         roomManager.DeleteJSON(value);
     }
 
+    /// <summary>
+    /// Closes the dev menu
+    /// </summary>
+    /// <param name="value">The value of the corresponding button</param>
     public void CloseMenu(bool value)
     {
         roomManager.CloseDevMenu(value);
     }
 
+    /// <summary>
+    /// Opens the furniture menu
+    /// </summary>
+    /// <param name="value">The value of the corresponding button</param>
     public void OpenFurnitureMenu(bool value)
     {
         roomManager.OpenFurnitureMenu(value);

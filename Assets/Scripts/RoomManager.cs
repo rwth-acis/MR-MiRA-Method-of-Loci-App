@@ -41,9 +41,11 @@ public class RoomManager : MonoBehaviour
     public bool LayoutMode { get; set; } = false;
     [Tooltip("Whether the reuse mode is active")]
     public bool ReusePalace { get; set; } = false;
-
     [Tooltip("If true, the next touched object will be deleted")]
     public bool IsDeleteMode { get; private set; } = false;
+    [Tooltip("The orange spotlight to highlight the current object")]
+    public GameObject spotLight;
+
 
     // All buttons in the user menu
     [Tooltip("The button to create a new room")]
@@ -92,8 +94,6 @@ public class RoomManager : MonoBehaviour
     public GameObject addMoreRoomsButton;
     [Tooltip("The button to continue the evaluation after adding more rooms")]
     public GameObject enoughRoomsButton;
-    [Tooltip("The orange spotlight to highlight the current object")]
-    public GameObject spotLight;
 
     private List<User> _users = new List<User>();
     private Camera _cam;
@@ -146,7 +146,7 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
         agentController = FindObjectOfType<AgentController>();
         user = GameObject.Find("CenterEyeAnchor");
@@ -162,7 +162,7 @@ public class RoomManager : MonoBehaviour
         _furnitureMenu = GameObject.FindGameObjectWithTag("FurnitureMenu");
         _furnitureMenu.SetActive(false);
         _storyText = GameObject.FindGameObjectWithTag("Story");
-        _storyText.SetActive(false);
+        //_storyText.SetActive(false);
         _tooltipMenu = GameObject.FindGameObjectWithTag("Tooltip");
         _tooltipMenu.SetActive(false);
         spotLight.SetActive(false);
@@ -743,6 +743,10 @@ public class RoomManager : MonoBehaviour
         _currentRoom.SaveRoom();
     }
 
+    /// <summary>
+    /// Adds a furniture object to the current room
+    /// </summary>
+    /// <param name="furniture">The furniture object to be added</param>
     public void AddFurniture(GameObject furniture)
     {
         GameObject newObject = GameObject.Instantiate(furniture, FindFreeFloorSpace(furniture), Quaternion.identity);
@@ -854,7 +858,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Shows one object at a time to the user to place in the memory palace
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the button to start the list phase</param>
     public async void ListPhase(bool value)
     {
         await LoadRoom(_currentUser.GetFirstRoom());
@@ -1089,7 +1093,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Called when the user reaches the end of the rooms too early and wants to create more rooms
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the return to furniture phase button</param>
     public async void ReturnToFurniturePhase(bool value)
     {
         _storyText.SetActive(false);
@@ -1145,7 +1149,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// Called when the user is finished adding more rooms and wants to return to the evaluation phases
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the finish adding more rooms button</param>
     public void FinishAddingMoreRooms(bool value)
     {
         _finishAddingMoreRooms = true;
@@ -1263,7 +1267,7 @@ public class RoomManager : MonoBehaviour
         _deleteCounter++;
         if (_deleteCounter == 2)
         {
-            string path = Path.Combine(Application.persistentDataPath, _currentUser._name + ".json");
+            string path = Path.Combine(Application.persistentDataPath, _currentUser.Name + ".json");
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -1280,7 +1284,7 @@ public class RoomManager : MonoBehaviour
             {
                 GameObject.Destroy(obj);
             }
-            LoadUser(_currentUser._name);
+            LoadUser(_currentUser.Name);
         }
     }
 
@@ -1288,7 +1292,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// To pause the audio of the agent
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the pause audio button</param>
     public void PauseAudio(bool value)
     {
         agentController.PauseAudio();
@@ -1297,7 +1301,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// To replay the audio of the agent
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the replay audio button</param>
     public void ReplayAudio(bool value)
     {
         agentController.ReplayAudio();
@@ -1369,7 +1373,7 @@ public class RoomManager : MonoBehaviour
     /// <summary>
     /// To set the height of the menu to match the user's height
     /// </summary>
-    /// <param name="value"></param>
+    /// <param name="value">The value of the change menu height button</param>
     public void ChangeMenuHeight(bool value)
     {
         _menu.transform.position = new Vector3(_menu.transform.position.x, user.transform.position.y - 0.2f, _menu.transform.position.z);

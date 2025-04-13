@@ -16,7 +16,7 @@ public class FurnitureLoader : MonoBehaviour
     [FormerlySerializedAs("FurnitureObjects")] [Tooltip("The list of furniture objects")]
     public List<GameObject> furnitureObjects;
 
-    [FormerlySerializedAs("FurniturePreview")] [Tooltip("The list of furniture object previews")]
+    [Tooltip("The list of furniture object previews")]
     public List<Texture2D> furniturePreview;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -236,6 +236,10 @@ public class FurnitureLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Loads the images in picture frames into the menu
+    /// </summary>
+    /// <param name="value">The value of the corresponding button</param>
     public void LoadImages(bool value)
     {
         title.GetComponent<TextMeshProUGUI>().text = "Bilder";

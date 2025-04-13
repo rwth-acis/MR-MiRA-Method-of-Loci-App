@@ -49,13 +49,13 @@ public class AgentController : MonoBehaviour
     [Tooltip("Tell user to repeat the information, starting with the first room")]
     [SerializeField] public AudioClip repetitionAudio;
 
-    private bool _isFollowingUser = false;
+    private bool _isFollowingUser;
     private AudioClip _currentAudio;
     private AudioSource _audioSource;
-    private bool paused = false;
-    private bool replaying = false;
+    private bool paused;
+    private bool replaying;
     private GameObject _storyPlane;
-     private string _storyText =
+    private readonly string _storyText =
         "Gestern habe ich sehr viel erlebt. " +
         "Ich war auf dem Weg zum Air-Hockey spielen, mit meinen Freunden, Mira und Loki, " +
         "da sah ich mitten in der Stadt einen roten Bison. " +
@@ -68,15 +68,15 @@ public class AgentController : MonoBehaviour
         "Nach 3 Stunden Warten gehe ich wieder nach Hause, weil der Zug ausgefallen ist. " +
         "Ein Taxi ist mir zu teuer und der Schlitten fährt nicht ohne mein Pferd. " +
         "Das ist gerade im Urlaub.";
-     private string _introductionText =
+    private readonly string _introductionText =
         "Hallo, ich werde versuchen dir heute die Method of Loci beizubringen. " +
         "Ich begleite dich bei allen Schritten auf dem Weg. " +
         "Zunächst erkläre ich dir wie die Methode funktioniert. " +
         "Wenn du willst kannst du dir diesen Teil mehrfach anhören.";
-     private string _MoLText =
+    private readonly string _MoLText =
         "Die Method of Loci ist eine beliebte Gedächtnis Strategie aus dem alten Griechenland. " +
         "Sie benutzt das Raumgedächtnis damit du dir etwas merken kannst. " +
-        "Du stellst dir die Information als Objekt oder Bild vor und platzierst sie in deinem Kopf." +
+        "Du stellst dir die Information als Objekt oder Bild vor und platzierst sie in deinem Kopf. " +
         "Die Orte an denen Objekte platziert werden heißen loci. " +
         "Mehrere Informationen können entlang einem Pfad von loci angeordnet werden und so kannst du dir auch die Reihenfolge merken. " +
         "Um viele Informationen zu lernen, benötigst du eine Vielzahl an Räumen in denen du Objekte platzieren kannst. " +
@@ -85,7 +85,7 @@ public class AgentController : MonoBehaviour
         "hier in dieser App versuche ich dir die Aufgabe des Erstellens und Einrichten eines Gedächtnispalastes zu vereinfachen.";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    async void Start()
+    private async void Start()
     {
         ActivateAgent();
         // Get the task system of the agent
@@ -134,11 +134,10 @@ public class AgentController : MonoBehaviour
     /// <summary>
     /// Instructs the agent to go to a specific object
     /// </summary>
-    /// <param name="targetObject"></param>
+    /// <param name="targetObject">The object the agent goes to</param>
     public void GoToObject(GameObject targetObject)
     {
         // let the agent stand a bit away from the object
-        Vector3 position = targetObject.transform.position;
         AgentMovementTask task = new AgentMovementTask(targetObject, default, true);
         TaskSystem.ScheduleTask(task);
     }
@@ -146,7 +145,7 @@ public class AgentController : MonoBehaviour
     /// <summary>
     /// Instructs the agent to go to a specific object and point at it for 5 seconds
     /// </summary>
-    /// <param name="targetObject"></param>
+    /// <param name="targetObject">The object the agnet points at</param>
     public void GoToAndPointAtObject(GameObject targetObject)
     {
         FaceObject(targetObject);
@@ -212,7 +211,7 @@ public class AgentController : MonoBehaviour
     /// <summary>
     /// Plays the audio clip from the list at the given index
     /// </summary>
-    /// <param name="index"></param>
+    /// <param name="index">The place in the list of audios</param>
     public void PlayAudioListPhase(int index)
     {
         PlayAudio(listAudios[index]);
