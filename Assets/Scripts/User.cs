@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -6,11 +5,11 @@ using UnityEngine;
 public class User
 {
     [Tooltip("The name of the user")]
-    public string _name { get; private set; }
+    public string Name { get; private set; }
     [Tooltip("The JSON data of the user")]
     public string SaveDataJSON { get; private set; }
     [Tooltip("Place in the list of rooms")]
-    public int CurrentRoomID { get; private set; } = 0;
+    public int CurrentRoomID { get; set; } = 0;
 
     private List<Room> _rooms = new List<Room>();
     private SaveData _saveData;
@@ -21,7 +20,7 @@ public class User
     /// <param name="name">The name of the new user</param>
     public User(string name)
     {
-        _name = name;
+        Name = name;
     }
 
     /// <summary>
@@ -31,9 +30,9 @@ public class User
     /// <param name="saveData">The save data of the list of rooms</param>
     public User(string name, SaveData saveData)
     {
-        _name = name;
+        Name = name;
         _saveData = saveData;
-        foreach (SaveRoom saveRoom in _saveData.SaveRooms)
+        foreach (SaveRoom saveRoom in _saveData.saveRooms)
         {
             _rooms.Add(new Room(saveRoom));
         }
@@ -117,12 +116,11 @@ public class User
         // Save all rooms of the user
         foreach (Room room in _rooms)
         {
-            _saveData.SaveRooms.Add(room.SaveData);
+            _saveData.saveRooms.Add(room.SaveData);
         }
         // Save JSON data to file
         SaveDataJSON = JsonUtility.ToJson(_saveData);
-        string path = Path.Combine(Application.persistentDataPath, _name + ".json");
-        Debug.Log("Save to:" + path);
+        string path = Path.Combine(Application.persistentDataPath, Name + ".json");
         File.WriteAllText(path, SaveDataJSON);
     }
 }

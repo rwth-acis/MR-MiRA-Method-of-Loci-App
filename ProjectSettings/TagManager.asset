@@ -32,6 +32,12 @@ TagManager:
   - LocoText
   - Information
   - LociMenu
+  - Wall
+  - DevMenu
+  - FurnitureMenu
+  - Story
+  - Tooltip
+  - Light
   layers:
   - Default
   - TransparentFX

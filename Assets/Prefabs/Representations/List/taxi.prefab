@@ -150,6 +150,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 6c08e85be83e15348bd848b95eeea636, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6c08e85be83e15348bd848b95eeea636, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6c08e85be83e15348bd848b95eeea636, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6c08e85be83e15348bd848b95eeea636, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -189,9 +201,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 6c08e85be83e15348bd848b95eeea636, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6c08e85be83e15348bd848b95eeea636, type: 3}
       propertyPath: m_Name
-      value: Taxi
+      value: taxi
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -280,6 +296,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: {fileID: 6340099184687672377}
   isDoor: 0
+  isImage: 0
+  isVerticalImage: 0
+  next: 0
+  isTooltip: 0
 --- !u!82 &4095662218152613211
 AudioSource:
   m_ObjectHideFlags: 0
@@ -290,12 +310,12 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d39b5aa248f8b894fb3936fca46c687a, type: 3}
-  m_Resource: {fileID: 8300000, guid: d39b5aa248f8b894fb3936fca46c687a, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 68c05ec74c30cfb428749590431c5db5, type: 3}
+  m_Resource: {fileID: 8300000, guid: 68c05ec74c30cfb428749590431c5db5, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.707
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 1
   SpatializePostEffects: 0

@@ -29,8 +29,9 @@ public class Room
     public List<Guid> RepresentationAnchors { get; private set; } = new List<Guid>();
     [Tooltip("A list of the loci in the room, represented by halo objects")]
     public List<GameObject> Loci { get; private set; } = new List<GameObject>();
-
+    [Tooltip("The colour of the walls in the room")]
     public Color WallColour { get; private set; } = Color.white;
+    [Tooltip("The save data of the room")]
     public SaveRoom SaveData { get; private set; }
 
     [Tooltip("The index of the locus to be replaced next")]
@@ -63,8 +64,6 @@ public class Room
         WallColour = saveRoom.wallColour;
         FurnitureAnchors = saveRoom.furnitureAnchors.ConvertAll(Guid.Parse);
         RepresentationAnchors = saveRoom.representationAnchors.ConvertAll(Guid.Parse);
-        Debug.Log("ANCHOR: After loading from save: Furniture count: " + Furniture.Count + " FurnitureTransforms count: " + FurnitureTransforms.Count + " FurnitureAnchors count: " + FurnitureAnchors.Count);
-
     }
 
     /// <summary>
@@ -75,19 +74,6 @@ public class Room
     /// <param name="representationAnchors">List of UUIDs from SaveRoom, for representation anchors.</param>
     public async Task LoadUnboundAnchors(List<Guid> furnitureAnchors, List<Guid> representationAnchors)
     {
-        Debug.Log("2");
-        foreach (var guid in furnitureAnchors)
-        {
-            Debug.Log("ANCHOR: loading unbound furn. anchor " + guid);
-        }
-
-        foreach (var guid in representationAnchors)
-        {
-            Debug.Log("ANCHOR: loading unbound repr. anchor " + guid);
-        }
-
-        Debug.Log("ANCHOR: loading unbound anchors, furniture count: " + Furniture.Count + " furniture anchors: " + furnitureAnchors.Count);
-
         if (furnitureAnchors.Count == 0 && representationAnchors.Count == 0)
         {
             return;
@@ -96,99 +82,62 @@ public class Room
         if (furnitureAnchors.Count != 0)
         {
             _unboundFurnitureAnchors.Clear();
-            var result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(furnitureAnchors, _unboundFurnitureAnchors);
+            OVRResult<List<OVRSpatialAnchor.UnboundAnchor>, OVRAnchor.FetchResult> result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(furnitureAnchors, _unboundFurnitureAnchors);
             if (result.Success)
             {
-                Debug.Log("3");
-                foreach (var unboundAnchor in result.Value)
+                foreach (OVRSpatialAnchor.UnboundAnchor unboundAnchor in result.Value)
                 {
-                    var result2 = await unboundAnchor.LocalizeAsync();
-                    if (result2)
-                    {
-                        Debug.Log("ANCHOR: Localised " + unboundAnchor.Uuid);
-                    }
-                    else
-                    {
-                        Debug.Log($"Localisation failed for anchor {unboundAnchor.Uuid}");
-                    }
+                    await unboundAnchor.LocalizeAsync();
                 }
                 bool done = false;
                 while (!done)
                 {
                     done = true;
-                    foreach (var anchor in _unboundFurnitureAnchors)
+                    foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundFurnitureAnchors)
                     {
                         if (!anchor.Localized)
                         {
-                            Debug.Log("ANCHOR: Localising " + anchor.Uuid);
                             await anchor.LocalizeAsync();
                         }
 
                         if (!anchor.Localized)
                         {
-                            Debug.LogError($"ANCHOR: Localisation failed for anchor {anchor.Uuid}");
                             done = false;
                         }
                     }
                 }
-                Debug.Log("ANCHOR: All unbound furniture anchors localised successfully");
-            }
-            else
-            {
-                Debug.LogError("Failed to load unbound furniture anchors");
-                Debug.LogError($"Load failed with error {result.Status}.");
             }
         }
 
         if (representationAnchors.Count != 0)
         {
             _unboundRepresentationAnchors.Clear();
-            var result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(representationAnchors, _unboundRepresentationAnchors);
+            OVRResult<List<OVRSpatialAnchor.UnboundAnchor>, OVRAnchor.FetchResult> result = await OVRSpatialAnchor.LoadUnboundAnchorsAsync(representationAnchors, _unboundRepresentationAnchors);
             if (result.Success)
             {
-                Debug.Log("3");
-                foreach (var unboundAnchor in result.Value)
+                foreach (OVRSpatialAnchor.UnboundAnchor unboundAnchor in result.Value)
                 {
-                    var result2 = await unboundAnchor.LocalizeAsync();
-                    if (result2)
-                    {
-                        Debug.Log("ANCHOR: Localised " + unboundAnchor.Uuid);
-                    }
-                    else
-                    {
-                        Debug.LogError($"Localisation failed for anchor {unboundAnchor.Uuid}");
-                    }
+                    await unboundAnchor.LocalizeAsync();
                 }
                 bool done = false;
                 while (!done)
                 {
                     done = true;
-                    foreach (var anchor in _unboundRepresentationAnchors)
+                    foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundRepresentationAnchors)
                     {
                         if (!anchor.Localized)
                         {
-                            Debug.Log("ANCHOR: Localising " + anchor.Uuid);
                             await anchor.LocalizeAsync();
                         }
 
                         if (!anchor.Localized)
                         {
-                            Debug.LogError($"ANCHOR: Localisation failed for anchor {anchor.Uuid}");
                             done = false;
                         }
                     }
                 }
-                Debug.Log("ANCHOR: All unbound representation anchors localised successfully");
-            }
-            else
-            {
-                Debug.LogError("Failed to load unbound representation anchors");
-                Debug.LogError($"Load failed with error {result.Status}.");
             }
         }
-
-
-        Debug.Log("ANCHOR: Unbound anchor count: " + _unboundFurnitureAnchors.Count + " " + _unboundRepresentationAnchors.Count + " furniture count: " + Furniture.Count + " representation count: " + Representations.Count);
     }
 
     /// <summary>
@@ -197,16 +146,15 @@ public class Room
     /// </summary>
     public void LoadTransforms()
     {
-        Debug.Log("ANCHOR: Call LoadTransforms");
         if (FurnitureInstances.Count != 0)
         {
             if (Furniture != null && Furniture.Count != 0 && FurnitureTransforms != null && FurnitureTransforms.Count != 0)
             {
                 for (int i = 0; i < Furniture.Count; i++)
                 {
-                    FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i]._position[0], FurnitureTransforms[i]._position[1], FurnitureTransforms[i]._position[2]);
-                    FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i]._rotation[1], FurnitureTransforms[i]._rotation[2], FurnitureTransforms[i]._rotation[3], FurnitureTransforms[i]._rotation[0]);
-                    FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i]._scale[0], FurnitureTransforms[i]._scale[1], FurnitureTransforms[i]._scale[2]);
+                    FurnitureInstances[i].transform.position = new Vector3(FurnitureTransforms[i].position[0], FurnitureTransforms[i].position[1], FurnitureTransforms[i].position[2]);
+                    FurnitureInstances[i].transform.rotation = new Quaternion(FurnitureTransforms[i].rotation[1], FurnitureTransforms[i].rotation[2], FurnitureTransforms[i].rotation[3], FurnitureTransforms[i].rotation[0]);
+                    FurnitureInstances[i].transform.localScale = new Vector3(FurnitureTransforms[i].scale[0], FurnitureTransforms[i].scale[1], FurnitureTransforms[i].scale[2]);
                 }
             }
         }
@@ -216,9 +164,9 @@ public class Room
             {
                 for (int i = 0; i < Representations.Count; i++)
                 {
-                    RepresentationInstances[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
-                    RepresentationInstances[i].transform.localScale = new Vector3(RepresentationTransforms[i]._scale[0], RepresentationTransforms[i]._scale[1],RepresentationTransforms[i]._scale[2]);
-                    RepresentationInstances[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
+                    RepresentationInstances[i].transform.position = new Vector3(RepresentationTransforms[i].position[0], RepresentationTransforms[i].position[1], RepresentationTransforms[i].position[2]);
+                    RepresentationInstances[i].transform.localScale = new Vector3(RepresentationTransforms[i].scale[0], RepresentationTransforms[i].scale[1],RepresentationTransforms[i].scale[2]);
+                    RepresentationInstances[i].transform.rotation = new Quaternion(RepresentationTransforms[i].rotation[1], RepresentationTransforms[i].rotation[2], RepresentationTransforms[i].rotation[3], RepresentationTransforms[i].rotation[0]);
                 }
             }
         }
@@ -229,17 +177,15 @@ public class Room
     /// </summary>
     public async void LoadAnchors()
     {
-        Debug.Log("ANCHOR: Call LoadAnchors");
-        Debug.Log("ANCHOR: FurnitureAnchors count: " + FurnitureAnchors.Count);
         // We rebuild these lists to cross-reference the UUIDs, as the order of the unbound anchors is not guaranteed
         // Simply assigning doesn't work, as we need to copy by value, not by reference
         List<Guid> oldFurnitureAnchors = new List<Guid>();
-        foreach (var guid in FurnitureAnchors)
+        foreach (Guid guid in FurnitureAnchors)
         {
             oldFurnitureAnchors.Add(guid);
         }
         List<Guid> oldRepresentationAnchors = new List<Guid>();
-        foreach (var guid in RepresentationAnchors)
+        foreach (Guid guid in RepresentationAnchors)
         {
             oldRepresentationAnchors.Add(guid);
         }
@@ -253,11 +199,8 @@ public class Room
             RepresentationAnchors.Clear();
         }
 
-        Debug.Log("ANCHOR: load transforms, furniture count: " + Furniture.Count + " furniture transforms count: " + FurnitureTransforms.Count + " furniture anchors count: " + _unboundFurnitureAnchors.Count);
-
         // save count, as list elements are removed while binding
         int unboundFurnitureCount = _unboundFurnitureAnchors.Count;
-        Debug.Log("ANCHOR: unboundFurnitureCount " + unboundFurnitureCount + " should be equal to " + Furniture.Count);
         if (FurnitureInstances.Count != 0 && _unboundFurnitureAnchors.Count != 0)
         {
             if (Furniture != null && Furniture.Count != 0 && FurnitureTransforms != null && FurnitureTransforms.Count != 0)
@@ -266,28 +209,19 @@ public class Room
                 {
                     if (unboundFurnitureCount > i) // && _unboundFurnitureAnchors[i].Localized
                     {
-                        DeleteAnchor(FurnitureInstances[i], false); // This acts as a check for an existing anchor
+                        await DeleteAnchor(FurnitureInstances[i], false); // This acts as a check for an existing anchor
                         OVRSpatialAnchor spatialAnchor = FurnitureInstances[i].AddComponent<OVRSpatialAnchor>();
                         foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundFurnitureAnchors)
                         {
-                            Debug.Log("ANCHOR: Is this true? oldFurnitureAnchors.Count " + oldFurnitureAnchors.Count + " >  i " + i);
                             if (oldFurnitureAnchors.Count > i && anchor.Uuid == oldFurnitureAnchors[i])
                             {
                                 anchor.BindTo(spatialAnchor);
-                                Debug.Log("ANCHOR: bound " + spatialAnchor.Uuid + " to " + FurnitureInstances[i].name);
                                 FurnitureAnchors.Add(spatialAnchor.Uuid);
                                 // We destroy the anchor after binding, to make the object movable, grabbable and allow for teleportation
-                                DeleteAnchor(spatialAnchor.GameObject(), false);
-                                Debug.Log("ANCHOR: furniture success!)");
+                                await DeleteAnchor(spatialAnchor.GameObject(), false);
                                 break;
                             }
-                            Debug.Log($"ANCHOR: Localisation furniture {i} failed");
-
                         }
-                    }
-                    else
-                    {
-                        Debug.LogError($"ANCHOR: furniture not localised or anchor missing");
                     }
                 }
                 _unboundFurnitureAnchors.Clear();
@@ -303,21 +237,18 @@ public class Room
                 {
                     if (unboundRepresentationCount > i) // && _unboundRepresentationAnchors[i].Localized
                     {
-                        DeleteAnchor(FurnitureInstances[i], false); // This acts as a check for an existing anchor
+                        await DeleteAnchor(RepresentationInstances[i], false); // This acts as a check for an existing anchor
                         OVRSpatialAnchor spatialAnchor = RepresentationInstances[i].AddComponent<OVRSpatialAnchor>();
                         foreach (OVRSpatialAnchor.UnboundAnchor anchor in _unboundRepresentationAnchors)
                         {
                             if (oldRepresentationAnchors.Count > i && anchor.Uuid == oldRepresentationAnchors[i])
                             {
                                 anchor.BindTo(spatialAnchor);
-                                Debug.Log("ANCHOR: bound " + spatialAnchor.Uuid + " to " + RepresentationInstances[i].name);
                                 RepresentationAnchors.Add(spatialAnchor.Uuid);
                                 // We destroy the anchor after binding, to make the object movable, grabbable and allow for teleportation
                                 await DeleteAnchor(spatialAnchor.GameObject(), false);
-                                Debug.Log("ANCHOR: representation success!)");
                                 break;
                             }
-                            Debug.LogError($"ANCHOR: representation {i} failed to localize");
                         }
                     }
                 }
@@ -330,16 +261,22 @@ public class Room
     /// Loads the transforms of the loci after images to mark them as instantiated.
     /// This cannot be called before the instances are created as Transform is a component of GameObject.
     /// </summary>
-    public void LoadTransformsLoci()
+    public async Task LoadTransformsLoci()
     {
         if (Loci.Count == 0) return;
         if (Representations == null || Representations.Count == 0 || RepresentationTransforms == null ||
             RepresentationTransforms.Count == 0) return;
         for (int i = 0; i < Loci.Count; i++)
         {
-            Loci[i].transform.position = new Vector3(RepresentationTransforms[i]._position[0], RepresentationTransforms[i]._position[1], RepresentationTransforms[i]._position[2]);
-            Loci[i].transform.rotation = new Quaternion(RepresentationTransforms[i]._rotation[1], RepresentationTransforms[i]._rotation[2], RepresentationTransforms[i]._rotation[3], RepresentationTransforms[i]._rotation[0]);
+            Loci[i].transform.position = new Vector3(RepresentationTransforms[i].position[0], RepresentationTransforms[i].position[1], RepresentationTransforms[i].position[2]);
+            Loci[i].transform.rotation = new Quaternion(RepresentationTransforms[i].rotation[1], RepresentationTransforms[i].rotation[2], RepresentationTransforms[i].rotation[3], RepresentationTransforms[i].rotation[0]);
             Loci[i].transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            if (_unboundRepresentationAnchors.Count > i)
+            {
+                OVRSpatialAnchor spatialAnchor = Loci[i].AddComponent<OVRSpatialAnchor>();
+                _unboundRepresentationAnchors[i].BindTo(spatialAnchor);
+                await DeleteAnchor(spatialAnchor.GameObject(), false);
+            }
         }
     }
 
@@ -368,7 +305,7 @@ public class Room
     /// <summary>
     /// Add a locus halo instance to the list of Loci
     /// </summary>
-    /// <param name="locus"></param>
+    /// <param name="locus">The halo instance</param>
     public void AddLocusInstance(GameObject locus)
     {
         this.Loci.Add(locus);
@@ -378,6 +315,7 @@ public class Room
     /// Add a representation prefab to the list of representations in the room.
     /// </summary>
     /// <param name="representation">The prefab to add to the representations list</param>
+    /// <param name="instance">An instance of the prefab</param>
     public void AddRepresentation(GameObject representation, GameObject instance)
     {
         this.Representations.Add(representation);
@@ -388,7 +326,7 @@ public class Room
     /// Add a representation instance to the list of representations in the room.
     /// Only after the representation has been instantiated.
     /// </summary>
-    /// <param name="representationInstance"></param>
+    /// <param name="representationInstance">The instance of the representation object to be added</param>
     public void AddRepresentationInstance(GameObject representationInstance)
     {
         this.RepresentationInstances.Add(representationInstance);
@@ -438,18 +376,18 @@ public class Room
             if (FurnitureInstances.Count != 0)
             {
                 FurnitureTransforms.Clear();
-                for (int i = 0; i < FurnitureInstances.Count; i++)
+                foreach (GameObject instance in FurnitureInstances)
                 {
-                    SerializedTransform newTransform = new SerializedTransform(FurnitureInstances[i].transform);
+                    SerializedTransform newTransform = new SerializedTransform(instance.transform);
                     FurnitureTransforms.Add(newTransform);
                 }
             }
             if (RepresentationInstances.Count != 0)
             {
                 RepresentationTransforms.Clear();
-                for (int i = 0; i < RepresentationInstances.Count; i++)
+                foreach (GameObject instance in RepresentationInstances)
                 {
-                    SerializedTransform newRepTransform = new SerializedTransform(RepresentationInstances[i].transform);
+                    SerializedTransform newRepTransform = new SerializedTransform(instance.transform);
                     RepresentationTransforms.Add(newRepTransform);
                 }
             }
@@ -471,26 +409,19 @@ public class Room
             {
                 await OVRSpatialAnchor.EraseAnchorsAsync(uuids: FurnitureAnchors, anchors: null);
                 FurnitureAnchors.Clear();
-                foreach (var instance in FurnitureInstances)
+                foreach (GameObject instance in FurnitureInstances)
                 {
-                    Debug.Log("UPDATE ANCHOR: Updating " + instance.name);
                     // We delete and recreate existing anchors
                     await DeleteAnchor(instance, true);
-                    Debug.Log("ANCHOR: anchor amount (should be 0!!): " + instance.GetComponents<OVRSpatialAnchor>().Length);
                     OVRSpatialAnchor newAnchor = instance.AddComponent<OVRSpatialAnchor>();
                     while (!newAnchor.Created)
                     {
                         await Task.Delay(100);
                     }
-                    var result = await newAnchor.SaveAnchorAsync();
+                    OVRResult<OVRAnchor.SaveResult> result = await newAnchor.SaveAnchorAsync();
                     if (result.Success)
                     {
-                        Debug.Log($"ANCHOR: {newAnchor.Uuid} saved successfully to " + instance.name);
                         FurnitureAnchors.Add(newAnchor.Uuid);
-                    }
-                    else
-                    {
-                        Debug.LogError($"ANCHOR: {newAnchor.Uuid} failed to save with error {result.Status}");
                     }
                     await DeleteAnchor(instance, false);
                 }
@@ -499,7 +430,7 @@ public class Room
             {
                 await OVRSpatialAnchor.EraseAnchorsAsync(uuids: RepresentationAnchors, anchors: null);
                 RepresentationAnchors.Clear();
-                foreach (var instance in RepresentationInstances)
+                foreach (GameObject instance in RepresentationInstances)
                 {
                     await DeleteAnchor(instance, true);
                     OVRSpatialAnchor newRepAnchor = instance.AddComponent<OVRSpatialAnchor>();
@@ -507,21 +438,15 @@ public class Room
                     {
                         await Task.Delay(100);
                     }
-                    var result = await newRepAnchor.SaveAnchorAsync();
+                    OVRResult<OVRAnchor.SaveResult> result = await newRepAnchor.SaveAnchorAsync();
                     if (result.Success)
                     {
-                        Debug.Log($"ANCHOR: {newRepAnchor.Uuid} saved successfully." + instance.name);
                         RepresentationAnchors.Add(newRepAnchor.Uuid);
-                    }
-                    else
-                    {
-                        Debug.LogError($"ANCHOR: {newRepAnchor.Uuid} failed to save with error {result.Status}");
                     }
                     await DeleteAnchor(instance, false);
                 }
             }
         }
-        Debug.Log("ANCHOR: After update transforms: Furniture count: " + Furniture.Count + " FurnitureTransforms count: " + FurnitureTransforms.Count + " FurnitureAnchors count: " + FurnitureAnchors.Count);
     }
 
     /// <summary>
@@ -536,14 +461,13 @@ public class Room
     /// <summary>
     /// Replaces the representation at the given index with the new representation.
     /// </summary>
-    /// <param name="index">The index in the Representation List</param>
     /// <param name="newRepresentation">The prefab of the new Representation</param>
     /// <param name="newRepresentationInstance">The instantiated GameObject of the new Representation</param>
-    public void ReplaceRepresentation(int index, GameObject newRepresentation, GameObject newRepresentationInstance)
+    public void ReplaceRepresentation(GameObject newRepresentation, GameObject newRepresentationInstance)
     {
-        Representations[index] = newRepresentation;
+        Representations[ReplacingLocusIndex] = newRepresentation;
         RepresentationInstances.Add(newRepresentationInstance);
-        ReplacingLocusIndex = index + 1;
+        ReplacingLocusIndex++;
     }
 
     /// <summary>
@@ -556,7 +480,6 @@ public class Room
         if (anchorObject.GetComponents<OVRSpatialAnchor>().Length != 0)
         {
             OVRSpatialAnchor anchorComponent = anchorObject.GetComponent<OVRSpatialAnchor>();
-            Debug.Log("ANCHOR: Found existing anchor, deleting..." + anchorComponent.name);
             if (erase)
             {
                 await anchorComponent.EraseAnchorAsync();
@@ -566,5 +489,26 @@ public class Room
             await Awaitable.NextFrameAsync();
         }
     }
+
+    /// <summary>
+    /// Deletes an anchor from the list of anchors, and erases it from memory. Asynchronous.
+    /// </summary>
+    /// <param name="index">The index in the applicable list</param>
+    /// <param name="isFurniture">If true deletes from furniture list, else from representation list</param>
+    public async Task DeleteAnchorFromList(int index, bool isFurniture)
+    {
+        Guid anchor = isFurniture ? FurnitureAnchors[index] : RepresentationAnchors[index];
+        List<Guid> anchorList = new List<Guid> { anchor };
+        await OVRSpatialAnchor.EraseAnchorsAsync(null, anchorList);
+        if (isFurniture)
+        {
+            FurnitureAnchors.RemoveAt(index);
+        }
+        else
+        {
+            RepresentationAnchors.RemoveAt(index);
+        }
+    }
+
 }
 
