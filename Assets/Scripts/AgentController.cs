@@ -3,6 +3,7 @@ using UnityEngine;
 using i5.VirtualAgents;
 using i5.VirtualAgents.AgentTasks;
 using i5.VirtualAgents.ScheduleBasedExecution;
+using TMPro;
 
 public class AgentController : MonoBehaviour
 {
@@ -53,9 +54,38 @@ public class AgentController : MonoBehaviour
     private AudioSource _audioSource;
     private bool paused = false;
     private bool replaying = false;
+    private GameObject _storyPlane;
+     private string _storyText =
+        "Gestern habe ich sehr viel erlebt. " +
+        "Ich war auf dem Weg zum Air-Hockey spielen, mit meinen Freunden, Mira und Loki, " +
+        "da sah ich mitten in der Stadt einen roten Bison. " +
+        "Das ist komisch, dachte ich mir und drehte um, um das Tier nicht zu erschrecken. " +
+        "Da lief mir auch schon ein Geist mit blauer Sonnenbrille entgegen. " +
+        "Dieser stolperte und verlor eine kleine Münze. " +
+        "Die Münze steckte ich in meine gelbe Tüte und ging weiter. " +
+        "Später kann ich mir eine Zitrone von dem Geld kaufen, dachte ich. " +
+        "Zwei Feuerwehrautos, ein Rennauto und ein Rentier warten schon am Bahnhof. " +
+        "Nach 3 Stunden Warten gehe ich wieder nach Hause, weil der Zug ausgefallen ist. " +
+        "Ein Taxi ist mir zu teuer und der Schlitten fährt nicht ohne mein Pferd. " +
+        "Das ist gerade im Urlaub.";
+     private string _introductionText =
+        "Hallo, ich werde versuchen dir heute die Method of Loci beizubringen. " +
+        "Ich begleite dich bei allen Schritten auf dem Weg. " +
+        "Zunächst erkläre ich dir wie die Methode funktioniert. " +
+        "Wenn du willst kannst du dir diesen Teil mehrfach anhören.";
+     private string _MoLText =
+        "Die Method of Loci ist eine beliebte Gedächtnis Strategie aus dem alten Griechenland. " +
+        "Sie benutzt das Raumgedächtnis damit du dir etwas merken kannst. " +
+        "Du stellst dir die Information als Objekt oder Bild vor und platzierst sie in deinem Kopf." +
+        "Die Orte an denen Objekte platziert werden heißen loci. " +
+        "Mehrere Informationen können entlang einem Pfad von loci angeordnet werden und so kannst du dir auch die Reihenfolge merken. " +
+        "Um viele Informationen zu lernen, benötigst du eine Vielzahl an Räumen in denen du Objekte platzieren kannst. " +
+        "Diese Räume nennen wir Gedächtnispalast. " +
+        "Traditionell findet das Lernen nur in deinem Kopf statt, " +
+        "hier in dieser App versuche ich dir die Aufgabe des Erstellens und Einrichten eines Gedächtnispalastes zu vereinfachen.";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    async void Start()
     {
         ActivateAgent();
         // Get the task system of the agent
@@ -65,9 +95,11 @@ public class AgentController : MonoBehaviour
         FaceUser();
         // Wave to the user
         TaskSystem.Tasks.PlayAnimation("WaveLeft", 5, "", 0, "Left Arm");
-
-        PlayAudio(introductionAudio);
-        PlayAudio(MoLAudio);
+        // Play the introduction audios and display the introduction texts
+        _storyPlane = GameObject.FindGameObjectWithTag("Story");
+        await Task.Delay(100);
+        await PlayAudio(introductionAudio);
+        await PlayAudio(MoLAudio);
     }
 
     /// <summary>
@@ -195,6 +227,20 @@ public class AgentController : MonoBehaviour
         while (_audioSource.isPlaying)
         {
             await Task.Delay(100);
+        }
+        // Display the subtitles for first two audios
+        if (audioClip == introductionAudio)
+        {
+            _storyPlane.GetComponentInChildren<TextMeshProUGUI>().text = _introductionText;
+        }
+        else if (audioClip == MoLAudio)
+        {
+            _storyPlane.GetComponentInChildren<TextMeshProUGUI>().text = _MoLText;
+        }
+        else
+        {
+            // Hide the subtitles
+            _storyPlane.GetComponentInChildren<TextMeshProUGUI>().text = _storyText;
         }
         _currentAudio = audioClip;
         _audioSource.clip = audioClip;
